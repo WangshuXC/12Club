@@ -93,7 +93,7 @@
 }
 
 .box:hover {
-    height: 40vh;
+    height: 50vh;
     margin-bottom: 0;
     flex-basis: 40%;
 }

@@ -1,5 +1,5 @@
 body {
-    background-image: url('/background.webp');
+    background-image: url('../imgs/background.webp');
     background-repeat: no-repeat;
     background-size: cover;
 }
@@ -46,7 +46,7 @@ span {
     left: -10px;
     right: 0;
     bottom: -5px;
-    width: 100px;
+    width: 140%;
     background-color: transparent;
     border-radius: 15px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);

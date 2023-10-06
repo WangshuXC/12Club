@@ -21,6 +21,7 @@
     "@vitejs/plugin-vue": "^4.3.4",
     "@vue/cli-plugin-babel": "^5.0.8",
     "@vue/cli-service": "^5.0.8",
+    "postcss-px-to-viewport": "^1.1.1",
     "vite": "^4.4.11"
   }
 }

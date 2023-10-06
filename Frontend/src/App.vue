@@ -1,9 +1,11 @@
 <template>
   <div class="main-container" :class="{ 'default': !isNightMode, 'night': isNightMode }">
     <div class="left">
-      <navbar :isNightMode="isNightMode"></navbar>
-      <div class="switchbtn-container">
-        <switchbtn @toggle="toggleStyle"></switchbtn>
+      <div class="navbar-container">
+        <navbar :isNightMode="isNightMode"></navbar>
+      </div>
+      <div class="daynightbtn-container">
+        <daynightbtn @toggle="toggleStyle"></daynightbtn>
       </div>
     </div>
     <div class="right" :style="{ 'background-color': backgroundColor }">
@@ -14,13 +16,13 @@
 
 <script>
 import navbar from './components/Navbar.vue';
-import switchbtn from './components/switchbtn.vue'
+import daynightbtn from './components/Daynightbtn.vue'
 
 export default {
   name: 'App',
   components: {
     navbar,
-    switchbtn,
+    daynightbtn,
   },
   props: {
     isNightMode: {
