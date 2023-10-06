@@ -1,0 +1,104 @@
+.Accordion {
+    display: flex;
+    flex-direction: column;
+}
+
+.nameshell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    height: 30px;
+    width: 40%;
+    background-color: var(--background-color);
+    border-radius: 20px;
+    border: 10px solid var(--background-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nameshell p {
+    font-size: 20px;
+    color: var(--text-color);
+    justify-content: center;
+    align-items: center;
+    text-overflow: ellipsis;
+}
+
+.BtnShell {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.updatebtn {
+    width: 90px;
+    height: 40px;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    border-radius: 20px;
+    border: 10px solid var(--background-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin: 0 15px;
+    transition: transform 0.1s;
+    transform: scale(1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.clicked {
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 120%;
+    font-weight: bold;
+
+    transform: scale(1.2) translateY(-10px);
+}
+
+
+
+.AccordionShell {
+    width: 70vw;
+    height: 30vh;
+    display: flex;
+}
+
+.box {
+    overflow: hidden;
+    transition: 0.3s;
+    margin: 0 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    border: 10px solid var(--background-color);
+    background-color: var(--background-color);
+}
+
+.box>img {
+    width: 200%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.4s;
+}
+
+.box>span {
+    font: 300 1.3vw "";
+    text-align: center;
+    color: var(--text-color);
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box:hover {
+    height: 40vh;
+    margin-bottom: 0;
+    flex-basis: 40%;
+}
+
+.box:hover>img {
+    width: 100%;
+    height: 100%;
+}

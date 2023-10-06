@@ -1,0 +1,8 @@
+# 排除顶层 __pycache__ 目录
+__pycache__/
+
+# 排除 App 目录下的 __pycache__ 目录
+App/__pycache__/
+
+# 排除 App/routes 目录下的 __pycache__ 目录
+App/routes/__pycache__/
