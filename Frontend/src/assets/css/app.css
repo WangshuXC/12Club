@@ -39,7 +39,8 @@ body.night {
     flex-direction: column;
     width: calc(1/20 * 100%);
     background-color: transparent;
-    margin-left: 20px;
+    margin-left: 15px;
+    align-items: center;
 }
 
 .navbar-container {

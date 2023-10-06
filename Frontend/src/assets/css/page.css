@@ -1,8 +1,3 @@
-.container {
-    display: flex;
-    flex-direction: column;
-}
-
 .data-page {
     overflow: auto;
     overflow-x: hidden;
@@ -46,16 +41,16 @@
 
 
 .data-thumbnail {
-    width: 50%;
+    width: 60%;
+
 }
 
 .data-thumbnail img {
-    width: 200%;
-    height: auto;
+    width: 100%;
+    /* height: 50%; */
     border-radius: 8px;
-    max-width: 200%;
-    max-height: 200%;
 }
+
 
 .data-info {
     width: 50%;
@@ -79,8 +74,4 @@
 .data-subteam {
     margin-top: 5px;
     font-size: 12px;
-}
-
-h1 {
-    color: var(--text-color);
 }

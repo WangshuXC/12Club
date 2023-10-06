@@ -40,9 +40,10 @@
     filter: drop-shadow(0 0 23px var(--animation-color))
 }
 
-.container {
+.home-container {
     overflow: hidden;
     display: flex;
+    flex-direction: column;
 }
 
 .title {

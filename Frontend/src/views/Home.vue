@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="home-container">
         <div class="title">
             <button data-text="Awesome" class="button">
                 <span class="actual-text">&nbsp;12&nbsp;Club&nbsp;</span>

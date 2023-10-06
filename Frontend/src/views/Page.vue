@@ -1,39 +1,28 @@
 <template>
-    <div class="container">
-        <div class="title">
-            <center>
-                <h1>具体页面</h1>
-            </center>
-        </div>
-        <div class="data-page">
-            <div class="data-list">
-                <div v-for="(row, rowIndex) in groupRows(data_List, 3)" :key="rowIndex">
-                    <div class="data-row">
-                        <div v-for="(data, dataIndex) in row" :key="'data-' + dataIndex" class="data-item">
-                            <div class="data-item-content">
-
-                                <div class="data-info">
-
-                                    <div class="data-name">
-                                        <a :href="nowurl + '/' + data.id">{{ data.name }}</a>
-                                    </div>
-
-                                    <div class="data-update">
-                                        <a>最近更新：第{{ data.latestEpisode }}话</a>
-                                    </div>
-                                    <div class="data-update-time">
-                                        <a>最近更新日期：{{ data.latestUpdate }}</a>
-                                    </div>
-                                    <div class="data-subteam">
-                                        <a>字幕组：{{ data.subteam }}</a>
-                                    </div>
+    <div class="data-page">
+        <div class="data-list">
+            <div v-for="(row, rowIndex) in groupRows(data_List, 3)" :key="rowIndex">
+                <div class="data-row">
+                    <div v-for="(data, dataIndex) in row" :key="'data-' + dataIndex" class="data-item">
+                        <div class="data-item-content">
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <a :href="nowurl + '/' + data.id">{{ data.name }}</a>
                                 </div>
+                                <div class="data-update">
+                                    <a>最近更新：第{{ data.latestEpisode }}话</a>
+                                </div>
+                                <div class="data-update-time">
+                                    <a>最近更新日期：{{ data.latestUpdate }}</a>
+                                </div>
+                                <div class="data-subteam">
+                                    <a>字幕组：{{ data.subteam }}</a>
+                                </div>
+                            </div>
+                            <div class="data-thumbnail">
                                 <a :href="nowurl + '/' + data.id">
-                                    <div class="data-thumbnail">
-                                        <img :src="data.pictureUrl" alt="">
-                                    </div>
+                                    <img :src="data.pictureUrl" alt="">
                                 </a>
-
                             </div>
                         </div>
                     </div>
