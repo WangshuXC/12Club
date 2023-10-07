@@ -147,22 +147,6 @@ comic_list = [
         "latestUpdate": "2023-09-30",
         "subteam": "OO字幕组",
     },
-    {
-        "id": 19,
-        "name": "斗罗大陆",
-        "pictureUrl": "https://blue-archive.io/image/avatar_students/10039.webp",
-        "latestEpisode": 28,
-        "latestUpdate": "2023-10-03",
-        "subteam": "PP字幕组",
-    },
-    {
-        "id": 20,
-        "name": "超能力女儿",
-        "pictureUrl": "https://blue-archive.io/image/avatar_students/10040.webp",
-        "latestEpisode": 11,
-        "latestUpdate": "2023-09-29",
-        "subteam": "QQ字幕组",
-    },
 ]
 
 

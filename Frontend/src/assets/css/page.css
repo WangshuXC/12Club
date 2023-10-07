@@ -18,11 +18,12 @@
     display: inline-block;
     vertical-align: top;
     /* margin: auto; */
-    width: calc((100% - 40px) / 4);
+    width: calc((100% + 200px) / 4);
+    height: auto;
     color: #333;
-    font-size: 14px;
     text-decoration: none;
-    padding: calc(1vh - 5px) calc(2vw + 25px);
+    padding: calc(1vh) calc(2vw - 15px);
+    margin: 0 auto;
 }
 
 .data-item-content {
@@ -41,7 +42,8 @@
 
 
 .data-thumbnail {
-    width: 60%;
+    height: auto;
+    width: 50%;
 
 }
 
@@ -53,13 +55,15 @@
 
 
 .data-info {
+    display: block;
+    justify-content: center;
     width: 50%;
-    margin-left: 10px;
+    margin-left: 1em;
 }
 
 .data-info a {
     text-decoration: none;
-    margin-right: 30px;
+    margin-right: 2em;
     color: var(--text-color);
 }
 
@@ -72,6 +76,6 @@
 .data-update,
 .data-update-time,
 .data-subteam {
-    margin-top: 5px;
+    margin-top: 0.5rem;
     font-size: 12px;
 }

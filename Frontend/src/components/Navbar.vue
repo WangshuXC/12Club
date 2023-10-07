@@ -2,7 +2,7 @@
     <nav class="navbar">
         <a href="/" class="nav-item" @mouseover="handleMouseOver('home')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
-                <img :src="isNightMode ? 'src/assets/icons/home-night.png' : 'src/assets/icons/home.png'" alt="Home"
+                <img :src="isNightMode ? '/src/assets/icons/home-night.png' : '/src/assets/icons/home.png'"
                     class="nav-icon" />
                 <span>首页</span>
             </div>
@@ -10,7 +10,7 @@
         </a>
         <a href="/anime" class="nav-item" @mouseover="handleMouseOver('anime')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
-                <img :src="isNightMode ? 'src/assets/icons/anime-night.png' : 'src/assets/icons/anime.png'" alt="Home"
+                <img :src="isNightMode ? '/src/assets/icons/anime-night.png' : '/src/assets/icons/anime.png'"
                     class="nav-icon" />
                 <span>动漫</span>
             </div>
@@ -18,7 +18,7 @@
         </a>
         <a href="/comic" class="nav-item" @mouseover="handleMouseOver('comic')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
-                <img :src="isNightMode ? 'src/assets/icons/comic-night.png' : 'src/assets/icons/comic.png'" alt="Home"
+                <img :src="isNightMode ? '/src/assets/icons/comic-night.png' : '/src/assets/icons/comic.png'"
                     class="nav-icon" />
                 <span>漫画</span>
             </div>
@@ -26,7 +26,7 @@
         </a>
         <a href="/novel" class="nav-item" @mouseover="handleMouseOver('novel')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
-                <img :src="isNightMode ? 'src/assets/icons/novel-night.png' : 'src/assets/icons/novel.png'" alt="Home"
+                <img :src="isNightMode ? '/src/assets/icons/novel-night.png' : '/src/assets/icons/novel.png'"
                     class="nav-icon" />
                 <span>小说</span>
             </div>
@@ -72,6 +72,16 @@ export default {
             activeItem: "",
             urlItem: "",
         };
+    },
+    computed: {
+        getImagePath(item) {
+            switch (item) {
+                case 'home':
+                    if (this.isNightMode) { return '/src/assets/icons/home-night.png;' }
+                    else { return '/src/assets/icons/home.png;' };
+            }
+
+        },
     },
     methods: {
         handleMouseOver(item) {

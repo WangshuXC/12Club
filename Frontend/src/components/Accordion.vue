@@ -62,13 +62,17 @@ export default {
         leaveBox() {
             this.hoveredText = "";
         },
-
         fetchData(apiUrl) {
             axios
                 .get(apiUrl)
                 .then((response) => {
-                    this.imgListShow = response.data[0];
-                    this.nameListShow = response.data[1];
+                    if (apiUrl == this.apiUrls[0]) {
+                        this.imgListShow = response.data[0];
+                        this.nameListShow = response.data[1];
+                    }
+                    this.imgListGet.push(response.data[0]);
+                    this.nameListGet.push(response.data[1]);
+
                 })
                 .catch((error) => {
                     console.error(error);
@@ -76,13 +80,15 @@ export default {
         },
         expandButton(index) {
             this.expandedButtonIndex = index;
-            const apiUrl = this.apiUrls[index];
-            this.fetchData(apiUrl);
+            this.imgListShow = this.imgListGet[index];
+            this.nameListShow = this.nameListGet[index];
         },
     },
     mounted() {
-        const initialApiUrl = this.apiUrls[0];
-        this.fetchData(initialApiUrl);
+        for (let i = 0; i < 4; i++) {
+            const apiUrl = this.apiUrls[i];
+            this.fetchData(apiUrl);
+        }
     },
 };
 </script>

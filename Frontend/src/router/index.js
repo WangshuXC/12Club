@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue'
 import Page from '../views/Page.vue'
+import Detail from '../views/Detail.vue'
 import Admin from '../views/Admin.vue'
 
 
@@ -18,21 +19,13 @@ const routes = [
     components: {
       default: Page,
     },
-    props: (route) => ({ page_id: route.query.page_id || 1 }),
-    children: [
-      {
-        path: 'page=:page_id',
-        name: 'AnimePage',
-        component: Page,
-        props: true,
-      },
-      {
-        path: ':anime_id',
-        name: 'AnimeDetail',
-        component: Page,
-        props: true,
-      },
-    ],
+  },
+  {
+    path: '/anime/:id',
+    name: 'AnimeDetails',
+    components: {
+      default: Detail,
+    },
   },
   {
     path: '/comic',
@@ -42,10 +35,24 @@ const routes = [
     },
   },
   {
+    path: '/comic/:id',
+    name: 'ComicDetails',
+    components: {
+      default: Detail,
+    },
+  },
+  {
     path: '/novel',
     name: 'Novel',
     components: {
       default: Page,
+    },
+  },
+  {
+    path: '/novel/:id',
+    name: 'NovelDetails',
+    components: {
+      default: Detail,
     },
   },
   {
