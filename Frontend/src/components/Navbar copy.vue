@@ -8,7 +8,8 @@
             </div>
             <div class="rect-background" :class="{ active: activeItem === 'home' }"></div>
         </a>
-        <a href="/anime" class="nav-item" @mouseover="handleMouseOver('anime')" @mouseout="handleMouseOut">
+        <a href="/anime" class="nav-item" :style="{ color: isNightMode ? '#fff' : '#333' }"
+            @mouseover="handleMouseOver('anime')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
                 <img :src="isNightMode ? 'src/assets/icons/anime-night.png' : 'src/assets/icons/anime.png'" alt="Home"
                     class="nav-icon" />
@@ -16,7 +17,8 @@
             </div>
             <div class="rect-background" :class="{ active: activeItem === 'anime' }"></div>
         </a>
-        <a href="/comic" class="nav-item" @mouseover="handleMouseOver('comic')" @mouseout="handleMouseOut">
+        <a href="/comic" class="nav-item" :style="{ color: isNightMode ? '#fff' : '#333' }"
+            @mouseover="handleMouseOver('comic')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
                 <img :src="isNightMode ? 'src/assets/icons/comic-night.png' : 'src/assets/icons/comic.png'" alt="Home"
                     class="nav-icon" />
@@ -24,7 +26,8 @@
             </div>
             <div class="rect-background" :class="{ active: activeItem === 'comic' }"></div>
         </a>
-        <a href="/novel" class="nav-item" @mouseover="handleMouseOver('novel')" @mouseout="handleMouseOut">
+        <a href="/novel" class="nav-item" :style="{ color: isNightMode ? '#fff' : '#333' }"
+            @mouseover="handleMouseOver('novel')" @mouseout="handleMouseOut">
             <div class="nav-icon-container">
                 <img :src="isNightMode ? 'src/assets/icons/novel-night.png' : 'src/assets/icons/novel.png'" alt="Home"
                     class="nav-icon" />
@@ -44,33 +47,9 @@ export default {
             default: false
         }
     },
-    mounted() {
-        const url = window.location.pathname;
-        this.nowurl = url
-
-        switch (url) {
-            case '/':
-                this.activeItem = 'home';
-                this.urlItem = 'home';
-                break;
-            case '/anime':
-                this.activeItem = 'anime';
-                this.urlItem = 'anime';
-                break;
-            case '/comic':
-                this.activeItem = 'comic';
-                this.urlItem = 'comic';
-                break;
-            case '/novel':
-                this.activeItem = 'novel';
-                this.urlItem = 'novel';
-                break;
-        }
-    },
     data() {
         return {
             activeItem: "",
-            urlItem: "",
         };
     },
     methods: {
@@ -78,12 +57,7 @@ export default {
             this.activeItem = item;
         },
         handleMouseOut() {
-            if (this.activeItem === this.urlItem) {
-                return;
-            }
-            else {
-                this.activeItem = this.urlItem;
-            }
+            this.activeItem = "";
         },
         toggleStyle() {
             this.$emit('toggle')

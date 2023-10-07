@@ -1,10 +1,7 @@
 <template>
     <div class="home-container">
         <div class="title">
-            <button data-text="Awesome" class="button">
-                <span class="actual-text">&nbsp;12&nbsp;Club&nbsp;</span>
-                <span class="hover-text" aria-hidden="true">&nbsp;12&nbsp;Club&nbsp;</span>
-            </button>
+            <club></club>
         </div>
         <div class="Accordion-container">
             <Accordion></Accordion>
@@ -14,6 +11,7 @@
 
 <script>
 import Accordion from '../components/Accordion.vue'
+import club from '../components/12club.vue'
 export default {
     name: 'Home',
     data() {
@@ -23,6 +21,7 @@ export default {
     },
     components: {
         Accordion,
+        club,
     },
 };
 </script>

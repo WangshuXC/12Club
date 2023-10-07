@@ -7,8 +7,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px auto;
-    height: 30px;
+    margin: 1% auto;
+    height: 2%;
     width: 40%;
     background-color: var(--background-color);
     border-radius: 20px;
@@ -17,7 +17,7 @@
 }
 
 .nameshell p {
-    font-size: 20px;
+    font-size: 1.1em;
     color: var(--text-color);
     justify-content: center;
     align-items: center;
@@ -27,18 +27,18 @@
 .BtnShell {
     display: flex;
     justify-content: center;
-    padding: 20px;
+    padding: 0.5%;
 }
 
 .updatebtn {
-    width: 90px;
-    height: 40px;
+    /* width: clac(20em+2px);
+    height: clac(20vh+1px); */
     color: var(--text-color);
     background-color: var(--background-color);
     border-radius: 20px;
-    border: 10px solid var(--background-color);
+    border: 0.2em solid var(--background-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    margin: 0 15px;
+    margin: 0 1em;
     transition: transform 0.1s;
     transform: scale(1);
     display: flex;
@@ -54,7 +54,7 @@
     font-size: 120%;
     font-weight: bold;
 
-    transform: scale(1.2) translateY(-10px);
+    transform: scale(1.1) translateY(-10px);
 }
 
 
@@ -68,7 +68,7 @@
 .box {
     overflow: hidden;
     transition: 0.3s;
-    margin: 0 15px;
+    margin: 0 1em;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     border: 10px solid var(--background-color);
@@ -93,7 +93,7 @@
 }
 
 .box:hover {
-    height: 50vh;
+    height: 45vh;
     margin-bottom: 0;
     flex-basis: 40%;
 }
@@ -101,4 +101,5 @@
 .box:hover>img {
     width: 100%;
     height: 100%;
+    /* object-fit: fill; */
 }
