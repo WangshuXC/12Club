@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ParseGetQuery, ParsePutBody, ParseDeleteQuery } from '@/utils/parseQuery'
-import { 
-  adminPaginationSchema, 
+import {
   adminUpdateResourceSchema, 
-  adminDeleteResourceSchema 
+  adminDeleteResourceSchema,
+  adminGetResourceSchema
 } from '@/validations/admin'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 import { getResource } from './get'
@@ -11,7 +11,7 @@ import { updateResource } from './update'
 import { deleteResource } from './delete'
 
 export async function GET(req: NextRequest) {
-  const input = ParseGetQuery(req, adminPaginationSchema)
+  const input = ParseGetQuery(req, adminGetResourceSchema)
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }

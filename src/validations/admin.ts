@@ -24,6 +24,18 @@ export const adminUpdateUserSchema = z.object({
   bio: z.string().trim().max(107, { message: '签名不能超过 107 个字符' })
 })
 
+export const adminGetResourceSchema = z.object({
+  page: z.coerce.number().min(1).max(9999999),
+  limit: z.coerce.number().min(1).max(100),
+  search: z.string().max(300, { message: '搜索内容最多 300 个字符' }).optional(),
+  types: z.string().optional().transform((val) => {
+    if (!val) return undefined
+    return val.split(',').filter(type => ['a', 'c', 'g', 'n'].includes(type)) as ('a' | 'c' | 'g' | 'n')[]
+  }),
+  sortField: z.enum(['created', 'view', 'download', 'favorite_by', 'comment', 'updated', 'released']).default('updated'),
+  sortOrder: z.enum(['asc', 'desc']).optional()
+})
+
 export const adminUpdateResourceSchema = z.object({
   id: z.coerce.number().min(1).max(9999999),
   name: z.string().trim().min(1, { message: '资源名称不能为空' }),
@@ -136,3 +148,4 @@ export const adminHandleReportSchema = z.object({
 export const adminSearchTagSchema = z.object({
   search: z.string().trim().min(1, { message: '搜索关键词不能为空' }).max(107, { message: '搜索关键词长度不能超过 107 个字符' })
 })
+

@@ -1,12 +1,12 @@
 import { z } from 'zod'
 import { prisma } from '../../../../../prisma'
-import { adminPaginationSchema } from '@/validations/admin'
+import { adminGetResourceSchema } from '@/validations/admin'
 import type { AdminResource } from '@/types/api/admin'
 
 export const getResource = async (
-  input: z.infer<typeof adminPaginationSchema>,
+  input: z.infer<typeof adminGetResourceSchema>,
 ) => {
-  const { page, limit, search, types } = input
+  const { page, limit, search, sortField, sortOrder, types } = input
   const offset = (page - 1) * limit
 
   // 构建查询条件
@@ -60,13 +60,28 @@ export const getResource = async (
       : { AND: whereConditions }
     : {}
 
+  // 构建排序条件
+  let orderBy: any = {}
+
+  // 处理关联计数排序
+  if (sortField === 'favorite_by') {
+    orderBy = {
+      favorite_folders: {
+        _count: sortOrder
+      }
+    }
+  } else {
+    // 普通字段排序
+    orderBy[sortField] = sortOrder
+  }
+
   try {
     const [data, total] = await Promise.all([
       prisma.resource.findMany({
         where,
         take: limit,
         skip: offset,
-        orderBy: { created: 'desc' },
+        orderBy: orderBy,
         include: {
           user: {
             select: {

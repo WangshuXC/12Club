@@ -19,6 +19,7 @@ import { useDebounce } from 'use-debounce'
 import { SelfPagination } from '@/components/common/Pagination'
 import type { AdminResource } from '@/types/api/admin'
 import { AdminResourceOption } from './AdminResourceOption'
+import { AdminResourceSort } from './AdminResourceSort'
 import { useAdminResourceStore } from '@/store/adminResourceStore'
 
 const columns = [
@@ -68,6 +69,8 @@ export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: 
       page,
       limit: PAGE_SIZE,
       search: debouncedQuery,
+      sortField: adminResourceData.sortField,
+      sortOrder: adminResourceData.sortOrder,
       ...(filterTypes && { types: filterTypes.join(',') })
     })
 
@@ -121,6 +124,7 @@ export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: 
           value={searchQuery}
           onValueChange={handleSearch}
         />
+        <AdminResourceSort />
         <AdminResourceOption />
       </div>
 

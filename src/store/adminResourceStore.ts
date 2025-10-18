@@ -1,18 +1,23 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import type { SortField, SortOrder } from '@/components/pageContainer/_sort'
 
 export interface AdminResourceStore {
   searchInAnime: boolean
   searchInComic: boolean
   searchInGame: boolean
   searchInNovel: boolean
+  sortField: SortField
+  sortOrder: SortOrder
 }
 
 const initialState: AdminResourceStore = {
   searchInAnime: true,
   searchInComic: true,
   searchInGame: true,
-  searchInNovel: true
+  searchInNovel: true,
+  sortField: 'updated',
+  sortOrder: 'desc'
 }
 
 interface AdminResourceStoreState {
