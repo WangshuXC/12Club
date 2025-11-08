@@ -11,75 +11,75 @@ datasource db {
 }
 
 model User {
-  id                   Int      @id @default(autoincrement())
-  name                 String   @unique @db.VarChar(17)
-  email                String   @unique @db.VarChar(1007)
-  password             String   @db.VarChar(1007)
-  ip                   String   @default("") @db.VarChar(233)
-  avatar               String   @default("") @db.VarChar(233)
-  role                 Int      @default(1)
-  status               Int      @default(0)
-  register_time        DateTime @default(now())
-  bio                  String   @default("") @db.VarChar(107)
-  enable_email_notice  Boolean  @default(true)
-  daily_image_count    Int      @default(0)
-  daily_check_in       Int      @default(0)
-  daily_upload_size    Float    @default(0)
-  last_login_time      String   @default("") @db.VarChar(255)
-  created              DateTime @default(now())
-  updated              DateTime @updatedAt
+  id                  Int      @id @default(autoincrement())
+  name                String   @unique @db.VarChar(17)
+  email               String   @unique @db.VarChar(1007)
+  password            String   @db.VarChar(1007)
+  ip                  String   @default("") @db.VarChar(233)
+  avatar              String   @default("") @db.VarChar(233)
+  role                Int      @default(1)
+  status              Int      @default(0)
+  register_time       DateTime @default(now())
+  bio                 String   @default("") @db.VarChar(107)
+  enable_email_notice Boolean  @default(true)
+  daily_image_count   Int      @default(0)
+  daily_check_in      Int      @default(0)
+  daily_upload_size   Float    @default(0)
+  last_login_time     String   @default("") @db.VarChar(255)
+  created             DateTime @default(now())
+  updated             DateTime @updatedAt
 
   // Relations
-  resources                       Resource[]
-  resource_patches                ResourcePatch[]
-  resource_comments               ResourceComment[]
-  messages_sent                   UserMessage[]                     @relation("MessageSender")
-  messages_received               UserMessage[]                     @relation("MessageRecipient")
-  following                       UserFollowRelation[]              @relation("Follower")
-  followers                       UserFollowRelation[]              @relation("Following")
-  favorite_resources              UserResourceFavoriteRelation[]
-  comment_likes                   UserResourceCommentLikeRelation[]
-  resource_play_links             ResourcePlayLink[]
-  password_resets                 PasswordReset[]
-  favorite_folders                UserResourceFavoriteFolder[]
-  announcements                   Announcement[]
-  resource_tags                   ResourceTag[]
-  resource_auto_updates           ResourceAutoUpdate[]
+  resources             Resource[]
+  resource_patches      ResourcePatch[]
+  resource_comments     ResourceComment[]
+  messages_sent         UserMessage[]                     @relation("MessageSender")
+  messages_received     UserMessage[]                     @relation("MessageRecipient")
+  following             UserFollowRelation[]              @relation("Follower")
+  followers             UserFollowRelation[]              @relation("Following")
+  favorite_resources    UserResourceFavoriteRelation[]
+  comment_likes         UserResourceCommentLikeRelation[]
+  resource_play_links   ResourcePlayLink[]
+  password_resets       PasswordReset[]
+  favorite_folders      UserResourceFavoriteFolder[]
+  announcements         Announcement[]
+  resource_tags         ResourceTag[]
+  resource_auto_updates ResourceAutoUpdate[]
 
   @@map("user")
 }
 
 model Resource {
-  id               Int      @id @default(autoincrement())
-  name             String   @db.VarChar(1007)
-  db_id            String   @unique @db.VarChar(107)
-  accordion        Int      @default(0)
-  accordion_total  Int      @default(0)
-  image_url        String   @default("") @db.VarChar(1007)
-  introduction     String   @default("") @db.VarChar(100007)
-  author           String   @default("") @db.VarChar(107)
-  translator           String   @default("") @db.VarChar(107)
-  released         String   @default("") @db.VarChar(107)
-  status           Int      @default(0)
-  download         Int      @default(0)
-  view             Int      @default(0)
-  comment          Int      @default(0)
-  type             String[]
-  language         String[]
-  user_id          Int
-  created          DateTime @default(now())
-  updated          DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(1007)
+  db_id           String   @unique @db.VarChar(107)
+  accordion       Int      @default(0)
+  accordion_total Int      @default(0)
+  image_url       String   @default("") @db.VarChar(1007)
+  introduction    String   @default("") @db.VarChar(100007)
+  author          String   @default("") @db.VarChar(107)
+  translator      String   @default("") @db.VarChar(107)
+  released        String   @default("") @db.VarChar(107)
+  status          Int      @default(0)
+  download        Int      @default(0)
+  view            Int      @default(0)
+  comment         Int      @default(0)
+  type            String[]
+  language        String[]
+  user_id         Int
+  created         DateTime @default(now())
+  updated         DateTime @updatedAt
 
   // Relations
-  user                            User                              @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  aliases                         ResourceAlias[]
-  patches                         ResourcePatch[]
-  comments                        ResourceComment[]
-  favorites                       UserResourceFavoriteRelation[]
-  play_links                      ResourcePlayLink[]
-  favorite_folders                UserResourceFavoriteFolderRelation[]
-  tag_relations                   ResourceTagRelation[]
-  auto_update                     ResourceAutoUpdate?
+  user             User                                 @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  aliases          ResourceAlias[]
+  patches          ResourcePatch[]
+  comments         ResourceComment[]
+  favorites        UserResourceFavoriteRelation[]
+  play_links       ResourcePlayLink[]
+  favorite_folders UserResourceFavoriteFolderRelation[]
+  tag_relations    ResourceTagRelation[]
+  auto_update      ResourceAutoUpdate?
 
   @@map("resource")
 }
@@ -92,7 +92,7 @@ model ResourceAlias {
   updated     DateTime @updatedAt
 
   // Relations
-  resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
 
   @@index([resource_id])
   @@index([name])
@@ -126,8 +126,8 @@ model ResourceTagRelation {
   updated     DateTime @updatedAt
 
   // Relations
-  resource    Resource    @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-  tag         ResourceTag @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+  resource Resource    @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  tag      ResourceTag @relation(fields: [tag_id], references: [id], onDelete: Cascade)
 
   @@unique([resource_id, tag_id])
   @@index([resource_id])
@@ -155,8 +155,8 @@ model ResourcePatch {
   updated     DateTime @updatedAt
 
   // Relations
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
 
   @@map("resource_patch")
 }
@@ -172,11 +172,11 @@ model ResourceComment {
   updated     DateTime @updatedAt
 
   // Relations
-  parent      ResourceComment?                   @relation("CommentReplies", fields: [parent_id], references: [id], onDelete: Cascade)
-  replies     ResourceComment[]                  @relation("CommentReplies")
-  user        User                               @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  resource    Resource                           @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-  likes       UserResourceCommentLikeRelation[]
+  parent   ResourceComment?                  @relation("CommentReplies", fields: [parent_id], references: [id], onDelete: Cascade)
+  replies  ResourceComment[]                 @relation("CommentReplies")
+  user     User                              @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resource Resource                          @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  likes    UserResourceCommentLikeRelation[]
 
   @@map("resource_comment")
 }
@@ -187,8 +187,8 @@ model UserFollowRelation {
   following_id Int
 
   // Relations
-  follower     User @relation("Follower", fields: [follower_id], references: [id], onDelete: Cascade)
-  following    User @relation("Following", fields: [following_id], references: [id], onDelete: Cascade)
+  follower  User @relation("Follower", fields: [follower_id], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [following_id], references: [id], onDelete: Cascade)
 
   @@unique([follower_id, following_id])
   @@map("user_follow_relation")
@@ -200,17 +200,17 @@ model UserMessage {
   content      String?  @db.VarChar(10007)
   status       Int      @default(0)
   link         String   @default("") @db.VarChar(1007)
-  basic_id  Int?     // 关联原始反馈消息的ID
+  basic_id     Int? // 关联原始反馈消息的ID
   sender_id    Int?
   recipient_id Int?
   created      DateTime @default(now())
   updated      DateTime @updatedAt
 
   // Relations
-  sender       User?        @relation("MessageSender", fields: [sender_id], references: [id], onDelete: Cascade)
-  recipient    User?        @relation("MessageRecipient", fields: [recipient_id], references: [id], onDelete: Cascade)
-  feedback     UserMessage? @relation("FeedbackReply", fields: [basic_id], references: [id], onDelete: Cascade)
-  replies      UserMessage[] @relation("FeedbackReply")
+  sender    User?         @relation("MessageSender", fields: [sender_id], references: [id], onDelete: Cascade)
+  recipient User?         @relation("MessageRecipient", fields: [recipient_id], references: [id], onDelete: Cascade)
+  feedback  UserMessage?  @relation("FeedbackReply", fields: [basic_id], references: [id], onDelete: Cascade)
+  replies   UserMessage[] @relation("FeedbackReply")
 
   @@map("user_message")
 }
@@ -223,8 +223,8 @@ model UserResourceFavoriteRelation {
   updated     DateTime @updatedAt
 
   // Relations
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  resource    Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, resource_id])
   @@map("user_resource_favorite_relation")
@@ -238,8 +238,8 @@ model UserResourceCommentLikeRelation {
   updated    DateTime @updatedAt
 
   // Relations
-  user       User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  comment    ResourceComment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  comment ResourceComment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, comment_id])
   @@map("user_resource_comment_like_relation")
@@ -256,41 +256,42 @@ model ResourcePlayLink {
   updated        DateTime @updatedAt
 
   // Relations
-  resource       Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@map("resource_play_link")
 }
 
 model ResourceAutoUpdate {
-  id                 Int      @id @default(autoincrement())
-  resource_id        Int
-  user_id            Int
-  status             Int      @default(1)       // 0=禁用, 1=启用
-  last_update_time   DateTime?                  // 上次更新时间
-  created            DateTime @default(now())
-  updated            DateTime @updatedAt
+  id               Int       @id @default(autoincrement())
+  resource_id      Int
+  user_id          Int
+  status           Int       @default(1) // 0=禁用, 1=启用
+  last_update_time DateTime? // 上次更新时间
+  created          DateTime  @default(now())
+  updated          DateTime  @updatedAt
 
   // Relations
-  resource           Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
-  user               User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resource Resource @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  @@unique([resource_id])  // 每个资源只能有一个自动更新配置
+  @@unique([resource_id]) // 每个资源只能有一个自动更新配置
   @@index([user_id])
   @@index([status])
   @@map("resource_auto_update")
 }
 
 model PasswordReset {
-  id          Int      @id @default(autoincrement())
-  user_id     Int
-  name        String   @db.VarChar(17)
-  email       String   @db.VarChar(1007)
-  reset_code  String   @unique @db.VarChar(36) // UUID格式
-  created     DateTime @default(now())
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  name       String   @db.VarChar(17)
+  email      String   @db.VarChar(1007)
+  reset_code String   @unique @db.VarChar(36) // UUID格式
+  created    DateTime @default(now())
+  status     Int      @default(0) // 0=未处理, 1=已处理
 
   // Relations
-  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([reset_code])
   @@index([user_id])
@@ -298,29 +299,29 @@ model PasswordReset {
 }
 
 model UserResourceFavoriteFolder {
-  id          Int                                   @id @default(autoincrement())
-  name        String                                @db.VarChar(100)
-  description String                                @default("") @db.VarChar(500)
-  is_public   Boolean                               @default(false)
+  id          Int                                  @id @default(autoincrement())
+  name        String                               @db.VarChar(100)
+  description String                               @default("") @db.VarChar(500)
+  is_public   Boolean                              @default(false)
   user_id     Int
   resource    UserResourceFavoriteFolderRelation[]
-  created     DateTime                              @default(now())
-  updated     DateTime                              @updatedAt
+  created     DateTime                             @default(now())
+  updated     DateTime                             @updatedAt
 
-  user        User                                  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, name])
 }
 
 model UserResourceFavoriteFolderRelation {
-  id        Int                        @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   folder_id Int
   db_id     Int
-  created   DateTime                   @default(now())
-  updated   DateTime                   @updatedAt
+  created   DateTime @default(now())
+  updated   DateTime @updatedAt
 
-  folder    UserResourceFavoriteFolder @relation(fields: [folder_id], references: [id], onDelete: Cascade)
-  resource  Resource                   @relation(fields: [db_id], references: [id], onDelete: Cascade)
+  folder   UserResourceFavoriteFolder @relation(fields: [folder_id], references: [id], onDelete: Cascade)
+  resource Resource                   @relation(fields: [db_id], references: [id], onDelete: Cascade)
 
   @@unique([folder_id, db_id])
 }
@@ -334,7 +335,7 @@ model Announcement {
   updated DateTime @updatedAt
 
   // Relations
-  user    User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
   @@map("announcement")

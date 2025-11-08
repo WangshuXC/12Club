@@ -13,7 +13,14 @@ import { ChevronRight } from 'lucide-react'
 import { SidebarContent } from './SidebarContent'
 import { useEffect } from 'react'
 
-export const Sidebar = () => {
+interface NotificationCardsProps {
+  passwordResets: number
+  feedbacks: number
+  reports: number
+  total: number
+}
+
+export const Sidebar = ({ notifications }: { notifications: NotificationCardsProps }) => {
   const pathname = usePathname()
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 
@@ -30,7 +37,7 @@ export const Sidebar = () => {
           >
             管理面板
           </Link>
-          {SidebarContent({ pathname })}
+          {SidebarContent({ pathname, notifications })}
         </div>
       </aside>
 
@@ -49,7 +56,7 @@ export const Sidebar = () => {
       >
         <DrawerContent>
           <DrawerHeader className="flex flex-col gap-1">管理面板</DrawerHeader>
-          <DrawerBody>{SidebarContent({ pathname })}</DrawerBody>
+          <DrawerBody>{SidebarContent({ pathname, notifications })}</DrawerBody>
         </DrawerContent>
       </Drawer>
     </>

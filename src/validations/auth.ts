@@ -41,6 +41,10 @@ export const forgotResetSchema = z.object({
 // 保持向后兼容
 export const forgotSchema = forgotRequestSchema
 
+export const updateResetCodeStatusSchema = z.object({
+  id: z.coerce.number().min(1).max(9999999)
+})
+
 const baseRegisterSchema = z.object({
   name: z.string().regex(UsernameRegex, {
     message: '非法的用户名，用户名为 1~17 位任意字符'

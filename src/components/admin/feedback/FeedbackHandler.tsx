@@ -20,6 +20,7 @@ import { useUserStore } from '@/store/userStore'
 import { FetchPost } from '@/utils/fetch'
 import type { AdminFeedback } from '@/types/api/admin'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   initialFeedback: AdminFeedback
@@ -27,6 +28,8 @@ interface Props {
 
 export const FeedbackHandler = ({ initialFeedback }: Props) => {
   const currentUser = useUserStore((state) => state.user)
+
+  const router = useRouter()
 
   const {
     isOpen: isOpenHandle,
@@ -50,6 +53,7 @@ export const FeedbackHandler = ({ initialFeedback }: Props) => {
       onCloseHandle()
       setHandleContent('')
       toast.success('处理反馈成功!')
+      router.refresh()
     }
     setUpdating(false)
   }

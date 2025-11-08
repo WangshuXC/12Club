@@ -10,7 +10,8 @@ import { FetchGet } from '@/utils/fetch'
 import { StatsCard } from './StatsCard'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { ADMIN_STATS_MAP } from '@/constants/admin'
-import type { OverviewData } from '@/types/api/admin'
+import type { OverviewData, AdminNotificationData } from '@/types/api/admin'
+import { AdminNotification } from '@/components/admin/notice/AdminNotification'
 
 export const AdminStatistic: FC = () => {
   const [overview, setOverview] = useState<OverviewData>({
@@ -20,8 +21,19 @@ export const AdminStatistic: FC = () => {
     newResourcePatch: 0,
     newComment: 0
   })
+  const [notifications, setNotifications] = useState<AdminNotificationData>({
+    passwordResets: 0,
+    feedbacks: 0,
+    reports: 0,
+    total: 0
+  })
   const [days, setDays] = useState(1)
   const [debouncedDays] = useDebounce(days, 300)
+
+  const fetchNotifications = async () => {
+    const res = await FetchGet<AdminNotificationData>('/admin/stats/notice')
+    ErrorHandler(res, setNotifications)
+  }
 
   const fetchOverview = async (days: number) => {
     const res = await FetchGet<OverviewData>('/admin/stats', {
@@ -34,9 +46,20 @@ export const AdminStatistic: FC = () => {
     fetchOverview(debouncedDays)
   }, [debouncedDays])
 
+  useEffect(() => {
+    fetchNotifications()
+  }, [])
+
   return (
     <div className="space-y-8">
       <AdminWebSites />
+
+      {notifications.total > 0 && (
+        <>
+          <Divider />
+          <AdminNotification notifications={notifications} />
+        </>
+      )}
 
       <Divider />
 

@@ -22,6 +22,7 @@ import type { ResetCode } from '@/types/api/admin/forgot'
 const columns = [
     { name: '用户信息', uid: 'user' },
     { name: '重置码', uid: 'resetCode' },
+    { name: '状态', uid: 'status'},
     { name: '创建时间', uid: 'createdAt' },
     { name: '操作', uid: 'actions' }
 ]
@@ -91,6 +92,14 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
         }))
     }
 
+    // 更新状态的回调函数
+    const handleUpdateStatus = (resetCodeId: number) => {
+      setResetCodes(prevCodes => prevCodes.map(code => code.id === resetCodeId ? {
+        ...code,
+        status: 1
+      } : code))
+    }
+
     return (
         <div className="space-y-6">
             <div className="flex items-center gap-2">
@@ -140,7 +149,8 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
                                         {RenderCell(
                                             item,
                                             columnKey.toString(),
-                                            handleDeleteResetCode
+                                            handleDeleteResetCode,
+                                            handleUpdateStatus
                                         )}
                                     </TableCell>
                                 )}

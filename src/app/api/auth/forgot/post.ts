@@ -41,7 +41,8 @@ export const requestPasswordReset = async (input: {
         user_id: user.id,
         name: user.name,
         email: user.email,
-        reset_code: resetCode
+        reset_code: resetCode,
+        status: 0
       }
     })
 

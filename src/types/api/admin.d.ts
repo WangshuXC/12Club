@@ -131,4 +131,11 @@ export interface SystemInfo {
   platform: string
   distro: string
   release: string
-} 
+}
+
+export interface AdminNotificationData {
+  passwordResets: number
+  feedbacks: number
+  reports: number
+  total: number
+}

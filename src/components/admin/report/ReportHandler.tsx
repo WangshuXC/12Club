@@ -20,6 +20,7 @@ import { MoreVertical } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { FetchPost } from '@/utils/fetch'
 import type { AdminReport } from '@/types/api/admin'
+import { useRouter } from 'next/navigation'
 
 interface Props {
   initialReport: AdminReport
@@ -27,6 +28,8 @@ interface Props {
 
 export const ReportHandler = ({ initialReport }: Props) => {
   const currentUser = useUserStore((state) => state.user)
+
+  const router = useRouter()
 
   const {
     isOpen: isOpenHandle,
@@ -66,6 +69,7 @@ export const ReportHandler = ({ initialReport }: Props) => {
         description: '处理举报成功!',
         color: 'success'
       })
+      router.refresh()
     }
     setUpdating(false)
   }

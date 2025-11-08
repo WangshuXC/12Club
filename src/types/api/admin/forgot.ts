@@ -13,6 +13,7 @@ export interface ResetCode {
     status: number
   }
   createdAt: string
+  status: number
 }
 
 export interface ResetCodeStats {

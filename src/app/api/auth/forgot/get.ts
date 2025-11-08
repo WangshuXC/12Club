@@ -59,7 +59,8 @@ export const getResetCodes = async (params: {
         userEmail: reset.email,
         userId: reset.user_id,
         user: reset.user,
-        createdAt: reset.created.toISOString()
+        createdAt: reset.created.toISOString(),
+        status: reset.status
       })),
       total,
       stats: {
