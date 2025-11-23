@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '../../../../../prisma'
 import { ParsePutBody } from '@/utils/parseQuery'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import { revalidatePath } from 'next/cache'
 
 // 定义请求体验证 schema，与 Card.tsx 中发送的数据结构对应
 const removeFavoriteSchema = z.object({
@@ -69,6 +70,10 @@ export const PUT = async (req: NextRequest) => {
         }
       }
     })
+
+    // 更新缓存
+    revalidatePath(`/user/${uid}`)
+
     // 返回 added: false 表示已移除
     return NextResponse.json({ added: false })
   }
