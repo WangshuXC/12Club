@@ -107,7 +107,7 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
             </div>
 
             {/* 搜索 */}
-            {resetCodes && resetCodes.length > 0 && <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <Input
                     fullWidth
                     isClearable
@@ -116,7 +116,7 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
                     value={searchQuery}
                     onValueChange={handleSearch}
                 />
-            </div>}
+            </div>
 
             {loading ? (
                 <Loading hint="正在获取重置码数据..." />
