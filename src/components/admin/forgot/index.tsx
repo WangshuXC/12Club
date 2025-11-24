@@ -55,7 +55,7 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
             ...(debouncedQuery && { search: debouncedQuery })
         })
 
-        const response = await FetchGet<{
+        const { data }: any  = await FetchGet<{
             resetCodes: ResetCode[]
             total: number
             stats: {
@@ -64,9 +64,9 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
         }>(`/auth/forgot?${params}`)
 
         setLoading(false)
-        setResetCodes(response.resetCodes)
-        setTotal(response.total)
-        setStats(response.stats)
+        setResetCodes(data.resetCodes)
+        setTotal(data.total)
+        setStats(data.stats)
     }
 
     useEffect(() => {
