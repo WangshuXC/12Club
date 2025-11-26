@@ -69,7 +69,7 @@ const getResourceByFolder = async (
     type: relation.resource.type,
     language: relation.resource.language,
     created: relation.resource.created,
-    comment: relation.resource.comment,
+    comment: relation.resource._count.comments,
     status: relation.resource.status,
     _count: {
       favorite_by: relation.resource._count.favorite_folders,
