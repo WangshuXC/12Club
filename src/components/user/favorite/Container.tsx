@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   Card,
@@ -44,6 +45,7 @@ export const UserFavorite = ({
   const [isPending, startTransition] = useTransition()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const router = useRouter()
 
   const {
     isOpen: isOpenFolder,
@@ -84,6 +86,7 @@ export const UserFavorite = ({
         onCloseDelete()
         onCloseFolder()
         toast.success('删除收藏夹成功')
+        router.refresh()
       })
     })
   }
@@ -96,6 +99,24 @@ export const UserFavorite = ({
 
   const onRemoveFavorite = (dbId: string) => {
     setResource((prev) => prev.filter((p) => p.dbId !== dbId))
+
+    // 更新外层文件夹显示的资源数量
+    setFolders((prev) =>
+      prev.map((folder) => {
+        // 找到当前选中的文件夹
+        if (folder.id === selectedFolder?.id) {
+          return {
+            ...folder,
+            _count: {
+              ...folder._count,
+              // 计数减 1，并确保不小于 0
+              resource: Math.max(0, folder._count.resource - 1)
+            }
+          }
+        }
+        return folder
+      })
+    )
   }
 
   const onEditFolderSuccess = (updatedFolder: UserFavoriteResourceFolder) => {

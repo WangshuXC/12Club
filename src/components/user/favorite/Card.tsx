@@ -1,6 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Button,
   Card,
@@ -33,6 +34,7 @@ export const UserFavoriteDataCard = ({
   onRemoveFavorite
 }: Props) => {
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   const {
     isOpen: isOpenDelete,
@@ -49,6 +51,7 @@ export const UserFavoriteDataCard = ({
         onCloseDelete()
         toast.success('取消收藏成功')
         onRemoveFavorite(favoriteData.dbId)
+        router.refresh()
       })
     })
   }

@@ -32,6 +32,15 @@ export const getUserProfile = async (
       where: { user_id: input.id }
     })
 
+    // 获取用户收藏资源数量
+    const favoriteCount = await prisma.userResourceFavoriteFolderRelation.count({
+      where: {
+        folder: {
+          user_id: input.id
+        }
+      }
+    })
+
     const userInfo: UserInfo = {
       id: user.id,
       requestUserUid: currentUserUid,
@@ -46,7 +55,7 @@ export const getUserProfile = async (
         resource: 0,
         resource_patch: resourcePatchCount,
         resource_comment: commentCount,
-        resource_favorite: 0
+        resource_favorite: favoriteCount
       }
     }
 

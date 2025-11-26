@@ -69,9 +69,12 @@ const getResourceByFolder = async (
     type: relation.resource.type,
     language: relation.resource.language,
     created: relation.resource.created,
-    comment: relation.resource.comments.length,
+    comment: relation.resource._count.comments,
     status: relation.resource.status,
-    _count: relation.resource._count
+    _count: {
+      favorite_by: relation.resource._count.favorite_folders,
+      comment: relation.resource._count.comments
+    }
   }))
 
   return { resources, total }

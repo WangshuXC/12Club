@@ -76,47 +76,89 @@ export const ForgotForm = () => {
 
   return (
     <form className="w-72">
-      {/* 用户名输入框 - 始终显示 */}
-      <Controller
-        name="name"
-        control={hasResetCode ? resetForm.control as any : requestForm.control}
-        render={({ field, formState: { errors } }) => (
-          <Input
-            {...field}
-            isRequired
-            label="用户名"
-            type="name"
-            variant="bordered"
-            autoComplete="username"
-            isInvalid={!!errors.name}
-            errorMessage={errors.name?.message as string}
-            className="mb-4"
-          />
-        )}
-      />
+      {/*
+        将 requestForm 和 resetForm 的输入框完全分开渲染。
+        避免在同一个 Controller 上动态切换 control 属性。
+      */}
 
-      {/* 邮箱输入框 - 始终显示 */}
-      <Controller
-        name="email"
-        control={hasResetCode ? resetForm.control as any : requestForm.control}
-        render={({ field, formState: { errors } }) => (
-          <Input
-            {...field}
-            isRequired
-            label="邮箱"
-            type="email"
-            variant="bordered"
-            isInvalid={!!errors.email}
-            autoComplete="email"
-            errorMessage={errors.email?.message as string}
-            className="mb-4"
+      {/* 阶段一：申请重置 (Request Phase) */}
+      {!hasResetCode && (
+        <>
+          <Controller
+            name="name"
+            control={requestForm.control}
+            render={({ field, formState: { errors } }) => (
+              <Input
+                {...field}
+                isRequired
+                label="用户名"
+                type="name"
+                variant="bordered"
+                autoComplete="username"
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message as string}
+                className="mb-4"
+              />
+            )}
           />
-        )}
-      />
+          <Controller
+            name="email"
+            control={requestForm.control}
+            render={({ field, formState: { errors } }) => (
+              <Input
+                {...field}
+                isRequired
+                label="邮箱"
+                type="email"
+                variant="bordered"
+                isInvalid={!!errors.email}
+                autoComplete="email"
+                errorMessage={errors.email?.message as string}
+                className="mb-4"
+              />
+            )}
+          />
+        </>
+      )}
 
-      {/* 重置码和新密码输入框 - 仅在hasResetCode为true时显示 */}
+      {/* 阶段二：重置密码 (Reset Phase) */}
       {hasResetCode && (
         <>
+          {/* 这里依然渲染 name 和 email，但是绑定到 resetForm */}
+          <Controller
+            name="name"
+            control={resetForm.control}
+            render={({ field, formState: { errors } }) => (
+              <Input
+                {...field}
+                isRequired
+                label="用户名"
+                type="name"
+                variant="bordered"
+                autoComplete="username"
+                isInvalid={!!errors.name}
+                errorMessage={errors.name?.message as string}
+                className="mb-4"
+              />
+            )}
+          />
+          <Controller
+            name="email"
+            control={resetForm.control}
+            render={({ field, formState: { errors } }) => (
+              <Input
+                {...field}
+                isRequired
+                label="邮箱"
+                type="email"
+                variant="bordered"
+                isInvalid={!!errors.email}
+                autoComplete="email"
+                errorMessage={errors.email?.message as string}
+                className="mb-4"
+              />
+            )}
+          />
           <Controller
             name="resetCode"
             control={resetForm.control}
@@ -166,6 +208,7 @@ export const ForgotForm = () => {
           />
         </>
       )}
+
       <Button
         color="primary"
         className="w-full"
