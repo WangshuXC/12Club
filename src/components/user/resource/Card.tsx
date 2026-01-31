@@ -51,14 +51,13 @@ export const UserResourceCard = ({ resource }: Props) => {
 
             <div>
               {resource.content.split(',').map((link) => (
-                <ExternalLink
+                <div
                   key={link}
-                  link={link}
-                  underline="always"
-                  showAnchorIcon={false}
+                  className="underline text-sky-400"
+                  onClick={() => window.open(link)}
                 >
                   {link}
-                </ExternalLink>
+                </div>
               ))}
             </div>
           </div>

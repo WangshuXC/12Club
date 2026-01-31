@@ -1,9 +1,13 @@
+import type { Metadata } from 'next'
 import { Sidebar } from '@/components/admin/Sidebar'
 import { NotFoundComponent } from '@/components/common/NotFound'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 import { getAdminNotification } from '@/app/api/admin/stats/notice/route'
+import { adminMetadata } from '../metadata'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = adminMetadata
 
 interface Props {
   children: React.ReactNode

@@ -1,10 +1,14 @@
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
+import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { PageContainer } from '@/components/pageContainer'
 import { getPageResourceActions } from './actions'
 import { ErrorComponent } from '@/components/common/Error'
+import { animeMetadata } from '../metadata'
 import type { QueryParams } from '@/types/common/page'
+
+export const metadata: Metadata = animeMetadata
 
 interface Props {
   searchParams?: Promise<QueryParams>
