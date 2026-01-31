@@ -14,7 +14,8 @@ import {
   Images,
   Key,
   Megaphone,
-  RefreshCw
+  RefreshCw,
+  BarChart3
 } from 'lucide-react'
 import { ComponentType } from 'react'
 
@@ -42,6 +43,11 @@ const menuItems: MenuItem[] = [
     name: '用户管理',
     href: '/admin/user',
     icon: Users
+  },
+  {
+    name: '统计管理',
+    href: '/admin/tracking',
+    icon: BarChart3
   },
   //   {
   //     name: '创作者管理',
@@ -85,7 +91,7 @@ const menuItems: MenuItem[] = [
     name: '一键更新管理',
     href: '/admin/auto-update',
     icon: RefreshCw
-  },
+  }
   //   {
   //     name: '管理日志',
   //     href: '/admin/log',
@@ -98,7 +104,13 @@ const menuItems: MenuItem[] = [
   //   }
 ]
 
-export const SidebarContent = ({ pathname, notifications }: { pathname: string, notifications: NotificationCardsProps }) => {
+export const SidebarContent = ({
+  pathname,
+  notifications
+}: {
+  pathname: string
+  notifications: NotificationCardsProps
+}) => {
   return (
     <nav className="flex-1 p-4 pl-0">
       <ul className="space-y-2">
@@ -106,18 +118,26 @@ export const SidebarContent = ({ pathname, notifications }: { pathname: string, 
           const Icon = item.icon
           const isActive = pathname === item.href
 
-          const notification = notifications || {passwordResets: 0, feedbacks: 0, reports: 0, total: 0}
+          const notification = notifications || {
+            passwordResets: 0,
+            feedbacks: 0,
+            reports: 0,
+            total: 0
+          }
 
-          const count = item.notificationKey ? notification[item.notificationKey] : 0
+          const count = item.notificationKey
+            ? notification[item.notificationKey]
+            : 0
 
           return (
             <li key={item.href}>
               <Link
                 href={item.href}
-                className={`flex items-center justify-between gap-3 rounded-medium px-4 py-2 transition-colors ${isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-default-100'
-                  }`}
+                className={`flex items-center justify-between gap-3 rounded-medium px-4 py-2 transition-colors ${
+                  isActive
+                    ? 'bg-primary text-primary-foreground'
+                    : 'hover:bg-default-100'
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon size={20} />

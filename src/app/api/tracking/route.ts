@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { prisma } from '../../../../prisma'
 import { ParsePostBody } from '@/utils/parseQuery'
-import { cookies } from 'next/headers'
-import { jwtDecode } from 'jwt-decode'
+import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 
 // 单个事件的 schema
 const TrackingEventSchema = z.object({
@@ -28,15 +27,11 @@ const BatchTrackingSchema = z.object({
     events: z.array(TrackingEventSchema)
 })
 
-// 获取用户 ID（从 JWT token 解析）
-const getUserIdFromToken = async (): Promise<number | null> => {
+// 获取用户 ID（从请求头的 cookie 中解析并验证 JWT token）
+const getUserIdFromToken = async (req: NextRequest): Promise<number | null> => {
     try {
-        const cookieStore = await cookies()
-        const token = cookieStore.get('12club-token')?.value
-        if (!token) return null
-
-        const decoded = jwtDecode<{ id: number }>(token)
-        return decoded.id || null
+        const payload = await verifyHeaderCookie(req)
+        return payload?.uid || null
     } catch {
         return null
     }
@@ -65,7 +60,7 @@ export async function POST(req: NextRequest) {
         }
 
         const { guid, events } = data
-        const userId = await getUserIdFromToken()
+        const userId = await getUserIdFromToken(req)
         const userAgent = req.headers.get('user-agent') || ''
         const ip = getClientIP(req)
 
