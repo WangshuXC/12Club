@@ -51,7 +51,13 @@ const DetailContainerComponent = ({
 
       {pathname.startsWith('/anime') && introduce?.playList.length > 0 && (
         <>
-          <div className="rounded-md lg:rounded-2xl overflow-hidden h-fit">
+          <div
+            className="rounded-md lg:rounded-2xl overflow-hidden h-fit"
+            log-expose="accordion-play"
+            data-log-accordion={accordion.toString()}
+            data-log-name={coverData?.title}
+            data-log-dbid={id}
+          >
             <ArtPlayer
               key={accordion}
               src={introduce?.playList[accordion - 1]?.link || ''}
