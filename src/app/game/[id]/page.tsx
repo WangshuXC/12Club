@@ -1,8 +1,50 @@
+import type { Metadata } from 'next'
 import { DetailContainer } from '@/components/detailContainer'
 import { getResourceActions } from './actions'
 import { ErrorComponent } from '@/components/common/Error'
+import { Config } from '@/config/config'
 
-export default async function Page({ params }: { params: { id: string } }) {
+interface Props {
+  params: Promise<{ id: string }>
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params
+  const resource = await getResourceActions({ id })
+
+  if (typeof resource === 'string') {
+    return {
+      title: '游戏详情',
+      description: '游戏资源详情页'
+    }
+  }
+
+  const { coverData, introduce } = resource
+  const title = coverData.title
+  const description =
+    introduce.text?.slice(0, 160) ||
+    `${title} - 在 12Club 下载此游戏资源`
+
+  return {
+    title,
+    description,
+    keywords: [title, ...introduce.alias, ...introduce.tags.map((t) => t.name)],
+    openGraph: {
+      title: `${title} | ${Config.titleShort}`,
+      description,
+      type: 'website',
+      images: coverData.image ? [{ url: coverData.image }] : undefined
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: coverData.image ? [coverData.image] : undefined
+    }
+  }
+}
+
+export default async function Page({ params }: Props) {
   const { id } = await params
   const resource = await getResourceActions({
     id

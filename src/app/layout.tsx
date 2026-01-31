@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Toaster } from 'react-hot-toast'
-import { clubViewport } from './metadata'
+import { clubViewport, clubMetadata } from './metadata'
 import '@/styles/index.css'
 
 import { ViewTransitions } from 'next-view-transitions'
@@ -12,13 +12,7 @@ import { Footer } from '@/components/common/Footer'
 
 export const viewport: Viewport = clubViewport
 
-export const metadata: Metadata = {
-  title: '12Club',
-  icons: {
-    icon: '/favicon.ico'
-  },
-  description: '欢迎来到12Club'
-}
+export const metadata: Metadata = clubMetadata
 
 export default async function RootLayout({
   children
