@@ -17,7 +17,7 @@ export const Footer = () => {
               width={30}
               height={30}
             />
-            <span>© 2025 {Config.titleShort}</span>
+            <span>© {new Date().getFullYear()} {Config.titleShort}</span>
           </Link>
 
           <div className="flex space-x-8">

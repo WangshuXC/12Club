@@ -340,3 +340,58 @@ model Announcement {
   @@index([user_id])
   @@map("announcement")
 }
+
+// ==================== 埋点系统 ====================
+
+// 访客表 - 存储未登录用户的 GUID
+model TrackingVisitor {
+  id         Int      @id @default(autoincrement())
+  guid       String   @unique @db.VarChar(36) // 访客唯一标识
+  user_agent String   @default("") @db.VarChar(500) // 浏览器信息
+  ip         String   @default("") @db.VarChar(45) // IP 地址
+  first_seen DateTime @default(now()) // 首次访问时间
+  last_seen  DateTime @default(now()) // 最后访问时间
+  user_id    Int? // 关联的用户ID（登录后绑定）
+  created    DateTime @default(now())
+  updated    DateTime @updatedAt
+
+  // Relations
+  events TrackingEvent[]
+
+  @@index([guid])
+  @@index([user_id])
+  @@map("tracking_visitor")
+}
+
+// 埋点事件表 - 存储所有埋点数据
+model TrackingEvent {
+  id           Int      @id @default(autoincrement())
+  event_type   String   @db.VarChar(20) // expose | click | custom
+  event_name   String   @db.VarChar(100) // 事件名称，如 "button_click", "card_expose"
+  element_id   String   @default("") @db.VarChar(100) // 元素 ID
+  element_tag  String   @default("") @db.VarChar(50) // 元素标签名
+  page_url     String   @db.VarChar(500) // 页面 URL
+  page_title   String   @default("") @db.VarChar(200) // 页面标题
+  referrer     String   @default("") @db.VarChar(500) // 来源页面
+  extra_data   Json? // 额外的自定义数据
+  viewport     String   @default("") @db.VarChar(50) // 视口大小 "1920x1080"
+  screen       String   @default("") @db.VarChar(50) // 屏幕分辨率
+  device_type  String   @default("desktop") @db.VarChar(20) // desktop | mobile | tablet
+  visitor_id   Int // 关联访客
+  user_id      Int? // 关联用户（已登录时）
+  session_id   String   @default("") @db.VarChar(36) // 会话标识
+  timestamp    DateTime @default(now()) // 事件发生时间
+  created      DateTime @default(now())
+
+  // Relations
+  visitor TrackingVisitor @relation(fields: [visitor_id], references: [id], onDelete: Cascade)
+
+  @@index([event_type])
+  @@index([event_name])
+  @@index([visitor_id])
+  @@index([user_id])
+  @@index([page_url])
+  @@index([timestamp])
+  @@index([session_id])
+  @@map("tracking_event")
+}
