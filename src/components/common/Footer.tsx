@@ -17,12 +17,18 @@ export const Footer = () => {
               width={30}
               height={30}
             />
-            <span>© {new Date().getFullYear()} {Config.titleShort}</span>
+            <span>
+              © {new Date().getFullYear()} {Config.titleShort}
+            </span>
           </Link>
 
           <div className="flex space-x-8">
             <Link href="/doc" className="flex items-center">
               帮助文档
+            </Link>
+
+            <Link href="/ebook" className="flex items-center">
+              十周年电子书
             </Link>
 
             <Link
