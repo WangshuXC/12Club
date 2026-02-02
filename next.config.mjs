@@ -12,7 +12,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: '**'
       }
-    ]
+    ],
+    // 使用自定义 loader 来代理特定域名的图片
+    loader: 'custom',
+    loaderFile: './src/lib/imageLoader.ts',
+    // 自定义 loader 需要禁用内置优化
+    unoptimized: true,
   },
   eslint: { ignoreDuringBuilds: true },
   typescript: {
@@ -22,10 +27,6 @@ const nextConfig = {
     silenceDeprecations: ['legacy-js-api']
   },
   reactStrictMode: false,
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    config.devtool = 'source-map'; // 启用 source map
-    return config;
-  },
 }
 
 export default nextConfig
