@@ -8,7 +8,7 @@ import { Popover, PopoverTrigger, PopoverContent, Button } from '@heroui/react'
 export const Footer = () => {
   return (
     <footer className="w-full mt-8 text-sm border-t border-divider">
-      <div className="px-2 mx-auto sm:px-6 max-w-7xl">
+      <div className="px-2 mx-auto sm:px-6 container">
         <div className="flex flex-wrap justify-center gap-4 py-6 md:justify-between">
           <Link href="/" className="flex items-center space-x-2">
             <Image

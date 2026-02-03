@@ -28,11 +28,11 @@ export async function GET(req: NextRequest) {
         const dateFilter = buildDateFilter(startDate, endDate)
         const skip = (page - 1) * pageSize
 
-        // 获取所有动漫播放事件，提取 extra_data 中的信息
         const animeEvents = await prisma.trackingEvent.findMany({
             where: {
                 ...dateFilter,
-                event_name: 'accordion-play'
+                event_name: 'accordion-play',
+                event_type: 'custom'
             },
             select: {
                 id: true,
@@ -77,7 +77,7 @@ export async function GET(req: NextRequest) {
 
             const stats = animeStatsMap.get(dbid)!
             stats.uniqueVisitors.add(event.visitor_id)
-            // 曝光和点击都算作一次播放
+            // 每次播放事件算作一次播放
             stats.playCount++
 
             if (!stats.accordionStats.has(accordion)) {

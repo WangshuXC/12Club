@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 9001",
+    "dev": "npm run tunnel && next dev --turbopack --port 9001",
+    "dev:no-tunnel": "next dev --turbopack --port 9001",
+    "tunnel": "bash scripts/ssh-tunnel.sh",
+    "tunnel:stop": "pkill -f 'ssh -f -N.*12club' || true",
     "build": "pm2 stop nextjs-12club || true && next build && pm2 start nextjs-12club || true",
     "start": "next start",
     "lint": "next lint",

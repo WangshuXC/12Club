@@ -5,8 +5,15 @@ import { HeroUIProvider, ToastProvider } from '@heroui/react'
 import { ThemeProvider } from 'next-themes'
 import { useRouter } from 'next-nprogress-bar'
 import { TrackingProvider } from '@/components/tracking'
+import { DeviceInitializer } from '@/components/common/DeviceInitializer'
+import type { DeviceInfo } from '@/utils/device'
 
-export const Providers = ({ children }: { children: React.ReactNode }) => {
+interface ProvidersProps {
+  children: React.ReactNode
+  initialDeviceInfo: DeviceInfo
+}
+
+export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
   const router = useRouter()
 
   return (
@@ -19,6 +26,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
             debug: process.env.NODE_ENV === 'development' // 开发环境开启调试
           }}
         >
+          <DeviceInitializer initialDeviceInfo={initialDeviceInfo} />
           {children}
         </TrackingProvider>
       </ThemeProvider>

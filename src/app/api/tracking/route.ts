@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
+import { Prisma } from '@prisma/client'
 import { prisma } from '../../../../prisma'
 import { ParsePostBody } from '@/utils/parseQuery'
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
@@ -102,7 +103,7 @@ export async function POST(req: NextRequest) {
                     page_url: event.page_url.slice(0, 500),
                     page_title: event.page_title || '',
                     referrer: event.referrer || '',
-                    extra_data: event.extra_data || null,
+                    extra_data: (event.extra_data as Prisma.InputJsonValue) ?? Prisma.JsonNull,
                     viewport: event.viewport || '',
                     screen: event.screen || '',
                     device_type: event.device_type || 'desktop',

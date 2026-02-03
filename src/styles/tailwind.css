@@ -22,3 +22,27 @@
   /* 自定义主色调 */
   --color-primary: rgb(14 165 233);
 }
+
+/* 扩展 container 类支持 2K 屏幕 */
+@utility container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+  width: 100%;
+  max-width: 1280px !important;
+
+  @media (min-width: 1280px) {
+    max-width: 1400px !important;
+  }
+
+  @media (min-width: 1536px) {
+    max-width: 1600px !important;
+  }
+
+  @media (min-width: 1800px) {
+    max-width: 1760px !important;
+  }
+
+  @media (min-width: 2000px) {
+    max-width: 1920px !important;
+  }
+}
