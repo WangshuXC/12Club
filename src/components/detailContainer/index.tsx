@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, memo } from 'react'
+import { useState, memo, useCallback } from 'react'
 import { DetailTabs } from './Tabs'
 import { ButtonList } from './ButtonList'
 import { DetailCover } from './Detail'
 import { Button } from '@heroui/react'
 import { usePathname } from 'next/navigation'
 import { FetchPost } from '@/utils/fetch'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import { Introduction, Cover } from '@/types/common/detail-container'
 import { ArtPlayer } from './ArtPlayer'
@@ -22,9 +23,19 @@ const DetailContainerComponent = ({
   coverData
 }: DetailContainerProps) => {
   const pathname = usePathname()
+  const { trackCustom } = useTrackingContext()
 
   const [selected, setSelected] = useState('introduction')
   const [accordion, setAccordion] = useState(1)
+
+  // 视频播放时上报埋点
+  const handleVideoPlay = useCallback(() => {
+    trackCustom('accordion-play', {
+      accordion: accordion.toString(),
+      name: coverData?.title,
+      dbid: id
+    })
+  }, [trackCustom, accordion, coverData?.title, id])
 
   return (
     <>
@@ -51,52 +62,38 @@ const DetailContainerComponent = ({
 
       {pathname.startsWith('/anime') && introduce?.playList.length > 0 && (
         <>
-          <div
-            className="rounded-md lg:rounded-2xl overflow-hidden h-fit"
-            log-expose="accordion-play"
-            data-log-accordion={accordion.toString()}
-            data-log-name={coverData?.title}
-            data-log-dbid={id}
-          >
+          <div className="rounded-md lg:rounded-2xl overflow-hidden h-fit">
             <ArtPlayer
               key={accordion}
               src={introduce?.playList[accordion - 1]?.link || ''}
+              onPlay={handleVideoPlay}
             />
           </div>
 
           {introduce?.playList?.length > 1 && (
             <div className="flex flex-wrap gap-2 justify-center">
               {introduce?.playList.map((item, index) => (
-                <div
+                <Button
                   key={index}
-                  log-click="accordion-play"
-                  data-log-accordion={
-                    item.showAccordion || item.accordion.toString()
-                  }
-                  data-log-name={coverData?.title}
-                  data-log-dbid={id}
+                  variant="flat"
+                  size="sm"
+                  color="primary"
+                  className={`${accordion === item.accordion ? 'bg-primary text-white' : ''}`}
+                  onPress={() => {
+                    window?.umami?.track(
+                      `在线播放-${item.accordion.toString()}`,
+                      {
+                        dbId: id
+                      }
+                    )
+                    FetchPost('/detail/view', {
+                      resourceDbId: id
+                    })
+                    setAccordion(item.accordion)
+                  }}
                 >
-                  <Button
-                    variant="flat"
-                    size="sm"
-                    color="primary"
-                    className={`${accordion === item.accordion ? 'bg-primary text-white' : ''}`}
-                    onPress={() => {
-                      window?.umami?.track(
-                        `在线播放-${item.accordion.toString()}`,
-                        {
-                          dbId: id
-                        }
-                      )
-                      FetchPost('/detail/view', {
-                        resourceDbId: id
-                      })
-                      setAccordion(item.accordion)
-                    }}
-                  >
-                    {item.showAccordion || item.accordion.toString()}
-                  </Button>
-                </div>
+                  {item.showAccordion || item.accordion.toString()}
+                </Button>
               ))}
             </div>
           )}

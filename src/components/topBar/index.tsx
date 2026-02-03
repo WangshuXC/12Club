@@ -30,10 +30,9 @@ export const TopBar = () => {
 
   return (
     <Navbar
-      maxWidth="xl"
       isMenuOpen={isMenuOpen}
       onMenuOpenChange={setIsMenuOpen}
-      classNames={{ wrapper: 'px-3 2xl:px-6' }}
+      classNames={{ wrapper: 'px-3 container' }}
     >
       <NavbarContent className="2xl:hidden" justify="start">
         <li className="h-full">

@@ -6,11 +6,13 @@ import Artplayer from 'artplayer'
 interface VideoPlayerProps {
   src: string
   className?: string
+  onPlay?: () => void
 }
 
-export const ArtPlayer = ({ src, className = '' }: VideoPlayerProps) => {
+export const ArtPlayer = ({ src, className = '', onPlay }: VideoPlayerProps) => {
   const artRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<Artplayer | null>(null)
+  const hasReportedPlayRef = useRef(false)
 
   useEffect(() => {
     if (
@@ -44,6 +46,14 @@ export const ArtPlayer = ({ src, className = '' }: VideoPlayerProps) => {
         mutex: true
       })
 
+      // 监听播放事件，只在首次播放时上报
+      playerRef.current.on('play', () => {
+        if (!hasReportedPlayRef.current) {
+          hasReportedPlayRef.current = true
+          onPlay?.()
+        }
+      })
+
       // 确保鼠标指针正常显示
       if (artRef.current) {
         artRef.current.style.cursor = 'default'
@@ -61,6 +71,11 @@ export const ArtPlayer = ({ src, className = '' }: VideoPlayerProps) => {
         playerRef.current = null
       }
     }
+  }, [src, onPlay])
+
+  // 当 src 变化时重置上报状态
+  useEffect(() => {
+    hasReportedPlayRef.current = false
   }, [src])
 
   return (

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 import { DetailContainer } from '@/components/detailContainer'
+import { AnimeContainer } from '@/components/animeContainer'
 import { getResourceActions } from './actions'
 import { ErrorComponent } from '@/components/common/Error'
 import { Config } from '@/config/config'
+import { getServerDeviceInfo } from '@/utils/device'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -54,9 +57,25 @@ export default async function Page({ params }: Props) {
   }
 
   const { introduce, coverData } = resource
-  return (
-    <div className="container py-6 mx-auto space-y-6">
-      <DetailContainer id={id} introduce={introduce} coverData={coverData} />
-    </div>
-  )
+
+  // 获取 user-agent 判断设备类型
+  const headersList = await headers()
+  const userAgent = headersList.get('user-agent') || ''
+  const deviceInfo = getServerDeviceInfo(userAgent)
+
+  // 判断是否有播放链接，并且是PC设备，才使用AnimeContainer
+  const hasPlayList = introduce?.playList && introduce.playList.length > 0
+  const useAnimeLayout = hasPlayList && deviceInfo.isDesktop
+
+  if (useAnimeLayout) {
+    // 有播放链接且是PC设备时使用AnimeContainer（B站风格布局）
+    return <AnimeContainer id={id} introduce={introduce} coverData={coverData} />
+  } else {
+    // 无播放链接或移动设备时使用原有的DetailContainer布局
+    return (
+      <div className="container py-6 mx-auto space-y-6">
+        <DetailContainer id={id} introduce={introduce} coverData={coverData} />
+      </div>
+    )
+  }
 }
