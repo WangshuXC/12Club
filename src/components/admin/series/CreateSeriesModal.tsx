@@ -13,6 +13,7 @@ import {
 } from '@heroui/react'
 import { ResourceSelector } from './ResourceSelector'
 import { FetchPost } from '@/utils/fetch'
+import type { AdminSeriesResource } from '@/types/api/admin'
 
 interface CreateSeriesModalProps {
   isOpen: boolean
@@ -27,7 +28,7 @@ export const CreateSeriesModal = ({
 }: CreateSeriesModalProps) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [selectedDbIds, setSelectedDbIds] = useState<string[]>([])
+  const [selectedResources, setSelectedResources] = useState<AdminSeriesResource[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -35,7 +36,7 @@ export const CreateSeriesModal = ({
   const resetForm = () => {
     setName('')
     setDescription('')
-    setSelectedDbIds([])
+    setSelectedResources([])
     setError('')
   }
 
@@ -54,7 +55,7 @@ export const CreateSeriesModal = ({
       return
     }
 
-    if (selectedDbIds.length === 0) {
+    if (selectedResources.length === 0) {
       setError('请至少选择一个资源')
       return
     }
@@ -66,7 +67,7 @@ export const CreateSeriesModal = ({
       const response = await FetchPost<any>('/admin/series', {
         name: name.trim(),
         description: description.trim(),
-        dbIds: selectedDbIds
+        dbIds: selectedResources.map((r) => r.dbId)
       })
 
       if (typeof response === 'string') {
@@ -140,8 +141,8 @@ export const CreateSeriesModal = ({
               </p>
               
               <ResourceSelector
-                selectedDbIds={selectedDbIds}
-                onSelectionChange={setSelectedDbIds}
+                selectedResources={selectedResources}
+                onSelectionChange={setSelectedResources}
               />
             </div>
 
@@ -166,7 +167,7 @@ export const CreateSeriesModal = ({
             color="primary"
             onPress={handleCreate}
             isLoading={loading}
-            isDisabled={!name.trim() || selectedDbIds.length === 0}
+            isDisabled={!name.trim() || selectedResources.length === 0}
           >
             创建系列
           </Button>

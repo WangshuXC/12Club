@@ -14,6 +14,22 @@ const idSchema = z.object({
   id: z.string().min(7).max(7)
 })
 
+// 系列资源类型
+interface SeriesResource {
+  dbId: string
+  name: string
+  image: string
+  released: string | null
+}
+
+// 系列信息类型
+interface SeriesInfo {
+  id: number
+  name: string
+  description: string
+  resources: SeriesResource[]
+}
+
 const _getResourceActions = async (params: z.infer<typeof idSchema>) => {
   const input = safeParseSchema(idSchema, params)
   if (typeof input === 'string') {
@@ -25,6 +41,7 @@ const _getResourceActions = async (params: z.infer<typeof idSchema>) => {
   const response = await FetchGet<{
     introduce: Introduction
     coverData: Cover
+    series: SeriesInfo[] | null
   }>('/detail', {
     id: params.id,
     uid: payload?.uid ?? 0
@@ -32,8 +49,8 @@ const _getResourceActions = async (params: z.infer<typeof idSchema>) => {
 
   if (typeof response === 'string') return response
 
-  const { introduce, coverData } = response
-  return { introduce, coverData }
+  const { introduce, coverData, series } = response
+  return { introduce, coverData, series }
 }
 
 // 使用 React cache 缓存函数调用结果

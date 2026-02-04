@@ -71,6 +71,34 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
             }
           }
         },
+        series_relations: {
+          select: {
+            series: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+                resources: {
+                  select: {
+                    resource: {
+                      select: {
+                        db_id: true,
+                        name: true,
+                        image_url: true,
+                        released: true
+                      }
+                    }
+                  },
+                  orderBy: {
+                    resource: {
+                      released: 'asc'
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -140,9 +168,24 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
       image: detail.image_url
     }
 
+    // 处理系列信息
+    const series = detail.series_relations.length > 0
+      ? detail.series_relations.map((rel) => ({
+        id: rel.series.id,
+        name: rel.series.name,
+        description: rel.series.description,
+        resources: rel.series.resources.map((r) => ({
+          dbId: r.resource.db_id,
+          name: r.resource.name,
+          image: r.resource.image_url,
+          released: r.resource.released
+        }))
+      }))
+      : null
+
     await setKv(
       `${CACHE_KEY}:${input.id}`,
-      JSON.stringify({ introduce, coverData }),
+      JSON.stringify({ introduce, coverData, series }),
       RESOURCE_CACHE_DURATION
     )
 
@@ -155,7 +198,7 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
       }
     })
 
-    return { introduce, coverData }
+    return { introduce, coverData, series }
   } catch (error) {
     console.error('获取资源详情失败:', error)
     return error instanceof Error ? error.message : '获取资源详情时发生未知错误'

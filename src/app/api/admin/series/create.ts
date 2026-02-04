@@ -38,9 +38,6 @@ export const createSeries = async (
             }
         })
 
-        console.log('resources', resources)
-        console.log('resourceIds', input.dbIds)
-
         if (resources.length !== input.dbIds.length) {
             const foundDbIds = resources.map(r => r.db_id)
             const missingDbIds = input.dbIds.filter(dbId => !foundDbIds.includes(dbId))

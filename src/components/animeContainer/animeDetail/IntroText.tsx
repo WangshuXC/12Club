@@ -32,22 +32,25 @@ export const IntroText = ({
         {formattedText || '暂无简介'}
       </span>
       {shouldShowExpand && (
-        <Button
-          size="sm"
-          variant="light"
-          color="primary"
-          className="h-5 px-1 ml-1 min-w-0 absolute right-0 bottom-0"
-          endContent={
-            expanded ? (
-              <ChevronUp className="size-3" />
-            ) : (
-              <ChevronDown className="size-3" />
-            )
-          }
-          onPress={() => onExpandChange(!expanded)}
-        >
-          {expanded ? '收起' : '展开'}
-        </Button>
+        <span className="absolute right-0 bottom-0.5 flex items-center">
+          <span className="w-12 h-5 bg-gradient-to-r from-transparent to-background -mr-1" />
+          <Button
+            size="sm"
+            variant="light"
+            color="primary"
+            className="h-5 px-1 min-w-0 !bg-background hover:!bg-background"
+            endContent={
+              expanded ? (
+                <ChevronUp className="size-3" />
+              ) : (
+                <ChevronDown className="size-3" />
+              )
+            }
+            onPress={() => onExpandChange(!expanded)}
+          >
+            {expanded ? '收起' : '展开'}
+          </Button>
+        </span>
       )}
     </div>
   )

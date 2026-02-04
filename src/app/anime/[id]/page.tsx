@@ -56,7 +56,7 @@ export default async function Page({ params }: Props) {
     return <ErrorComponent error={resource} />
   }
 
-  const { introduce, coverData } = resource
+  const { introduce, coverData, series } = resource
 
   // 获取 user-agent 判断设备类型
   const headersList = await headers()
@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
 
   if (useAnimeLayout) {
     // 有播放链接且是PC设备时使用AnimeContainer（B站风格布局）
-    return <AnimeContainer id={id} introduce={introduce} coverData={coverData} />
+    return <AnimeContainer id={id} introduce={introduce} coverData={coverData} series={series} />
   } else {
     // 无播放链接或移动设备时使用原有的DetailContainer布局
     return (

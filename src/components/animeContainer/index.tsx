@@ -7,22 +7,41 @@ import { ActionBar } from './actionBar'
 import { PlaylistTab } from './PlaylistTab'
 import { ResourceTab } from './ResourceTab'
 import { Comments } from '../detailContainer/comment/Comments'
-import { Tab, Tabs } from '@heroui/react'
+import { Tab, Tabs, Card, CardBody, Image } from '@heroui/react'
 import { FetchPost } from '@/utils/fetch'
 import { useTrackingContext } from '@/components/tracking/TrackingProvider'
+import Link from 'next/link'
 
 import { Introduction, Cover } from '@/types/common/detail-container'
+
+// 系列资源类型
+interface SeriesResource {
+  dbId: string
+  name: string
+  image: string
+  released: string | null
+}
+
+// 系列信息类型
+interface SeriesInfo {
+  id: number
+  name: string
+  description: string
+  resources: SeriesResource[]
+}
 
 interface AnimeContainerProps {
   id: string
   introduce: Introduction
   coverData: Cover
+  series?: SeriesInfo[] | null
 }
 
 const AnimeContainerComponent = ({
   id,
   introduce,
-  coverData
+  coverData,
+  series
 }: AnimeContainerProps) => {
   const [accordion, setAccordion] = useState(1)
   const hasMultipleEpisodes = introduce?.playList?.length > 1
@@ -108,9 +127,9 @@ const AnimeContainerComponent = ({
         </div>
 
         {/* 右侧Tab区域 */}
-        <div className="w-100 shrink-0">
+        <div className="w-100 shrink-0 flex flex-col gap-4">
           {hasMultipleEpisodes ? (
-            <div className="sticky top-20">
+            <div>
               <Tabs
                 className="w-full overflow-hidden shadow-medium rounded-large"
                 fullWidth={true}
@@ -134,8 +153,59 @@ const AnimeContainerComponent = ({
               </Tabs>
             </div>
           ) : (
-            <div className="sticky top-20">
+            <div>
               <ResourceTab id={id} />
+            </div>
+          )}
+
+          {/* 同系列作品区域 */}
+          {series && series.length > 0 && (
+            <div className="flex flex-col gap-3">
+              {series.map((s) => (
+                <Card key={s.id} className="shadow-medium">
+                  <CardBody className="p-3">
+                    <p className="text-base font-semibold mb-2">系列作品</p>
+                    <div className="flex flex-col gap-2">
+                      {s.resources.map((resource) => (
+                        <Link
+                          key={resource.dbId}
+                          href={`/anime/${resource.dbId}`}
+                          className={`flex items-center gap-2 p-2 rounded-lg transition-colors hover:bg-default-100 ${
+                            resource.dbId === id
+                              ? 'bg-primary-50 border border-primary-200'
+                              : ''
+                          }`}
+                        >
+                          <Image
+                            src={resource.image}
+                            alt={resource.name}
+                            className="w-10 h-14 rounded object-cover"
+                            classNames={{
+                              wrapper: 'w-10 h-14 min-w-10 flex-shrink-0'
+                            }}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className={`text-sm truncate ${
+                                resource.dbId === id
+                                  ? 'font-semibold text-primary'
+                                  : ''
+                              }`}
+                            >
+                              {resource.name}
+                            </p>
+                            {resource.released && (
+                              <p className="text-xs text-default-400">
+                                {resource.released}
+                              </p>
+                            )}
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
             </div>
           )}
         </div>
@@ -152,7 +222,8 @@ export const AnimeContainer = memo(
     return (
       prevProps.id === nextProps.id &&
       prevProps.introduce === nextProps.introduce &&
-      prevProps.coverData === nextProps.coverData
+      prevProps.coverData === nextProps.coverData &&
+      prevProps.series === nextProps.series
     )
   }
 )

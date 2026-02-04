@@ -80,8 +80,14 @@ export const getSeries = async (
                                     image_url: true,
                                     type: true,
                                     status: true,
-                                    created: true
+                                    created: true,
+                                    released: true
                                 }
+                            }
+                        },
+                        orderBy: {
+                            resource: {
+                                released: 'asc'
                             }
                         }
                     }

@@ -10,12 +10,11 @@ import {
   Button,
   Input,
   Textarea,
-  Tabs,
-  Tab
+  addToast
 } from '@heroui/react'
 import { SeriesResourceManager } from './SeriesResourceManager'
-import { FetchPut } from '@/utils/fetch'
-import type { AdminSeries } from '@/types/api/admin'
+import { FetchPut, FetchPost, FetchDelete } from '@/utils/fetch'
+import type { AdminSeries, AdminSeriesResource } from '@/types/api/admin'
 
 interface EditSeriesModalProps {
   isOpen: boolean
@@ -34,7 +33,10 @@ export const EditSeriesModal = ({
   const [description, setDescription] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [activeTab, setActiveTab] = useState('info')
+
+  // 资源管理状态
+  const [resources, setResources] = useState<AdminSeriesResource[]>([])
+  const [originalDbIds, setOriginalDbIds] = useState<string[]>([])
 
   // 初始化表单数据
   useEffect(() => {
@@ -42,7 +44,10 @@ export const EditSeriesModal = ({
       setName(series.name)
       setDescription(series.description)
       setError('')
-      setActiveTab('info')
+      // 直接使用外层传递的 series.resources
+      const seriesResources = series.resources || []
+      setResources(seriesResources)
+      setOriginalDbIds(seriesResources.map((r) => r.dbId))
     }
   }, [isOpen, series])
 
@@ -51,7 +56,8 @@ export const EditSeriesModal = ({
     setName('')
     setDescription('')
     setError('')
-    setActiveTab('info')
+    setResources([])
+    setOriginalDbIds([])
   }
 
   // 关闭弹窗
@@ -62,10 +68,23 @@ export const EditSeriesModal = ({
     }
   }
 
-  // 更新系列信息
-  const handleUpdate = async () => {
+  // 计算资源变更
+  const getResourceChanges = () => {
+    const currentDbIds = resources.map((r) => r.dbId)
+    const toAdd = currentDbIds.filter((id) => !originalDbIds.includes(id))
+    const toRemove = originalDbIds.filter((id) => !currentDbIds.includes(id))
+    return { toAdd, toRemove }
+  }
+
+  // 保存所有更改（系列信息 + 资源变更）
+  const handleSave = async () => {
     if (!name.trim()) {
       setError('请输入系列名称')
+      return
+    }
+
+    if (resources.length === 0) {
+      setError('系列至少需要包含一个资源')
       return
     }
 
@@ -73,29 +92,93 @@ export const EditSeriesModal = ({
     setError('')
 
     try {
-      const response = await FetchPut<any>(`/admin/series/${series.id}`, {
+      // 1. 更新系列基本信息
+      const updateResponse = await FetchPut<any>(`/admin/series/${series.id}`, {
         id: series.id,
         name: name.trim(),
         description: description.trim()
       })
 
-      if (typeof response === 'string') {
-        setError(response)
+      if (typeof updateResponse === 'string') {
+        setError(updateResponse)
         return
       }
 
-      if (response.success) {
-        onSuccess()
-        handleClose()
-      } else {
-        setError(response.message || '更新系列失败')
+      if (!updateResponse.success) {
+        setError(updateResponse.message || '更新系列信息失败')
+        return
       }
+
+      // 2. 处理资源变更
+      const { toAdd, toRemove } = getResourceChanges()
+
+      // 添加新资源
+      if (toAdd.length > 0) {
+        const addResponse = await FetchPost<any>(
+          `/admin/series/${series.id}/resources`,
+          {
+            seriesId: series.id,
+            dbIds: toAdd
+          }
+        )
+
+        if (typeof addResponse === 'string') {
+          setError(`更新系列成功，但添加资源失败: ${addResponse}`)
+          return
+        }
+
+        if (!addResponse.success) {
+          setError(
+            `更新系列成功，但添加资源失败: ${addResponse.message || '未知错误'}`
+          )
+          return
+        }
+      }
+
+      // 移除资源
+      for (const dbId of toRemove) {
+        const removeResponse = await FetchDelete<any>(
+          `/admin/series/${series.id}/resources`,
+          {
+            seriesId: series.id,
+            dbId
+          }
+        )
+
+        if (typeof removeResponse === 'string') {
+          setError(`更新系列成功，但移除资源失败: ${removeResponse}`)
+          return
+        }
+
+        if (!removeResponse.success) {
+          setError(
+            `更新系列成功，但移除资源失败: ${removeResponse.message || '未知错误'}`
+          )
+          return
+        }
+      }
+
+      // 全部成功
+      onSuccess()
+      addToast({
+        title: '成功',
+        description: '系列信息已更新',
+        color: 'success'
+      })
+      handleClose()
     } catch (error) {
-      console.error('更新系列失败:', error)
-      setError('更新系列时发生错误')
+      setError('保存更改时发生错误')
     } finally {
       setLoading(false)
     }
+  }
+
+  // 检查是否有未保存的更改
+  const hasChanges = () => {
+    const nameChanged = name.trim() !== series.name
+    const descChanged = description.trim() !== series.description
+    const { toAdd, toRemove } = getResourceChanges()
+    return nameChanged || descChanged || toAdd.length > 0 || toRemove.length > 0
   }
 
   return (
@@ -112,7 +195,9 @@ export const EditSeriesModal = ({
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <h2 className="text-xl font-bold">编辑系列</h2>
-          <p className="text-sm text-default-500">编辑系列信息和管理关联资源</p>
+          <p className="text-sm text-default-500">
+            编辑系列信息和管理关联资源，点击保存后生效
+          </p>
         </ModalHeader>
 
         <ModalBody>
@@ -124,7 +209,7 @@ export const EditSeriesModal = ({
               onChange={(e) => setName(e.target.value)}
               isRequired
               errorMessage={error && !name.trim() ? '请输入系列名称' : ''}
-              isInvalid={error && !name.trim() ? true : false}
+              isInvalid={!!(error && !name.trim())}
             />
 
             <Textarea
@@ -144,8 +229,8 @@ export const EditSeriesModal = ({
           </div>
           <div className="pt-4">
             <SeriesResourceManager
-              seriesId={series.id}
-              onResourcesChange={onSuccess}
+              resources={resources}
+              onResourcesChange={setResources}
             />
           </div>
         </ModalBody>
@@ -154,16 +239,14 @@ export const EditSeriesModal = ({
           <Button variant="light" onPress={handleClose} isDisabled={loading}>
             取消
           </Button>
-          {activeTab === 'info' && (
-            <Button
-              color="primary"
-              onPress={handleUpdate}
-              isLoading={loading}
-              isDisabled={!name.trim()}
-            >
-              保存更改
-            </Button>
-          )}
+          <Button
+            color="primary"
+            onPress={handleSave}
+            isLoading={loading}
+            isDisabled={!name.trim() || resources.length === 0 || !hasChanges()}
+          >
+            保存更改
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
