@@ -15,7 +15,8 @@ import {
   Key,
   Megaphone,
   RefreshCw,
-  BarChart3
+  BarChart3,
+  Layers
 } from 'lucide-react'
 import { ComponentType } from 'react'
 
@@ -58,6 +59,11 @@ const menuItems: MenuItem[] = [
     name: '资源管理',
     href: '/admin/resource',
     icon: Images
+  },
+  {
+    name: '系列管理',
+    href: '/admin/series',
+    icon: Layers
   },
   {
     name: '评论管理',

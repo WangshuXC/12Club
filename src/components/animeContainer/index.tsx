@@ -25,7 +25,10 @@ const AnimeContainerComponent = ({
   coverData
 }: AnimeContainerProps) => {
   const [accordion, setAccordion] = useState(1)
-  const [selectedTab, setSelectedTab] = useState('playlist')
+  const hasMultipleEpisodes = introduce?.playList?.length > 1
+  const [selectedTab, setSelectedTab] = useState(
+    hasMultipleEpisodes ? 'playlist' : 'resources'
+  )
   const commentRef = useRef<HTMLDivElement>(null)
   const { trackCustom } = useTrackingContext()
 
@@ -55,7 +58,7 @@ const AnimeContainerComponent = ({
   return (
     <div className="container py-4">
       {/* 左右分栏布局 */}
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-row gap-4">
         {/* 左侧内容区域 */}
         <div className="flex-1 space-y-3">
           {/* 播放器 */}
@@ -106,29 +109,35 @@ const AnimeContainerComponent = ({
 
         {/* 右侧Tab区域 */}
         <div className="w-100 shrink-0">
-          <div className="lg:sticky lg:top-20">
-            <Tabs
-              className="w-full overflow-hidden shadow-medium rounded-large"
-              fullWidth={true}
-              defaultSelectedKey="playlist"
-              onSelectionChange={(value) => setSelectedTab(value.toString())}
-              selectedKey={selectedTab}
-            >
-              <Tab key="playlist" title="分集选择">
-                <PlaylistTab
-                  playList={introduce.playList}
-                  currentAccordion={accordion}
-                  onAccordionChange={handleAccordionChange}
-                  coverTitle={coverData.title}
-                  dbId={id}
-                />
-              </Tab>
+          {hasMultipleEpisodes ? (
+            <div className="sticky top-20">
+              <Tabs
+                className="w-full overflow-hidden shadow-medium rounded-large"
+                fullWidth={true}
+                defaultSelectedKey="playlist"
+                onSelectionChange={(value) => setSelectedTab(value.toString())}
+                selectedKey={selectedTab}
+              >
+                <Tab key="playlist" title="分集选择">
+                  <PlaylistTab
+                    playList={introduce.playList}
+                    currentAccordion={accordion}
+                    onAccordionChange={handleAccordionChange}
+                    coverTitle={coverData.title}
+                    dbId={id}
+                  />
+                </Tab>
 
-              <Tab key="resources" title="下载资源">
-                <ResourceTab id={id} />
-              </Tab>
-            </Tabs>
-          </div>
+                <Tab key="resources" title="下载资源">
+                  <ResourceTab id={id} />
+                </Tab>
+              </Tabs>
+            </div>
+          ) : (
+            <div className="sticky top-20">
+              <ResourceTab id={id} />
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export const IntroText = ({
       <span
         className={cn(
           'whitespace-pre-line',
-          !expanded && shouldShowExpand && 'line-clamp-4'
+          !expanded && shouldShowExpand && 'line-clamp-5'
         )}
       >
         {formattedText || '暂无简介'}

@@ -139,3 +139,38 @@ export interface AdminNotificationData {
   reports: number
   total: number
 }
+
+export interface AdminSeries {
+  id: number
+  name: string
+  description: string
+  created: Date | string
+  updated: Date | string
+  user: {
+    id: number
+    name: string
+    avatar: string
+  }
+  resourceCount: number
+  resources?: AdminSeriesResource[]
+}
+
+export interface AdminSeriesResource {
+  id: number
+  dbId: string
+  name: string
+  banner: string
+  type: string[]
+  status: number
+  created: Date | string
+}
+
+export interface AdminSeriesListResponse {
+  series: AdminSeries[]
+  total: number
+}
+
+export interface AdminSeriesDetailResponse {
+  series: AdminSeries
+  resources: AdminSeriesResource[]
+}

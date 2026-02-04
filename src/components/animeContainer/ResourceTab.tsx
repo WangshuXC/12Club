@@ -346,12 +346,17 @@ export const ResourceTab = ({ id, needUpdate = false }: ResourceTabProps) => {
 
       {/* 创建资源弹窗 */}
       <Modal
-        size="3xl"
+        size="2xl"
         isOpen={isOpenCreate}
         onClose={onCloseCreate}
-        scrollBehavior="outside"
+        scrollBehavior="inside"
         isDismissable={false}
         isKeyboardDismissDisabled={true}
+        classNames={{
+          wrapper: 'z-[9999]',
+          backdrop: 'z-[9998]'
+        }}
+        backdrop="blur"
       >
         <PublishResource
           dbId={id}
@@ -365,12 +370,17 @@ export const ResourceTab = ({ id, needUpdate = false }: ResourceTabProps) => {
 
       {/* 编辑资源弹窗 */}
       <Modal
-        size="3xl"
+        size="2xl"
         isOpen={isOpenEdit}
         onClose={onCloseEdit}
-        scrollBehavior="outside"
+        scrollBehavior="inside"
         isDismissable={false}
         isKeyboardDismissDisabled={true}
+        classNames={{
+          wrapper: 'z-[9999]',
+          backdrop: 'z-[9998]'
+        }}
+        backdrop="blur"
       >
         <EditResourceDialog
           onClose={onCloseEdit}
@@ -387,7 +397,16 @@ export const ResourceTab = ({ id, needUpdate = false }: ResourceTabProps) => {
       </Modal>
 
       {/* 删除确认弹窗 */}
-      <Modal isOpen={isOpenDelete} onClose={onCloseDelete} placement="center">
+      <Modal
+        isOpen={isOpenDelete}
+        onClose={onCloseDelete}
+        placement="center"
+        classNames={{
+          wrapper: 'z-[9999]',
+          backdrop: 'z-[9998]'
+        }}
+        backdrop="blur"
+      >
         <ModalContent>
           <ModalHeader>删除资源链接</ModalHeader>
           <ModalBody>

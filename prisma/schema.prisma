@@ -45,6 +45,7 @@ model User {
   announcements         Announcement[]
   resource_tags         ResourceTag[]
   resource_auto_updates ResourceAutoUpdate[]
+  resource_series       ResourceSeries[]
 
   @@map("user")
 }
@@ -80,6 +81,7 @@ model Resource {
   favorite_folders UserResourceFavoriteFolderRelation[]
   tag_relations    ResourceTagRelation[]
   auto_update      ResourceAutoUpdate?
+  series_relations ResourceSeriesRelation[]
 
   @@map("resource")
 }
@@ -339,6 +341,40 @@ model Announcement {
 
   @@index([user_id])
   @@map("announcement")
+}
+
+model ResourceSeries {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @default("") @db.VarChar(1000)
+  user_id     Int
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+
+  // Relations
+  user      User                      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  resources ResourceSeriesRelation[]
+
+  @@index([user_id])
+  @@index([name])
+  @@map("resource_series")
+}
+
+model ResourceSeriesRelation {
+  id          Int      @id @default(autoincrement())
+  series_id   Int
+  resource_id Int
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+
+  // Relations
+  series   ResourceSeries @relation(fields: [series_id], references: [id], onDelete: Cascade)
+  resource Resource       @relation(fields: [resource_id], references: [id], onDelete: Cascade)
+
+  @@unique([series_id, resource_id])
+  @@index([series_id])
+  @@index([resource_id])
+  @@map("resource_series_relation")
 }
 
 // ==================== 埋点系统 ====================

@@ -149,3 +149,42 @@ export const adminSearchTagSchema = z.object({
   search: z.string().trim().min(1, { message: '搜索关键词不能为空' }).max(107, { message: '搜索关键词长度不能超过 107 个字符' })
 })
 
+// 系列管理相关验证模式
+export const adminGetSeriesSchema = z.object({
+  page: z.coerce.number().min(1).max(9999999),
+  limit: z.coerce.number().min(1).max(100),
+  search: z.string().max(300, { message: '搜索内容最多 300 个字符' }).optional(),
+  sortField: z.enum(['created', 'updated', 'name', 'resource_count']).default('updated'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc')
+})
+
+export const adminGetSeriesDetailSchema = z.object({
+  id: z.coerce.number().min(1).max(9999999)
+})
+
+export const adminCreateSeriesSchema = z.object({
+  name: z.string().trim().min(1, { message: '系列名称不能为空' }).max(255, { message: '系列名称不能超过 255 个字符' }),
+  description: z.string().trim().max(1000, { message: '系列描述不能超过 1000 个字符' }).optional(),
+  dbIds: z.array(z.string().trim().min(2).max(10)).min(1, { message: '至少需要选择一个资源' })
+})
+
+export const adminUpdateSeriesSchema = z.object({
+  id: z.coerce.number().min(1).max(9999999),
+  name: z.string().trim().min(1, { message: '系列名称不能为空' }).max(255, { message: '系列名称不能超过 255 个字符' }),
+  description: z.string().trim().max(1000, { message: '系列描述不能超过 1000 个字符' }).optional()
+})
+
+export const adminDeleteSeriesSchema = z.object({
+  id: z.coerce.number().min(1).max(9999999)
+})
+
+export const adminAddSeriesToResourceSchema = z.object({
+  seriesId: z.coerce.number().min(1).max(9999999),
+  dbIds: z.array(z.string().trim().min(2).max(10)).min(1, { message: '至少需要选择一个资源' })
+})
+
+export const adminRemoveSeriesFromResourceSchema = z.object({
+  seriesId: z.coerce.number().min(1).max(9999999),
+  dbId: z.string().trim().min(2).max(10)
+})
+
