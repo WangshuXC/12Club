@@ -1,19 +1,23 @@
 'use client'
 
-import { Config } from '@/config/config'
 import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Eye, EyeOff } from 'lucide-react'
+
 import { addToast, Button, Checkbox, Input, Link } from '@heroui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Eye, EyeOff } from 'lucide-react'
+import { useRouter } from 'next-nprogress-bar'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { Config } from '@/config/config'
+import { useUserStore } from '@/store/userStore'
 import { hashPassword } from '@/utils/algorithm'
+import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPost } from '@/utils/fetch'
 import { registerSchema } from '@/validations/auth'
-import { useUserStore } from '@/store/userStore'
-import { ErrorHandler } from '@/utils/errorHandler'
-import { useRouter } from 'next-nprogress-bar'
+
 import { TextDivider } from './TextDivider'
+
 import type { UserState } from '@/store/userStore'
 
 type RegisterFormData = z.infer<typeof registerSchema>

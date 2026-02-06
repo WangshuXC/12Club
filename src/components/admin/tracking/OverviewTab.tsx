@@ -1,15 +1,19 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+
 import { Card, CardBody, Spinner } from '@heroui/react'
+
+import { getTrendData } from '@/app/admin/tracking/actions'
 import { cn } from '@/lib/utils'
+
+import { LineChart } from './LineChart'
+
 import type {
   TrackingOverview,
   TrendType,
   TrendDataPoint
 } from '@/app/admin/tracking/actions'
-import { getTrendData } from '@/app/admin/tracking/actions'
-import { LineChart } from './LineChart'
 
 interface OverviewCardsProps {
   data: TrackingOverview | null
@@ -33,27 +37,27 @@ export const OverviewCards = ({
     () =>
       data
         ? [
-            {
-              title: '总访客数',
-              value: data.totalVisitors,
-              type: 'visitors' as TrendType
-            },
-            {
-              title: '总事件数',
-              value: data.totalEvents,
-              type: 'events' as TrendType
-            },
-            {
-              title: '访问页面数',
-              value: data.uniquePages,
-              type: 'pages' as TrendType
-            },
-            {
-              title: '动漫播放次数',
-              value: data.animePlayCount,
-              type: 'plays' as TrendType
-            }
-          ]
+          {
+            title: '总访客数',
+            value: data.totalVisitors,
+            type: 'visitors' as TrendType
+          },
+          {
+            title: '总事件数',
+            value: data.totalEvents,
+            type: 'events' as TrendType
+          },
+          {
+            title: '访问页面数',
+            value: data.uniquePages,
+            type: 'pages' as TrendType
+          },
+          {
+            title: '动漫播放次数',
+            value: data.animePlayCount,
+            type: 'plays' as TrendType
+          }
+        ]
         : [],
     [data]
   )

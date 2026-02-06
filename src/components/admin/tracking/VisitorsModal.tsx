@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import {
   Modal,
   ModalContent,
@@ -16,14 +17,15 @@ import {
   User,
   Chip
 } from '@heroui/react'
-import { SelfPagination } from '@/components/common/Pagination'
-import { parseUserAgentLabel } from '@/utils/device'
+
 import {
   getPageVisitors,
   getAnimeVisitors,
   type PageVisitor,
   type PaginationInfo
 } from '@/app/admin/tracking/actions'
+import { SelfPagination } from '@/components/common/Pagination'
+import { parseUserAgentLabel } from '@/utils/device'
 
 type VisitorType = 'page' | 'anime'
 
@@ -31,12 +33,15 @@ interface VisitorsModalProps {
   isOpen: boolean
   onClose: () => void
   type: VisitorType
+
   // 页面访客需要的参数
   pageUrl?: string
   pageTitle?: string
+
   // 动漫访客需要的参数
   dbid?: string
   animeName?: string
+
   // 通用参数
   startDate?: string
   endDate?: string
@@ -59,6 +64,7 @@ export const VisitorsModal = ({
 
   const fetchVisitors = async (page = 1) => {
     setLoading(true)
+
     try {
       const start = startDate ? new Date(startDate).toISOString() : undefined
       const end = endDate
@@ -99,6 +105,7 @@ export const VisitorsModal = ({
   const extractPath = (url: string) => {
     try {
       const urlObj = new URL(url)
+
       return urlObj.pathname || url
     } catch {
       return url
@@ -110,6 +117,7 @@ export const VisitorsModal = ({
     if (type === 'page') {
       return '页面访客详情'
     }
+
     return '播放访客详情'
   }
 
@@ -117,9 +125,11 @@ export const VisitorsModal = ({
     if (type === 'page' && pageUrl) {
       return `${pageTitle} (${extractPath(pageUrl)})`
     }
+
     if (type === 'anime' && dbid) {
       return `${animeName} (${dbid})`
     }
+
     return ''
   }
 

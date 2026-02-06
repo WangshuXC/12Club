@@ -1,18 +1,22 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Card, CardBody, Input, NumberInput } from '@heroui/react'
+
 import { useCreateResourceStore } from '@/store/editStore'
-import { IdInput } from './IdInput'
+
 import { AliasInput } from './AliasInput'
-import { TagInput } from './TagInput'
 import { BannerImage } from './BannerImage'
-import { PublishButton } from './PublishButton'
-import { ResourceIntroduction } from './ResourceIntroduction'
-import { ReleasedDateInput } from './ReleasedDateInput'
-import { LanguageSelect } from './LanguageSelect'
-import type { CreateResourceRequestData } from '@/store/editStore'
 import { GetBangumiData } from './GetBangumiData'
+import { IdInput } from './IdInput'
+import { LanguageSelect } from './LanguageSelect'
+import { PublishButton } from './PublishButton'
+import { ReleasedDateInput } from './ReleasedDateInput'
+import { ResourceIntroduction } from './ResourceIntroduction'
+import { TagInput } from './TagInput'
+
+import type { CreateResourceRequestData } from '@/store/editStore'
 
 export const CreateContainer = () => {
   const { data, setData } = useCreateResourceStore()

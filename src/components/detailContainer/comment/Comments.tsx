@@ -1,17 +1,20 @@
 'use client'
 import { useState, useEffect } from 'react'
+
 import { Button, Card, CardBody, User } from '@heroui/react'
-import { FetchGet } from '@/utils/fetch'
-import { PublishComment } from './PublishComment'
-import { CommentDropdown } from './CommentDropdown'
-import { CommentLikeButton } from './CommentLike'
 import { MessageCircle, Quote } from 'lucide-react'
+
 import { Loading } from '@/components/common/Loading'
-import { ResourceComment } from '@/types/api/comment'
-import { scrollIntoComment } from './_scrollIntoComment'
-import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import { CommentContent } from '@/components/ui/CommentContent'
 import { cn } from '@/lib/utils'
+import { ResourceComment } from '@/types/api/comment'
+import { FetchGet } from '@/utils/fetch'
+import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+
+import { CommentDropdown } from './CommentDropdown'
+import { CommentLikeButton } from './CommentLike'
+import { PublishComment } from './PublishComment'
+import { scrollIntoComment } from './_scrollIntoComment'
 
 interface Props {
   id: string
@@ -25,6 +28,7 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
 
   useEffect(() => {
     if (!shouldFetchComment) return
+
     const fetchData = async () => {
       const res = await FetchGet<{ comment: ResourceComment[] }>(
         `/detail/comment?dbId=${id}`

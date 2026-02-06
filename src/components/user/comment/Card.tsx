@@ -2,10 +2,12 @@
 
 import { Card, CardBody, Chip, Link, Tooltip } from '@heroui/react'
 import { Heart } from 'lucide-react'
-import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
-import type { UserComment } from '@/types/api/user'
-import { getRouteByDbId } from '@/utils/router'
+
 import { CommentContent } from '@/components/ui/CommentContent'
+import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+import { getRouteByDbId } from '@/utils/router'
+
+import type { UserComment } from '@/types/api/user'
 
 interface Props {
   comment: UserComment

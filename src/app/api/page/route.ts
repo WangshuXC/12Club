@@ -1,14 +1,16 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseGetQuery } from '@/utils/parseQuery'
-import { pageSchema } from '../../../validations/page'
+import { z } from 'zod'
+
 import {
   ALL_SUPPORTED_LANGUAGE,
   ALL_SUPPORTED_STATUS,
   ALL_SUPPORTED_TYPE,
   TYPE_MAP
 } from '@/constants/resource'
+import { ParseGetQuery } from '@/utils/parseQuery'
+
 import { prisma } from '../../../../prisma'
+import { pageSchema } from '../../../validations/page'
 
 const getPageData = async (input: z.infer<typeof pageSchema>) => {
   const {
@@ -131,6 +133,7 @@ export const GET = async (req: NextRequest) => {
     if (typeof input === 'string') {
       return NextResponse.json(input)
     }
+
     if (
       !ALL_SUPPORTED_TYPE.includes(input.selectedType) ||
       !ALL_SUPPORTED_LANGUAGE.includes(input.selectedLanguage) ||
@@ -140,6 +143,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     const response = await getPageData(input)
+
     return NextResponse.json(response)
   } catch (error) {
     console.error('Error in page API:', error)

@@ -1,11 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Card, CardBody, CardFooter, Image } from "@heroui/react"
 import { Calendar, Type } from 'lucide-react'
+import Link from 'next/link'
+
 import { PostMetadata } from '@/lib/mdx/types'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
-import Link from 'next/link'
 
 interface Props {
   post: PostMetadata
@@ -26,13 +28,13 @@ export const AboutCard = ({ post }: Props) => {
         <div className="relative w-full mx-auto overflow-hidden text-center rounded-t-lg opacity-90">
           <div
             className={`absolute inset-0 animate-pulse bg-default-100 ${imageLoaded ? 'opacity-0' : 'opacity-90'
-              } transition-opacity duration-300`}
+            } transition-opacity duration-300`}
             style={{ aspectRatio: '16/9' }}
           />
           <Image
             alt={post.title}
             className={`size-full object-cover transition-all duration-300 ${imageLoaded ? 'scale-100 opacity-90' : 'scale-105 opacity-0'
-              }`}
+            }`}
             src={post.banner}
             style={{ aspectRatio: '16/9' }}
             onLoad={() => setImageLoaded(true)}

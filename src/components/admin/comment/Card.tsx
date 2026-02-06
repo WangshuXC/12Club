@@ -2,12 +2,15 @@
 
 import { Card, CardBody, Avatar } from '@heroui/react'
 import { ThumbsUp } from 'lucide-react'
-import { formatDate } from '@/utils/time'
 import Link from 'next/link'
-import { CommentEdit } from './CommentEdit'
-import type { AdminComment } from '@/types/api/admin'
-import { getRouteByDbId } from '@/utils/router'
+
 import { CommentContent } from '@/components/ui/CommentContent'
+import { getRouteByDbId } from '@/utils/router'
+import { formatDate } from '@/utils/time'
+
+import { CommentEdit } from './CommentEdit'
+
+import type { AdminComment } from '@/types/api/admin'
 
 interface Props {
   comment: AdminComment

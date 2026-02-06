@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+
 import {
   Button,
   Card,
@@ -15,12 +15,15 @@ import {
   useDisclosure
 } from '@heroui/react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+
 import { CardStatus } from '@/components/common/CoverCard'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPut } from '@/utils/fetch'
-import toast from 'react-hot-toast'
-import type { ResourceData } from '@/types/api/resource'
 import { getRouteByDbId } from '@/utils/router'
+
+import type { ResourceData } from '@/types/api/resource'
 
 interface Props {
   favoriteData: ResourceData

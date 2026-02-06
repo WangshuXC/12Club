@@ -2,6 +2,7 @@
 
 import { Button, Slider } from '@heroui/react'
 import { InspectionPanel, RotateCw } from 'lucide-react'
+
 import type { Aspect } from './types'
 
 interface CropControlsProps {

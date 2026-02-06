@@ -1,6 +1,7 @@
 'use client'
 
 import { TreeNode } from '@/lib/mdx/types'
+
 import { TreeItem } from './SideTreeItem'
 
 interface Props {

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Tooltip,
@@ -12,8 +13,9 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
-import { FetchDelete } from '@/utils/fetch'
 import toast from 'react-hot-toast'
+
+import { FetchDelete } from '@/utils/fetch'
 
 interface Props {
   id: number

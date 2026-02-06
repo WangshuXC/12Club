@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
+
 import { parseCookies } from '@/utils/cookies'
+
 import type { NextRequest } from 'next/server'
 
 const protectedPaths = ['/admin', '/user', '/edit']
@@ -9,11 +11,13 @@ export const isProtectedRoute = (pathname: string) =>
 
 const redirectToLogin = (request: NextRequest) => {
   const loginUrl = new URL('/login', request.url)
+
   return NextResponse.redirect(loginUrl)
 }
 
 const getToken = (request: NextRequest) => {
   const cookies = parseCookies(request.headers.get('cookie') ?? '')
+
   return cookies['12club-token']
 }
 

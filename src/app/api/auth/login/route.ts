@@ -1,13 +1,15 @@
-
-import { z } from 'zod'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { verifyPassword } from '@/utils/algorithm'
+import { generateToken } from '@/utils/jwt'
 import { ParsePostBody } from '@/utils/parseQuery'
 import { loginSchema } from '@/validations/auth'
-import { verifyPassword } from '@/utils/algorithm'
-import type { UserState } from '@/store/userStore'
+
 import { prisma } from '../../../../../prisma'
-import { generateToken } from '@/utils/jwt'
+
+import type { UserState } from '@/store/userStore'
 
 export const login = async (input: z.infer<typeof loginSchema>) => {
   const { name, password } = input
@@ -26,6 +28,7 @@ export const login = async (input: z.infer<typeof loginSchema>) => {
     if (!user) {
       return '用户未找到'
     }
+
     if (user.status === 2) {
       return '该用户已被封禁, 如果您觉得有任何问题, 请联系我们'
     }
@@ -78,5 +81,6 @@ export const POST = async (req: NextRequest) => {
   }
 
   const response = await login(input)
+
   return NextResponse.json(response)
 }

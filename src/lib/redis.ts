@@ -19,6 +19,7 @@ export const setKv = async (key: string, value: string, time?: number) => {
 export const getKv = async (key: string) => {
   const keyString = `${REDIS_PREFIX}:${key}`
   const value = await redis.get(keyString)
+
   return value
 }
 

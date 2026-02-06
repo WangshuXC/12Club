@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   Button,
   Modal,
@@ -12,9 +14,9 @@ import {
   useDisclosure,
   addToast
 } from '@heroui/react'
-import { useState } from 'react'
-import { FetchPost } from '@/utils/fetch'
 import { MessageCircleQuestion } from 'lucide-react'
+
+import { FetchPost } from '@/utils/fetch'
 
 interface Props {
   name: string
@@ -28,7 +30,7 @@ export const FeedbackButton = ({ name, dbId }: Props) => {
 
   const handleSubmitFeedback = async () => {
     setSubmitting(true)
-    const res = await FetchPost<{}>('/detail/feedback', {
+    const res = await FetchPost<object>('/detail/feedback', {
       dbId,
       content: inputValue
     })
@@ -45,6 +47,7 @@ export const FeedbackButton = ({ name, dbId }: Props) => {
         color: 'success'
       })
     }
+
     onClose()
     setSubmitting(false)
   }

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ParsePostBody } from '@/utils/parseQuery'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
-import { prisma } from '../../../../../../prisma'
+import { ParsePostBody } from '@/utils/parseQuery'
 import { usernameSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../prisma'
 
 const updateUsername = async (username: string, uid: number) => {
   const user = await prisma.user.findUnique({ where: { id: uid } })
@@ -29,6 +31,7 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')

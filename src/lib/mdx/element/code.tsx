@@ -1,5 +1,6 @@
-import { highlight } from 'sugar-high'
 import React, { FC } from 'react'
+
+import { highlight } from 'sugar-high'
 
 interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   children: string
@@ -7,5 +8,6 @@ interface CodeProps extends React.HTMLAttributes<HTMLElement> {
 
 export const docCode: FC<CodeProps> = ({ children, ...props }) => {
   const codeHTML = highlight(children)
+
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }

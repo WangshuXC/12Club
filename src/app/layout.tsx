@@ -1,16 +1,17 @@
-import type { Metadata, Viewport } from 'next'
 import { headers } from 'next/headers'
-import { Toaster } from 'react-hot-toast'
-import { clubViewport, clubMetadata } from './metadata'
-import '@/styles/index.css'
-
 import { ViewTransitions } from 'next-view-transitions'
+import { Toaster } from 'react-hot-toast'
 
-import { Providers } from './providers'
-import { TopBar } from '@/components/topBar'
 import { BackToTop } from '@/components/common/BackToTop'
 import { Footer } from '@/components/common/Footer'
+import { TopBar } from '@/components/topBar'
+import '@/styles/index.css'
 import { getServerDeviceInfo } from '@/utils/device'
+
+import { clubViewport, clubMetadata } from './metadata'
+import { Providers } from './providers'
+
+import type { Metadata, Viewport } from 'next'
 
 export const viewport: Viewport = clubViewport
 

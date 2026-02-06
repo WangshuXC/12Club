@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -12,9 +13,11 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
-import { FetchDelete } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
+
 import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchDelete } from '@/utils/fetch'
+
 import type { AdminUser } from '@/types/api/admin'
 
 interface Props {
@@ -29,7 +32,7 @@ export const UserDelete = ({ user, onDelete }: Props) => {
   const [deleting, setDeleting] = useState(false)
   const handleUpdateUserInfo = async () => {
     setDeleting(true)
-    const res = await FetchDelete<{}>('/admin/user', {
+    const res = await FetchDelete<object>('/admin/user', {
       uid: user.id
     })
     setDeleting(false)

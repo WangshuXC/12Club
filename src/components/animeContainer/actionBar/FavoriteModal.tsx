@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
+
 import {
   Button,
   Modal,
@@ -9,12 +10,14 @@ import {
   Chip
 } from '@heroui/react'
 import { Folder } from 'lucide-react'
-import { EditFolderModal } from '@/components/user/favorite/EditFolderModal'
-import { FetchGet, FetchPut } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
 import toast from 'react-hot-toast'
-import type { UserFavoriteResourceFolder } from '@/types/api/user'
+
+import { EditFolderModal } from '@/components/user/favorite/EditFolderModal'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchGet, FetchPut } from '@/utils/fetch'
+
 import type { FavoriteToggleResponse } from '@/types/api/resource'
+import type { UserFavoriteResourceFolder } from '@/types/api/user'
 
 interface FavoriteModalProps {
   dbId: string

@@ -2,6 +2,7 @@
 
 import { Tooltip, User, type UserProps } from '@heroui/react'
 import { useRouter } from 'next-nprogress-bar'
+
 import type { _User } from '@/types/user'
 
 interface SelfUserProps {
@@ -18,15 +19,16 @@ export const SelfUser = ({ user, userProps }: SelfUserProps) => {
   const altString = alt ? alt : username
 
   return (
-    // <Tooltip
-    //   showArrow
-    //   delay={500}
-    //   closeDelay={200}
-    //   //   content={<UserCard uid={user.id} />}
-    //   classNames={{
-    //     content: ['bg-background/70 backdrop-blur-md']
-    //   }}
-    // >
+
+  // <Tooltip
+  //   showArrow
+  //   delay={500}
+  //   closeDelay={200}
+  //   //   content={<UserCard uid={user.id} />}
+  //   classNames={{
+  //     content: ['bg-background/70 backdrop-blur-md']
+  //   }}
+  // >
 
     // </Tooltip>
     <User

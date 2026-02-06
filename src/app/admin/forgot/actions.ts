@@ -1,9 +1,10 @@
 'use server'
 
 import { z } from 'zod'
+
+import { getResetCodes } from '@/app/api/auth/forgot/get'
 import { safeParseSchema } from '@/utils/actions/safeParseSchema'
 import { adminPaginationSchema } from '@/validations/admin'
-import { getResetCodes } from '@/app/api/auth/forgot/get'
 
 export const getActions = async (
   params: z.infer<typeof adminPaginationSchema>
@@ -14,5 +15,6 @@ export const getActions = async (
   }
 
   const response = await getResetCodes(input)
+
   return response
 }

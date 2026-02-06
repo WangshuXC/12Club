@@ -6,6 +6,7 @@ const generateGUID = (): string => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0
     const v = c === 'x' ? r : (r & 0x3) | 0x8
+
     return v.toString(16)
   })
 }
@@ -62,6 +63,7 @@ export const useTrackingStore = create<TrackingStore>()(
         if (state.guid) {
           return state.guid
         }
+
         const newGUID = generateGUID()
         set({ guid: newGUID })
         return newGUID
@@ -73,6 +75,7 @@ export const useTrackingStore = create<TrackingStore>()(
         if (!state.guid) {
           return get().initGUID()
         }
+
         return state.guid
       },
 
@@ -84,6 +87,7 @@ export const useTrackingStore = create<TrackingStore>()(
           set({ sessionId: newSessionId })
           return newSessionId
         }
+
         return state.sessionId
       },
 
@@ -118,6 +122,7 @@ export const useTrackingStore = create<TrackingStore>()(
     {
       name: 'tracking-store',
       storage: createJSONStorage(() => localStorage),
+
       // 只持久化 guid，不持久化事件队列和会话 ID
       partialize: (state) => ({
         guid: state.guid

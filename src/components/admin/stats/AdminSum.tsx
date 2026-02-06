@@ -1,11 +1,15 @@
 'use client'
 
 import { FC, useEffect, useState } from 'react'
+
 import { BarChart3 } from 'lucide-react'
-import { StatsCard } from './StatsCard'
-import { FetchGet } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
+
 import { ADMIN_STATS_SUM_MAP } from '@/constants/admin'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchGet } from '@/utils/fetch'
+
+import { StatsCard } from './StatsCard'
+
 import type { SumData } from '@/types/api/admin'
 
 export const AdminSum: FC = () => {

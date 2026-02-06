@@ -1,9 +1,10 @@
 'use client'
 
-import { Config } from '@/config/config'
-import Link from 'next/link'
-import Image from 'next/image'
 import { Popover, PopoverTrigger, PopoverContent, Button } from '@heroui/react'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { Config } from '@/config/config'
 
 export const Footer = () => {
   return (

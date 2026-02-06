@@ -1,6 +1,7 @@
 'use client'
 
 import { Spinner } from '@heroui/react'
+
 import type { TrendDataPoint } from '@/app/admin/tracking/actions'
 
 interface LineChartProps {
@@ -59,6 +60,7 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
   // Y轴刻度 - 从 0 到最大值，均匀分布 5 个刻度
   const yTicks = Array.from({ length: 5 }, (_, i) => {
     const value = chartMin + (effectiveRange * (4 - i)) / 4
+
     return {
       value: Math.round(value),
       y: padding + (i / 4) * (chartHeight - padding * 2)

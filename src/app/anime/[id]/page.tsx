@@ -1,11 +1,14 @@
-import type { Metadata } from 'next'
 import { headers } from 'next/headers'
-import { DetailContainer } from '@/components/detailContainer'
+
 import { AnimeContainer } from '@/components/animeContainer'
-import { getResourceActions } from './actions'
 import { ErrorComponent } from '@/components/common/Error'
+import { DetailContainer } from '@/components/detailContainer'
 import { Config } from '@/config/config'
 import { getServerDeviceInfo } from '@/utils/device'
+
+import { getResourceActions } from './actions'
+
+import type { Metadata } from 'next'
 
 interface Props {
   params: Promise<{ id: string }>

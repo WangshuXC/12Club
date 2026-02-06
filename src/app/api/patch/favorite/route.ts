@@ -1,9 +1,11 @@
-import { z } from 'zod'
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../../prisma'
-import { ParsePutBody } from '@/utils/parseQuery'
-import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 import { revalidatePath } from 'next/cache'
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import { ParsePutBody } from '@/utils/parseQuery'
+
+import { prisma } from '../../../../../prisma'
 
 // 定义请求体验证 schema，与 Card.tsx 中发送的数据结构对应
 const removeFavoriteSchema = z.object({

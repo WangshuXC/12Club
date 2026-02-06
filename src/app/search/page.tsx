@@ -1,7 +1,10 @@
-import type { Metadata } from 'next'
-import { SearchContainer } from '@/components/searchContainer'
 import { Suspense } from 'react'
+
+import { SearchContainer } from '@/components/searchContainer'
+
 import { searchMetadata } from '../metadata'
+
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = searchMetadata
 

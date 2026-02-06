@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+
 import { useResizeObserver } from '@/hooks/useResizeObserver'
 import { cn } from '@/lib/utils'
 
@@ -55,6 +56,7 @@ export const MasonryGrid = ({
       if (!child) {
         return
       }
+
       const shortestColumn = columnHeights.indexOf(Math.min(...columnHeights))
       columnItems[shortestColumn].push(child)
       columnHeights[shortestColumn]++

@@ -1,7 +1,9 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
-import { resourceCommentCreateSchema } from '@/validations/comment'
+
 import { processComments } from '@/utils/processComments'
+import { resourceCommentCreateSchema } from '@/validations/comment'
+
+import { prisma } from '../../../../../prisma'
 
 const createCommentWithRetry = async (createData: any, maxRetries = 3) => {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
@@ -16,17 +18,21 @@ const createCommentWithRetry = async (createData: any, maxRetries = 3) => {
           created: true
         }
       })
+
       return newComment
     } catch (error) {
       if (error instanceof Error && error.message.includes('Unique constraint failed') && attempt < maxRetries) {
         console.warn(`⚠️ 约束冲突，重试第 ${attempt} 次...`)
+
         // 等待一个随机的短时间后重试
         await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50))
         continue
       }
+
       throw error
     }
   }
+
   throw new Error('创建评论失败：达到最大重试次数')
 }
 

@@ -1,10 +1,12 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParsePostBody } from '@/utils/parseQuery'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
-import { createResourceCommentReportSchema } from '@/validations/comment'
 import { createMessage } from '@/utils/message'
+import { ParsePostBody } from '@/utils/parseQuery'
 import { getRouteByDbId } from '@/utils/router'
+import { createResourceCommentReportSchema } from '@/validations/comment'
+
 import { prisma } from '../../../../../../prisma'
 
 export const createReport = async (
@@ -38,11 +40,13 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await createReport(input, payload.uid)
+
   return NextResponse.json(response)
 }

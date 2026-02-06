@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+
 import { verifyToken } from '@/utils/jwt'
 
 export const verifyHeaderCookie = async () => {

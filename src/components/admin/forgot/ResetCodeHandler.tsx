@@ -1,6 +1,7 @@
 'use client'
 
-import { CheckCheck } from 'lucide-react'
+import { useState } from 'react'
+
 import {
   Button,
   useDisclosure,
@@ -11,10 +12,12 @@ import {
   ModalFooter,
   addToast
 } from '@heroui/react'
-import type { ResetCode } from '@/types/api/admin/forgot'
-import { useState } from 'react'
-import { FetchPut } from '@/utils/fetch'
+import { CheckCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+
+import { FetchPut } from '@/utils/fetch'
+
+import type { ResetCode } from '@/types/api/admin/forgot'
 
 interface ResetCodeDetailProps {
   resetCode: ResetCode
@@ -29,6 +32,7 @@ export const ResetCodeHandler = ({ resetCode, onUpdate }: ResetCodeDetailProps) 
 
   const handleStatusChange = async () => {
     setLoading(true)
+
     try {
       const res = await FetchPut<{ status: number; message: string }>('/auth/forgot',
         { id: resetCode.id }

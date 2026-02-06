@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FetchGet } from '@/utils/fetch'
-import { SelfPagination } from '@/components/common/Pagination'
-import { useMounted } from '@/hooks/useMounted'
+
 import { Loading } from '@/components/common/Loading'
 import { Null } from '@/components/common/Null'
+import { SelfPagination } from '@/components/common/Pagination'
+import { useMounted } from '@/hooks/useMounted'
+import { FetchGet } from '@/utils/fetch'
+
 import { UserResourceCard } from './Card'
+
 import type { UserResource as UserResourceType } from '@/types/api/user'
 
 interface Props {
@@ -41,6 +44,7 @@ export const UserResource = ({ resources, total, uid }: Props) => {
     if (!isMounted) {
       return
     }
+
     fetchPatches()
   }, [page])
 

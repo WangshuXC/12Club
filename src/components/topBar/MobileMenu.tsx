@@ -1,8 +1,9 @@
 'use client'
 
 import { NavbarMenu, NavbarMenuItem } from '@heroui/react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+
 import { Config } from '@/config/config'
 import { MobileNavItemList } from '@/constants/top-bar'
 

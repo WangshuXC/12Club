@@ -1,7 +1,9 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
 import { ParsePutBody } from '@/utils/parseQuery'
 import { updatePatchResourceStatsSchema } from '@/validations/patch'
+
 import { prisma } from '../../../../../prisma'
 
 export const downloadStats = async (
@@ -56,5 +58,6 @@ export const PUT = async (req: NextRequest) => {
   }
 
   const response = await downloadStats(input)
+
   return NextResponse.json(response)
 }

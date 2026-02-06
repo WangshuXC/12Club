@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import {
   Button,
   Modal,
@@ -12,10 +13,12 @@ import {
   Input
 } from '@heroui/react'
 import { Plus, Search } from 'lucide-react'
-import { FetchGet, FetchPost } from '@/utils/fetch'
 import toast from 'react-hot-toast'
 import { useDebounce } from 'use-debounce'
+
 import { Loading } from '@/components/common/Loading'
+import { FetchGet, FetchPost } from '@/utils/fetch'
+
 import type { AdminResource } from '@/types/api/admin'
 
 interface Props {

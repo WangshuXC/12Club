@@ -1,12 +1,14 @@
 'use client'
 
 import { Card, CardBody, Chip, Image } from '@heroui/react'
-import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import Link from 'next/link'
-import { PatchAttribute } from '@/components/common/PatchAttribute'
-import { getRouteByDbId } from '@/utils/router'
-import type { UserResource as UserResourceType } from '@/types/api/user'
+
 import { ExternalLink } from '@/components/common/ExternalLink'
+import { PatchAttribute } from '@/components/common/PatchAttribute'
+import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+import { getRouteByDbId } from '@/utils/router'
+
+import type { UserResource as UserResourceType } from '@/types/api/user'
 
 interface Props {
   resource: UserResourceType

@@ -1,17 +1,18 @@
 'use client'
 
 import { NavbarBrand } from '@heroui/react'
-import { Config } from '@/config/config'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import { useTransitionRouter } from 'next-view-transitions'
-import { upPage } from '@/lib/routerTransition'
 import { usePathname } from 'next/navigation'
+import { useTransitionRouter } from 'next-view-transitions'
+
+import { Config } from '@/config/config'
+import { upPage } from '@/lib/routerTransition'
 
 export const TopBarBrand = () => {
   const router = useTransitionRouter()
   const pathName = usePathname()
+
   return (
     <NavbarBrand className="hidden mr-4 grow-0 2xl:flex">
       <Link

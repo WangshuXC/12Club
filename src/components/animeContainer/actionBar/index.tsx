@@ -3,12 +3,13 @@
 import { useDisclosure } from '@heroui/react'
 import { Star, Share2, MessageSquare, MessageCircleQuestion } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { formatNumber } from '@/utils/formatNumber'
-import { useUserStore } from '@/store/userStore'
-import { Copy } from '@/utils/copy'
+import toast from 'react-hot-toast'
+
 import { Config } from '@/config/config'
 import { cn } from '@/lib/utils'
-import toast from 'react-hot-toast'
+import { useUserStore } from '@/store/userStore'
+import { Copy } from '@/utils/copy'
+import { formatNumber } from '@/utils/formatNumber'
 
 import { ActionButton } from './ActionButton'
 import { FavoriteModal } from './FavoriteModal'
@@ -55,6 +56,7 @@ export const ActionBar = ({
       toast.error('请登录以收藏')
       return
     }
+
     onFavoriteOpen()
   }
 

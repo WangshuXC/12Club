@@ -30,6 +30,7 @@ export function isValidDbId(dbId: string): boolean {
   }
 
   const prefix = dbId.charAt(0).toLowerCase() as RouterPrefix
+
   return prefix in ROUTER_MAP
 }
 

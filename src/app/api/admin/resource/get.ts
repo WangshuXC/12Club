@@ -1,6 +1,9 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
+
 import { adminGetResourceSchema } from '@/validations/admin'
+
+import { prisma } from '../../../../../prisma'
+
 import type { AdminResource } from '@/types/api/admin'
 
 export const getResource = async (

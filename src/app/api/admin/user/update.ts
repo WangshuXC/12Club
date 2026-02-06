@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { adminUpdateUserSchema } from '@/validations/admin'
+
 import { deleteToken } from '@/utils/jwt'
+import { adminUpdateUserSchema } from '@/validations/admin'
+
 import { prisma } from '../../../../../prisma'
 
 export const updateUser = async (

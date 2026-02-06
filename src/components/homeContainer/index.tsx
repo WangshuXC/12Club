@@ -1,14 +1,17 @@
 'use client'
-import { HomeCarousel, HomeComments } from '@/types/common/home'
-import { ResourceData } from '@/types/api/resource'
-import { ChevronRight } from 'lucide-react'
-import AnimeCarousel from './AnimeCarousel'
-import CommentCard from './CommentCard'
 import { Button } from '@heroui/react'
+import { ChevronRight } from 'lucide-react'
 import Link from 'next/link'
-import { CoverCard } from '../common/CoverCard'
+
 import { Announcement } from '@/types/api/announcement'
+import { ResourceData } from '@/types/api/resource'
+import { HomeCarousel, HomeComments } from '@/types/common/home'
+
+import { CoverCard } from '../common/CoverCard'
+
+import AnimeCarousel from './AnimeCarousel'
 import { AnnouncementCarousel } from './AnnouncementCarousel'
+import CommentCard from './CommentCard'
 
 interface Props {
   carouselData: HomeCarousel[]

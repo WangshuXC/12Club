@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import {
   Drawer,
   DrawerContent,
@@ -8,10 +10,10 @@ import {
   useDisclosure,
   Link
 } from '@heroui/react'
-import { usePathname } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+
 import { SidebarContent } from './SidebarContent'
-import { useEffect } from 'react'
 
 interface NotificationCardsProps {
   passwordResets: number

@@ -1,10 +1,13 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { Button } from '@heroui/react'
 import { ArrowUp } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import FadeContent from '../ui/FadeContent'
+
 import { cn } from '@/lib/utils'
+
+import FadeContent from '../ui/FadeContent'
 
 export const BackToTop = () => {
   const [show, setShow] = useState(false)

@@ -1,6 +1,7 @@
 'use client'
 
 import { SetStateAction, useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -16,12 +17,13 @@ import {
   Textarea,
   useDisclosure
 } from '@heroui/react'
+import { convert } from 'html-to-text'
 import { MoreHorizontal, Pencil, Trash2, TriangleAlert } from 'lucide-react'
-import { useUserStore } from '@/store/userStore'
 
+import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchDelete, FetchPost, FetchPut } from '@/utils/fetch'
-import { convert } from 'html-to-text'
+
 import type { ResourceComment } from '@/types/api/comment'
 
 interface Props {
@@ -72,11 +74,14 @@ export const CommentDropdown = ({ comment, setComments }: Props) => {
   }
   const handleSubmitEdit = async () => {
     setUpdating(true)
-    const res = await FetchPut<{ comment: ResourceComment[] }>('/detail/comment', {
-      commentId: comment.id,
-      resourceId: comment.resourceId,
-      content: editContent
-    })
+    const res = await FetchPut<{ comment: ResourceComment[] }>(
+      '/detail/comment',
+      {
+        commentId: comment.id,
+        resourceId: comment.resourceId,
+        content: editContent
+      }
+    )
     if (typeof res === 'string') {
       addToast({
         title: '失败',
@@ -103,7 +108,7 @@ export const CommentDropdown = ({ comment, setComments }: Props) => {
   const [reporting, setReporting] = useState(false)
   const handleSubmitReport = async () => {
     setReporting(true)
-    const res = await FetchPost<{}>('/detail/comment/report', {
+    const res = await FetchPost<object>('/detail/comment/report', {
       commentId: comment.id,
       resourceId: comment.resourceId,
       content: reportValue
@@ -186,7 +191,12 @@ export const CommentDropdown = ({ comment, setComments }: Props) => {
             <Button variant="light" onPress={onCloseEdit}>
               取消
             </Button>
-            <Button color="primary" isDisabled={updating} isLoading={updating} onPress={handleSubmitEdit}>
+            <Button
+              color="primary"
+              isDisabled={updating}
+              isLoading={updating}
+              onPress={handleSubmitEdit}
+            >
               保存
             </Button>
           </ModalFooter>
@@ -237,7 +247,11 @@ export const CommentDropdown = ({ comment, setComments }: Props) => {
             <Button variant="light" onPress={onCloseReport}>
               取消
             </Button>
-            <Button color="primary" isLoading={reporting} onPress={handleSubmitReport}>
+            <Button
+              color="primary"
+              isLoading={reporting}
+              onPress={handleSubmitReport}
+            >
               提交
             </Button>
           </ModalFooter>

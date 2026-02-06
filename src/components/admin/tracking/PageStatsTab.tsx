@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Table,
   TableHeader,
@@ -14,9 +15,12 @@ import {
   Tooltip
 } from '@heroui/react'
 import { Users } from 'lucide-react'
+
 import { SelfPagination } from '@/components/common/Pagination'
-import type { PageStats, PaginationInfo } from '@/app/admin/tracking/actions'
+
 import { VisitorsModal } from './VisitorsModal'
+
+import type { PageStats, PaginationInfo } from '@/app/admin/tracking/actions'
 
 interface PageStatsTableProps {
   data: PageStats[]
@@ -46,6 +50,7 @@ export const PageStatsTable = ({
   const extractPath = (url: string) => {
     try {
       const urlObj = new URL(url)
+
       return urlObj.pathname || url
     } catch {
       return url

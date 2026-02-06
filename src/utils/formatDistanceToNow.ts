@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -31,6 +31,7 @@ const replaceTimeUnits = (input: string) => {
   }
 
   const regex = new RegExp(Object.keys(replacements).join('|'), 'g')
+
   return input.replace(regex, (matched) => replacements[matched])
 }
 
@@ -45,5 +46,6 @@ export const formatDistanceToNow = (pastTime: number | Date | string) => {
   }
 
   const localizedTime = replaceTimeUnits(time()).replace(/s\b/g, '')
+
   return `${localizedTime}前`
 }

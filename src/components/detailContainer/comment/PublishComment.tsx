@@ -1,14 +1,17 @@
 'use client'
 
 import { useState, useRef } from 'react'
+
 import { addToast, Button, Card, CardBody, CardHeader, Textarea } from '@heroui/react'
 import { Send } from 'lucide-react'
+
+import { CommentPreview } from '@/components/ui/MemePreview'
+import { MemeSelector } from '@/components/ui/MemeSelector'
+import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPost } from '@/utils/fetch'
-import { useUserStore } from '@/store/userStore'
-import { MemeSelector } from '@/components/ui/MemeSelector'
-import { CommentPreview } from '@/components/ui/MemePreview'
 import { insertMemeIntoText, type MemeItem } from '@/utils/memeUtils'
+
 import type { ResourceComment } from '@/types/api/comment'
 
 interface CreateCommentProps {

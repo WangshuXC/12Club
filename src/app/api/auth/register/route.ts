@@ -1,13 +1,15 @@
-
-import { z } from 'zod'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { getRemoteIp } from '@/utils/getRemoteIp'
+import { generateToken } from '@/utils/jwt'
 import { ParsePostBody } from '@/utils/parseQuery'
 import { backendRegisterSchema } from '@/validations/auth'
-import { getRemoteIp } from '@/utils/getRemoteIp'
-import type { UserState } from '@/store/userStore'
+
 import { prisma } from '../../../../../prisma'
-import { generateToken } from '@/utils/jwt'
+
+import type { UserState } from '@/store/userStore'
 
 export const register = async (
   input: z.infer<typeof backendRegisterSchema>,
@@ -67,6 +69,7 @@ export const register = async (
       dailyUploadLimit: user.daily_upload_size,
       enableEmailNotice: user.enable_email_notice
     }
+
     return responseData
   } catch (error) {
     console.error('注册失败:', error)
@@ -92,5 +95,6 @@ export const POST = async (req: NextRequest) => {
   const ip = getRemoteIp(req.headers)
 
   const response = await register(input, ip)
+
   return NextResponse.json(response)
 }

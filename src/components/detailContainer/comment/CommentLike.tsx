@@ -1,13 +1,16 @@
 'use client'
 
-import { Button, Tooltip, addToast } from '@heroui/react'
 import { useState } from 'react'
+
+import { Button, Tooltip, addToast } from '@heroui/react'
 import { ThumbsUp } from 'lucide-react'
-import { useUserStore } from '@/store/userStore'
+
 import { cn } from '@/lib/utils'
-import type { ResourceComment } from '@/types/api/comment'
-import { FetchPut } from '@/utils/fetch'
+import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPut } from '@/utils/fetch'
+
+import type { ResourceComment } from '@/types/api/comment'
 
 interface Props {
   comment: ResourceComment

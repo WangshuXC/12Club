@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../prisma'
-import { HomeCarousel, HomeComments } from '@/types/common/home'
+
 import { Announcement } from '@/types/api/announcement'
 import { ResourceData } from '@/types/api/resource'
+import { HomeCarousel, HomeComments } from '@/types/common/home'
 import { getRouteByDbId } from '@/utils/router'
+
+import { prisma } from '../../../../prisma'
 
 const reorderByCentralPriority = (sortedArray: any[]) => {
   if (sortedArray.length === 0) return []
@@ -22,6 +24,7 @@ const reorderByCentralPriority = (sortedArray: any[]) => {
     } else {
       reordered[right++] = sortedArray[i]
     }
+
     isLeftTurn = !isLeftTurn
   }
 
@@ -176,6 +179,7 @@ export const getHomeData = async () => {
 export const GET = async (req: NextRequest) => {
   try {
     const response = await getHomeData()
+
     return NextResponse.json(response)
   } catch (error) {
     console.error('Error fetching home data:', error)

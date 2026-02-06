@@ -1,8 +1,11 @@
 import { z } from 'zod'
-import { resourceCreateSchema } from '@/validations/edit'
-import { prisma } from '../../../../prisma'
-import { uploadResourceImage } from './_upload'
+
 import { getRouteByDbId } from '@/utils/router'
+import { resourceCreateSchema } from '@/validations/edit'
+
+import { prisma } from '../../../../prisma'
+
+import { uploadResourceImage } from './_upload'
 
 export const createResource = async (
   input: Omit<z.infer<typeof resourceCreateSchema>, 'alias' | 'tag'> & {
@@ -55,6 +58,7 @@ export const createResource = async (
           introduction,
           released,
           user_id: uid,
+
           // 设置默认值
           accordion: 0,
           status: 0,

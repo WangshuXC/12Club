@@ -1,7 +1,9 @@
 'use client'
 
-import { AnimatePresence, motion } from 'framer-motion'
 import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { AnimatePresence, motion } from 'framer-motion'
+
 import { cn } from '@/lib/utils'
 
 export function PlaceholdersAndVanishInput({
@@ -38,6 +40,7 @@ export function PlaceholdersAndVanishInput({
       if (intervalRef.current) {
         clearInterval(intervalRef.current)
       }
+
       document.removeEventListener('visibilitychange', handleVisibilityChange)
     }
   }, [placeholders])
@@ -70,9 +73,9 @@ export function PlaceholdersAndVanishInput({
     const newData: any[] = []
 
     for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800
+      const i = 4 * t * 800
       for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n
+        const e = i + 4 * n
         if (
           pixelData[e] !== 0 &&
           pixelData[e + 1] !== 0 &&
@@ -96,6 +99,7 @@ export function PlaceholdersAndVanishInput({
       x,
       y,
       r: 1,
+
       // color: `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`,
       color: 'var(--color-onPrimary)'
     }))
@@ -118,12 +122,14 @@ export function PlaceholdersAndVanishInput({
               current.r = 0
               continue
             }
+
             current.x += Math.random() > 0.5 ? 1 : -1
             current.y += Math.random() > 0.5 ? 1 : -1
             current.r -= 0.05 * Math.random()
             newArr.push(current)
           }
         }
+
         newDataRef.current = newArr
         const ctx = canvasRef.current?.getContext('2d')
         if (ctx) {
@@ -139,6 +145,7 @@ export function PlaceholdersAndVanishInput({
             }
           })
         }
+
         if (newDataRef.current.length > 0) {
           animateFrame(pos - 8)
         } else {
@@ -175,6 +182,7 @@ export function PlaceholdersAndVanishInput({
     vanishAndSubmit()
     onSubmit && onSubmit(e)
   }
+
   return (
     <form
       className={cn(

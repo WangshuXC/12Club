@@ -1,11 +1,12 @@
 import { z } from 'zod'
-import { ResourceSizeRegex } from '@/utils/validate'
+
 import {
   SUPPORTED_LANGUAGE,
   SUPPORTED_TYPE,
   SUPPORTED_RESOURCE_LINK,
   SUPPORTED_RESOURCE_SECTION
 } from '@/constants/resource'
+import { ResourceSizeRegex } from '@/utils/validate'
 
 export const patchResourceCreateSchema = z.object({
   dbId: z.coerce.string().min(1).max(9999999),

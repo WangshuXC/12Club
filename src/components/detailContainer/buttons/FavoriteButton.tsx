@@ -3,8 +3,10 @@
 import { Button, Tooltip, useDisclosure } from '@heroui/react'
 import { Heart } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { useUserStore } from '@/store/userStore'
+
 import { cn } from '@/lib/utils'
+import { useUserStore } from '@/store/userStore'
+
 import { FavoriteModal } from './FavoriteModal'
 
 interface Props {

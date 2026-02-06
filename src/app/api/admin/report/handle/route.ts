@@ -1,10 +1,12 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParsePostBody } from '@/utils/parseQuery'
-import { prisma } from '../../../../../../prisma'
-import { adminHandleReportSchema } from '@/validations/admin'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { createMessage } from '@/utils/message'
+import { ParsePostBody } from '@/utils/parseQuery'
+import { adminHandleReportSchema } from '@/validations/admin'
+
+import { prisma } from '../../../../../../prisma'
 
 export const handleReport = async (
   input: z.infer<typeof adminHandleReportSchema>,
@@ -16,12 +18,14 @@ export const handleReport = async (
   if (message?.status) {
     return '该举报已被处理'
   }
+
   const handleResult = input.content ? input.content : '无处理留言'
   const feedbackContent = `您的举报已处理!\n${handleResult}`
 
   return prisma.$transaction(async (prisma) => {
     await prisma.userMessage.update({
       where: { id: input.messageId },
+
       // status: 0 - unread, 1 - read, 2 - approve, 3 - decline
       data: { status: { set: 1 } }
     })
@@ -44,14 +48,17 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
+
   if (payload.role < 3) {
     return NextResponse.json('本页面仅管理员可访问')
   }
 
   const response = await handleReport(input, payload.uid)
+
   return NextResponse.json(response)
 }

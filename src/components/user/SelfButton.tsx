@@ -1,11 +1,14 @@
 'use client'
 
+import { useState } from 'react'
+
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
 import { BadgeCheck, Pencil, Shield } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
-import type { UserInfo } from '@/types/api/user'
-import { useState } from 'react'
+
 import { Username, Bio, UserAvatar, Password } from './settings'
+
+import type { UserInfo } from '@/types/api/user'
 
 interface Props {
   user: UserInfo

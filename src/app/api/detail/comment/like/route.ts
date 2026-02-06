@@ -1,9 +1,11 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParsePutBody } from '@/utils/parseQuery'
-import { prisma } from '../../../../../../prisma'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { createDedupMessage } from '@/utils/message'
+import { ParsePutBody } from '@/utils/parseQuery'
+
+import { prisma } from '../../../../../../prisma'
 
 const commentIdSchema = z.object({
   commentId: z.coerce
@@ -25,6 +27,7 @@ export const toggleCommentLike = async (
   if (!comment) {
     return '未找到评论'
   }
+
   if (comment.user_id === uid) {
     return '您不能给自己点赞'
   }
@@ -76,11 +79,13 @@ export const PUT = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await toggleCommentLike(input, payload.uid)
+
   return NextResponse.json(response)
 }

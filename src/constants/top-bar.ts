@@ -20,6 +20,7 @@ export const NavItemList: NavItem[] = [
     name: '小说',
     href: '/novel'
   },
+
   // {
   //   name: '音乐',
   //   href: '/music'
@@ -32,6 +33,7 @@ export const NavItemList: NavItem[] = [
 
 export const MobileNavItemList: NavItem[] = [
   ...NavItemList,
+
   // {
   //   name: '评论列表',
   //   href: '/comment'

@@ -1,9 +1,11 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '../../../../../prisma'
-import { ParsePutBody } from '@/utils/parseQuery'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+import { ParsePutBody } from '@/utils/parseQuery'
 import { addToFavoriteSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../prisma'
 
 export const togglePatchFavorite = async (
   input: z.infer<typeof addToFavoriteSchema>,
@@ -22,6 +24,7 @@ export const togglePatchFavorite = async (
   if (!folder) {
     return '未找到收藏文件夹'
   }
+
   if (folder.user_id !== uid) {
     return '这不是您的收藏夹'
   }
@@ -63,11 +66,13 @@ export const PUT = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await togglePatchFavorite(input, payload.uid)
+
   return NextResponse.json(response)
 } 

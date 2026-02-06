@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Button, Chip, Input, addToast } from '@heroui/react'
 import { Plus } from 'lucide-react'
 
@@ -23,6 +24,7 @@ export const AdminAliasInput = ({ aliases, onChange, errors }: Props) => {
       })
       return
     }
+
     if (alias) {
       onChange([...aliases, alias])
       setNewAlias('')

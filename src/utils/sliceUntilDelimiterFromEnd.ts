@@ -6,5 +6,6 @@ export const sliceUntilDelimiterFromEnd = (
   if (lastDelimiterIndex === -1) {
     return input
   }
+
   return input.slice(lastDelimiterIndex + delimiter.length)
 }

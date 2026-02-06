@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -9,10 +11,10 @@ import {
   CardHeader,
   Textarea
 } from '@heroui/react'
+
 import { useUserStore } from '@/store/userStore'
-import { useState } from 'react'
-import { FetchPost } from '@/utils/fetch'
 import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPost } from '@/utils/fetch'
 import { bioSchema } from '@/validations/user'
 
 export const Bio = () => {
@@ -30,7 +32,7 @@ export const Bio = () => {
       setUser({ ...user, bio })
       setLoading(true)
 
-      const res = await FetchPost<{}>('/user/setting/bio', { bio })
+      const res = await FetchPost<object>('/user/setting/bio', { bio })
       ErrorHandler(res, () => {
         addToast({
           title: '成功',

@@ -1,11 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FetchGet } from '@/utils/fetch'
+
 import { Loading } from '@/components/common/Loading'
-import { useMounted } from '@/hooks/useMounted'
-import { ReportCard } from './ReportCard'
 import { SelfPagination } from '@/components/common/Pagination'
+import { useMounted } from '@/hooks/useMounted'
+import { FetchGet } from '@/utils/fetch'
+
+import { ReportCard } from './ReportCard'
+
 import type { AdminReport } from '@/types/api/admin'
 
 interface Props {
@@ -38,6 +41,7 @@ export const Report = ({ initialReports, total }: Props) => {
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page])
 

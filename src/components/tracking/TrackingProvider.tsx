@@ -8,6 +8,7 @@ import {
   useCallback,
   ReactNode
 } from 'react'
+
 import { useTracking, UseTrackingOptions } from '@/hooks/useTracking'
 import { getDeviceInfo } from '@/utils/device'
 
@@ -32,6 +33,7 @@ export const useTrackingContext = () => {
   if (!context) {
     throw new Error('useTrackingContext must be used within a TrackingProvider')
   }
+
   return context
 }
 
@@ -43,6 +45,7 @@ const parseExtraData = (element: HTMLElement): Record<string, unknown> => {
   Array.from(element.attributes).forEach((attr) => {
     if (attr.name.startsWith('data-log-')) {
       const key = attr.name.replace('data-log-', '')
+
       try {
         // 尝试解析 JSON
         extraData[key] = JSON.parse(attr.value)
@@ -69,8 +72,10 @@ export const TrackingProvider = ({
 
   // 存储已曝光的元素
   const exposedElementsRef = useRef<WeakSet<Element>>(new WeakSet())
+
   // IntersectionObserver 实例
   const observerRef = useRef<IntersectionObserver | null>(null)
+
   // MutationObserver 实例
   const mutationObserverRef = useRef<MutationObserver | null>(null)
 
@@ -144,6 +149,7 @@ export const TrackingProvider = ({
       {
         // 元素进入视口 50% 时触发
         threshold: 0.5,
+
         // 提前 100px 触发
         rootMargin: '100px'
       }

@@ -1,5 +1,6 @@
-import { prisma } from '../../../../../prisma'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+
+import { prisma } from '../../../../../prisma'
 
 export const getResetCodes = async (params: {
   page: number
@@ -49,7 +50,6 @@ export const getResetCodes = async (params: {
       }),
       prisma.passwordReset.count({ where })
     ])
-
 
     return {
       resetCodes: resetCodes.map(reset => ({

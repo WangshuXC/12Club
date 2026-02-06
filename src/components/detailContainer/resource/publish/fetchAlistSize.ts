@@ -46,12 +46,15 @@ interface AlistListData {
 export const fetchLinkData = async (link: string) => {
   const key = link.split('/').pop()
   const apiUrl = `https://pan.touchgal.net/api/v3/share/info/${key}`
+
   try {
     const response = await fetch(apiUrl)
     if (!response.ok) {
       throw new Error(`Failed to fetch: ${response.statusText}`)
     }
+
     const data: AlistLinkData = await response.json()
+
     return data
   } catch (error) {
     console.error(`Error fetching data for link: ${link}`, error)
@@ -62,19 +65,23 @@ export const fetchLinkData = async (link: string) => {
 export const fetchListData = async (link: string) => {
   const key = link.split('/').pop()
   const apiUrl = `https://pan.touchgal.net/api/v3/share/list/${key}`
+
   try {
     const response = await fetch(apiUrl)
     if (!response.ok) {
       throw new Error(`Failed to fetch list: ${response.statusText}`)
     }
+
     const data: AlistListData = await response.json()
     if (data.code === 0 && data.data.objects && data.data.objects.length > 0) {
       const largestObject = data.data.objects.reduce(
         (max, obj) => (obj.size > max.size ? obj : max),
         { size: 0 }
       )
+
       return largestObject.size
     }
+
     return null
   } catch (error) {
     console.error(`Error fetching list data for key: ${key}`, error)

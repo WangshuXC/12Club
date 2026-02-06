@@ -1,7 +1,8 @@
 'use client'
 
-import { Slider } from '@heroui/react'
 import { FC } from 'react'
+
+import { Slider } from '@heroui/react'
 
 interface MosaicControllerProps {
   mosaicSize: number

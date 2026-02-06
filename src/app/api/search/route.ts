@@ -1,9 +1,11 @@
-import { z } from 'zod'
-import { NextRequest, NextResponse } from 'next/server'
-import { ParsePostBody } from '@/utils/parseQuery'
-import { searchSchema } from '../../../validations/search'
-import { prisma } from '../../../../prisma'
 import { Prisma } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { ParsePostBody } from '@/utils/parseQuery'
+
+import { prisma } from '../../../../prisma'
+import { searchSchema } from '../../../validations/search'
 
 const searchData = async (input: z.infer<typeof searchSchema>) => {
   const { query, page, limit, searchOption } = input
@@ -193,6 +195,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const response = await searchData(input)
+
     return NextResponse.json(response)
   } catch (error) {
     console.error('Error in search API:', error)

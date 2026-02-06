@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+
 import {
   Drawer,
   DrawerContent,
@@ -7,12 +9,13 @@ import {
   DrawerBody,
   useDisclosure
 } from "@heroui/react"
-import { TreeNode } from '@/lib/mdx/types'
 import { ChevronRight } from 'lucide-react'
-import { SidebarContent } from './SidebarContent'
 import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
 import { Link } from 'next-view-transitions'
+
+import { TreeNode } from '@/lib/mdx/types'
+
+import { SidebarContent } from './SidebarContent'
 
 interface Props {
   tree: TreeNode

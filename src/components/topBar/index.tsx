@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import {
   Navbar,
   NavbarContent,
@@ -8,16 +9,15 @@ import {
   NavbarMenuToggle
 } from '@heroui/react'
 import Link from 'next/link'
-
 import { usePathname } from 'next/navigation'
+import { useTransitionRouter } from 'next-view-transitions'
+
 import { NavItemList } from '@/constants/top-bar'
+import { slideInOut } from '@/lib/routerTransition'
 
 import { TopBarBrand } from './Brand'
 import { MobileMenu } from './MobileMenu'
 import { TopBarUser } from './User'
-
-import { useTransitionRouter } from 'next-view-transitions'
-import { slideInOut } from '@/lib/routerTransition'
 
 export const TopBar = () => {
   const pathname = usePathname()

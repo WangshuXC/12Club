@@ -54,6 +54,7 @@ export const parseDeviceType = (ua: string): string => {
   } else if (/iPod/i.test(ua)) {
     return 'ios_ipod'
   }
+
   // Android 设备
   else if (/Android/i.test(ua)) {
     if (/Mobile/i.test(ua)) {
@@ -62,22 +63,27 @@ export const parseDeviceType = (ua: string): string => {
       return 'android_tablet'
     }
   }
+
   // 其他平板
   else if (/(tablet|playbook|silk)/i.test(ua)) {
     return 'tablet'
   }
+
   // 其他移动设备
   else if (/blackberry|opera mini|iemobile|windows phone/i.test(ua)) {
     return 'mobile_other'
   }
+
   // Mac
   else if (/Macintosh/i.test(ua)) {
     return 'mac'
   }
+
   // Windows
   else if (/Windows/i.test(ua)) {
     return 'windows'
   }
+
   // Linux
   else if (/Linux/i.test(ua)) {
     return 'linux'
@@ -103,6 +109,7 @@ export const getDeviceTypeLabel = (deviceType: string): string => {
 export const parseUserAgentLabel = (ua: string | null): string => {
   if (!ua) return '未知设备'
   const deviceType = parseDeviceType(ua)
+
   return getDeviceTypeLabel(deviceType)
 }
 

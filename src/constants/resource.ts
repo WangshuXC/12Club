@@ -28,6 +28,7 @@ export const SUPPORTED_TYPE_MAP: Record<string, string> = {
 export const ALL_SUPPORTED_TYPE = ['all', ...SUPPORTED_TYPE]
 
 export const SUPPORTED_RESOURCE_TYPE = ['anime', 'comic', 'game', 'novel']
+
 export const SUPPORTED_RESOURCE_TYPE_MAP: Record<string, string> = {
   anime: '动漫',
   comic: '漫画',
@@ -36,7 +37,9 @@ export const SUPPORTED_RESOURCE_TYPE_MAP: Record<string, string> = {
 }
 
 export const SUPPORTED_LANGUAGE = ['zh', 'jp', 'en', 'other']
+
 export const ALL_SUPPORTED_LANGUAGE = ['all', ...SUPPORTED_LANGUAGE]
+
 export const SUPPORTED_LANGUAGE_MAP: Record<string, string> = {
   all: '全部语言',
   zh: '中文',
@@ -46,7 +49,9 @@ export const SUPPORTED_LANGUAGE_MAP: Record<string, string> = {
 }
 
 export const SUPPORTED_STATUS = ['0', '1', '2']
+
 export const ALL_SUPPORTED_STATUS = ['all', ...SUPPORTED_STATUS]
+
 export const SUPPORTED_STATUS_MAP: Record<string, string> = {
   all: '全部',
   0: '未完结',

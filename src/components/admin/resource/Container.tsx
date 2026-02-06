@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import {
   Table,
   TableBody,
@@ -10,17 +12,19 @@ import {
   Input
 } from '@heroui/react'
 import { Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { RenderCell } from './RenderCell'
-import { FetchGet } from '@/utils/fetch'
-import { Loading } from '@/components/common/Loading'
-import { useMounted } from '@/hooks/useMounted'
 import { useDebounce } from 'use-debounce'
+
+import { Loading } from '@/components/common/Loading'
 import { SelfPagination } from '@/components/common/Pagination'
-import type { AdminResource } from '@/types/api/admin'
+import { useMounted } from '@/hooks/useMounted'
+import { useAdminResourceStore } from '@/store/adminResourceStore'
+import { FetchGet } from '@/utils/fetch'
+
 import { AdminResourceOption } from './AdminResourceOption'
 import { AdminResourceSort } from './AdminResourceSort'
-import { useAdminResourceStore } from '@/store/adminResourceStore'
+import { RenderCell } from './RenderCell'
+
+import type { AdminResource } from '@/types/api/admin'
 
 const columns = [
   { name: '封面', uid: 'banner' },
@@ -83,6 +87,7 @@ export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: 
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page, debouncedQuery, adminResourceData])
 

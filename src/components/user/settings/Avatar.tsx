@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardBody, CardFooter } from '@heroui/react'
+
 import { AvatarCrop } from './AvatarCrop'
 
 export const UserAvatar = () => {

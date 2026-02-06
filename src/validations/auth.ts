@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { UsernameRegex, PasswordRegex } from '@/utils/validate'
 
 export const loginSchema = z.object({

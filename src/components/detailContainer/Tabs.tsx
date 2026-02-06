@@ -1,11 +1,14 @@
 'use client'
 
-import { Tab, Tabs } from '@heroui/react'
 import type { Dispatch, SetStateAction } from 'react'
-import { IntroductionTab } from './introduction'
+
+import { Tab, Tabs } from '@heroui/react'
+
 import { Introduction } from '@/types/common/detail-container'
-import { ResourceTab } from './resource'
+
 import { CommentTab } from './comment'
+import { IntroductionTab } from './introduction'
+import { ResourceTab } from './resource'
 
 interface DetailTabsProps {
   id: string
@@ -29,6 +32,7 @@ export const DetailTabs = ({
         if (value === 'comments') {
           window.scroll(0, 99999)
         }
+
         setSelected(value.toString())
       }}
       selectedKey={selected}

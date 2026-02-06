@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { deleteToken } from '@/utils/jwt'
 

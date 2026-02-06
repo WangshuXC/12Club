@@ -8,6 +8,7 @@ import {
   PopoverTrigger
 } from '@heroui/react'
 import { Settings } from 'lucide-react'
+
 import { useSearchStore } from '@/store/searchStore'
 
 export const SearchOption = () => {

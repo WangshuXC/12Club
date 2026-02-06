@@ -95,5 +95,6 @@ export const FetchFormData = async <T>(
   if (!formData) {
     throw new Error('formData is required for FetchFormData')
   }
+
   return FetchRequest<T>(url, 'POST', { formData })
 }

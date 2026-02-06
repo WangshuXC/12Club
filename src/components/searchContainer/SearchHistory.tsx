@@ -1,9 +1,11 @@
 'use client'
 
+import type { Dispatch, SetStateAction } from 'react'
+
 import { Button } from '@heroui/react'
 import { Clock, X } from 'lucide-react'
+
 import { useSearchStore } from '@/store/searchStore'
-import type { Dispatch, SetStateAction } from 'react'
 
 interface Props {
   showHistory: boolean

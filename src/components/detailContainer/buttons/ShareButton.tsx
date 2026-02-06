@@ -2,8 +2,9 @@
 
 import { Button, Tooltip } from '@heroui/react'
 import { Share2 } from 'lucide-react'
-import { Copy } from '@/utils/copy'
+
 import { Config } from '@/config/config'
+import { Copy } from '@/utils/copy'
 
 interface Props {
   name: string

@@ -1,16 +1,14 @@
 // ************* Core ESLint Rules ************
 const commonCoreRules = {
   indent: ['error', 2], // 强制使用两个空格进行缩进
-  'comma-dangle': ['error', 'always-multiline'], // 强制在多行的对象和数组字面量中的最后一个元素后面使用逗号
   'object-curly-spacing': ['error', 'always'], // 强制在对象字面量的大括号内使用空格
   eqeqeq: ['error', 'always'], // 要求使用全等（===）和非全等（!==）运算符
-  'no-console': 'warning', // 使用 console 语句提出警告
   'no-empty': 'error', // 禁止出现空的代码块
   'no-useless-catch': 'error', // 禁止出现不做任何事情的 catch 块
   'no-multiple-empty-lines': ['error', { max: 1, maxBOF: 0 }], // 限制连续空行的数量不能超过1
   'max-params': ['error', 5], // 限制函数定义中参数的最大数量为5
-  'max-depth': ['error', 3], // 限制代码块嵌套的最大深度为3
-  'max-nested-callbacks': ['error', 3], // 限制回调函数嵌套的最大深度为3
+  'max-depth': ['error', 4], // 限制代码块嵌套的最大深度为3
+  'max-nested-callbacks': ['error', 4], // 限制回调函数嵌套的最大深度为3
 
   // 注释的换行规则 （以下规则只适用于独立的注释，如果注释位于代码行的末尾，则不会生效）
   'lines-around-comment': [
@@ -113,6 +111,7 @@ const commonCoreRules = {
 module.exports = {
   extends: ['next/core-web-vitals', 'next/typescript'],
   rules: {
-    ...commonCoreRules
+    ...commonCoreRules,
+    '@typescript-eslint/no-explicit-any': 'warn' // 允许使用 any 类型，但会警告
   }
 }

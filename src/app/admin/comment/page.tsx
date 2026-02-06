@@ -1,14 +1,13 @@
-import { Comment } from '@/components/admin/comment/Container'
-import { GetActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
 
+import { Comment } from '@/components/admin/comment/Container'
+import { ErrorComponent } from '@/components/common/Error'
 
+import { GetActions } from './actions'
 
 export const revalidate = 3
 
-
-export default async function Kun() {
+export default async function CommentPage() {
   const response = await GetActions({
     page: 1,
     limit: 30

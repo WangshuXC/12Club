@@ -1,6 +1,22 @@
 'use client'
 
-import { Avatar, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast, useDisclosure } from '@heroui/react'
+import { useEffect, useState } from 'react'
+
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  addToast,
+  useDisclosure
+} from '@heroui/react'
 import {
   CalendarCheck,
   CircleHelp,
@@ -12,11 +28,12 @@ import {
   UserRound,
   Shield
 } from 'lucide-react'
-import { useUserStore } from '@/store/userStore'
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next-nprogress-bar'
-import { FetchGet, FetchPost } from '@/utils/fetch'
+
 import { useMounted } from '@/hooks/useMounted'
+import { useUserStore } from '@/store/userStore'
+import { FetchGet, FetchPost } from '@/utils/fetch'
+
 import type { UserState } from '@/store/userStore'
 
 export const UserDropdown = () => {
@@ -30,6 +47,7 @@ export const UserDropdown = () => {
     if (!isMounted) {
       return
     }
+
     if (!user.uid) {
       return
     }
@@ -43,7 +61,7 @@ export const UserDropdown = () => {
 
   const handleLogOut = async () => {
     setLoading(true)
-    await FetchPost<{}>('/user/status/logout')
+    await FetchPost<object>('/user/status/logout')
     setLoading(false)
     logout()
     router.push('/login')

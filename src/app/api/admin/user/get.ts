@@ -1,7 +1,10 @@
 import { z } from 'zod'
+
 import { adminPaginationSchema } from '@/validations/admin'
-import type { AdminUser } from '@/types/api/admin'
+
 import { prisma } from '../../../../../prisma'
+
+import type { AdminUser } from '@/types/api/admin'
 
 export const getUserInfo = async (
   input: z.infer<typeof adminPaginationSchema>

@@ -1,5 +1,7 @@
 'use client'
 
+import { FC, useEffect, useMemo, useRef, useState } from 'react'
+
 import {
   Button,
   Modal,
@@ -8,9 +10,9 @@ import {
   ModalFooter,
   ModalHeader
 } from '@heroui/react'
-import { FC, useEffect, useMemo, useRef, useState } from 'react'
-import { mosaicImg } from './utils'
+
 import { MosaicController } from './MosaicController'
+import { mosaicImg } from './utils'
 
 interface Props {
   isOpen: boolean
@@ -51,6 +53,7 @@ export const ImageMosaicModal: FC<Props> = ({
     img.onload = () => {
       setImageLoaded(true)
     }
+
     img.src = imgSrc
     return img
   }, [imgSrc])
@@ -96,6 +99,7 @@ export const ImageMosaicModal: FC<Props> = ({
     const mosaicCtx = mosaicCanvas.getContext('2d', {
       willReadFrequently: true
     })
+
     return { mosaicCanvas, mosaicCtx }
   }
 
@@ -104,10 +108,12 @@ export const ImageMosaicModal: FC<Props> = ({
       canvas.removeEventListener('mousedown', handleMouseDownRef.current)
       handleMouseDownRef.current = null
     }
+
     if (handleMouseMoveRef.current) {
       canvas.removeEventListener('mousemove', handleMouseMoveRef.current)
       handleMouseMoveRef.current = null
     }
+
     if (handleMouseUpRef.current) {
       document.removeEventListener('mouseup', handleMouseUpRef.current)
       handleMouseUpRef.current = null
@@ -148,6 +154,7 @@ export const ImageMosaicModal: FC<Props> = ({
         mosaicCtx.moveTo(mouseX, mouseY)
         canvasStatesRef.current.isInit = false
       }
+
       mosaicCtx.lineTo(mouseX, mouseY)
       mosaicCtx.lineWidth = mosaicSize
       mosaicCtx.lineCap = 'round'

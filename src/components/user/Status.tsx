@@ -2,6 +2,7 @@
 
 import { Card, CardBody } from '@heroui/react'
 import { MessageCircle, Puzzle, Star } from 'lucide-react'
+
 import type { UserInfo } from '@/types/api/user'
 
 export const UserStats = ({ user }: { user: UserInfo }) => {
@@ -12,6 +13,7 @@ export const UserStats = ({ user }: { user: UserInfo }) => {
       icon: Puzzle
     },
     { label: '评论', value: user._count.resource_comment, icon: MessageCircle },
+
     // { label: '消息', value: user._count.send_message, icon: MessageSquareMore },
     { label: '收藏', value: user._count.resource_favorite, icon: Star }
   ]

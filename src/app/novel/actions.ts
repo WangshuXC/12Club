@@ -1,9 +1,11 @@
 'use server'
 
 import { z } from 'zod'
+
 import { safeParseSchema } from '@/utils/actions/safeParseSchema'
 import { FetchGet } from '@/utils/fetch'
 import { pageSchema } from '@/validations/page'
+
 import type { PageData } from '@/types/api/page'
 
 export const getPageResourceActions = async (
@@ -13,6 +15,7 @@ export const getPageResourceActions = async (
   if (typeof input === 'string') {
     return input
   }
+
   const response = await FetchGet<{
     _data: PageData[]
     total: number
@@ -21,5 +24,6 @@ export const getPageResourceActions = async (
   if (typeof response === 'string') return response
 
   const { _data, total } = response
+
   return { _data, total }
 }

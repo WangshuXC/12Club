@@ -1,9 +1,9 @@
-import { Resource } from '@/components/admin/resource/Container'
-import { GetActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
 
+import { Resource } from '@/components/admin/resource/Container'
+import { ErrorComponent } from '@/components/common/Error'
 
+import { GetActions } from './actions'
 
 export const revalidate = 3
 

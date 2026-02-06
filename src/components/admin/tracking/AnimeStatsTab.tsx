@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+
 import {
   Table,
   TableHeader,
@@ -20,12 +21,15 @@ import {
 } from '@heroui/react'
 import { Users } from 'lucide-react'
 import Link from 'next/link'
+
 import { SelfPagination } from '@/components/common/Pagination'
-import type { AnimeStats, PaginationInfo } from '@/app/admin/tracking/actions'
-import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
-import { cn } from '@/lib/utils'
 import { TYPE_CHINESE_MAP } from '@/constants/resource'
+import { cn } from '@/lib/utils'
+import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
+
 import { VisitorsModal } from './VisitorsModal'
+
+import type { AnimeStats, PaginationInfo } from '@/app/admin/tracking/actions'
 
 interface AnimeStatsTableProps {
   data: AnimeStats[]
@@ -73,18 +77,18 @@ export const AnimeStatsTable = ({
       let comparison = 0
 
       switch (sortDescriptor.column) {
-        case 'name':
-          comparison = a.name.localeCompare(b.name, 'zh-CN')
-          break
-        case 'playCount':
-          comparison = a.playCount - b.playCount
-          break
-        case 'uniqueVisitors':
-          comparison = a.uniqueVisitors - b.uniqueVisitors
-          break
-        case 'episodes':
-          comparison = a.accordionStats.length - b.accordionStats.length
-          break
+      case 'name':
+        comparison = a.name.localeCompare(b.name, 'zh-CN')
+        break
+      case 'playCount':
+        comparison = a.playCount - b.playCount
+        break
+      case 'uniqueVisitors':
+        comparison = a.uniqueVisitors - b.uniqueVisitors
+        break
+      case 'episodes':
+        comparison = a.accordionStats.length - b.accordionStats.length
+        break
       }
 
       return sortDescriptor.direction === 'ascending' ? comparison : -comparison

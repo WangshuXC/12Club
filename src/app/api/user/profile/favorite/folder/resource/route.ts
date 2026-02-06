@@ -1,9 +1,12 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseGetQuery } from '@/utils/parseQuery'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
-import { prisma } from '../../../../../../../../prisma'
+import { ParseGetQuery } from '@/utils/parseQuery'
 import { getFavoriteFolderResourceSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../../../prisma'
+
 import type { ResourceData } from '@/types/api/resource'
 
 export const GET = async (req: NextRequest) => {
@@ -11,9 +14,11 @@ export const GET = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie()
 
   const res = await getResourceByFolder(input, payload?.uid ?? 0)
+
   return NextResponse.json(res)
 }
 
@@ -27,6 +32,7 @@ const getResourceByFolder = async (
   if (!folder) {
     return '未找到该文件夹'
   }
+
   if (!folder.is_public && folder.user_id !== uid) {
     return '您无权查看该私密文件夹'
   }

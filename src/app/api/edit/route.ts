@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseFormData, ParsePutBody } from '@/utils/parseQuery'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+import { ParseFormData, ParsePutBody } from '@/utils/parseQuery'
 import { resourceCreateSchema } from '@/validations/edit'
+
 import { createResource } from './create'
 
 const checkStringArrayValid = (type: 'alias' | 'tag', aliasString: string) => {
@@ -11,14 +13,17 @@ const checkStringArrayValid = (type: 'alias' | 'tag', aliasString: string) => {
   if (aliasArray.length > 100) {
     return `您最多使用 100 个${label}`
   }
+
   const maxLength = aliasArray.some((alias) => alias.length > 500)
   if (maxLength) {
     return `单个${label}的长度不可超过 500 个字符`
   }
+
   const minLength = aliasArray.some((alias) => alias.trim().length === 0)
   if (minLength) {
     return `单个${label}至少一个字符`
   }
+
   return aliasArray.map((a) => a.trim())
 }
 
@@ -27,10 +32,12 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
+
   if (payload.role < 3) {
     return NextResponse.json('本页面仅管理员可访问')
   }
@@ -48,6 +55,7 @@ export const POST = async (req: NextRequest) => {
     if (typeof tagCheckResult === 'string') {
       return NextResponse.json(tagCheckResult)
     }
+
     tagResult = tagCheckResult
   }
 
@@ -57,5 +65,6 @@ export const POST = async (req: NextRequest) => {
     { alias: aliasResult, tag: tagResult, banner: banner, ...rest },
     payload.uid
   )
+
   return NextResponse.json(response)
 }

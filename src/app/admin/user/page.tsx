@@ -1,13 +1,13 @@
-import { User } from '@/components/admin/user'
-import { getActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
 
+import { User } from '@/components/admin/user'
+import { ErrorComponent } from '@/components/common/Error'
 
+import { getActions } from './actions'
 
 export const revalidate = 3
 
-export default async function Kun() {
+export default async function UserPage() {
   const response = await getActions({
     page: 1,
     limit: 30

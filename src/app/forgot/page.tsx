@@ -1,10 +1,9 @@
 'use client'
-import { ForgotForm } from '@/components/loginRegister/Forgot'
 import { Card, CardBody, CardHeader } from '@heroui/react'
 import Image from 'next/image'
+
+import { ForgotForm } from '@/components/loginRegister/Forgot'
 import { Config } from '@/config/config'
-
-
 
 export default function Page() {
   return (

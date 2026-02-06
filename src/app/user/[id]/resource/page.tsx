@@ -1,7 +1,9 @@
-import { UserResource } from '@/components/user/resource/Container'
-import { kunGetActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
+
+import { ErrorComponent } from '@/components/common/Error'
+import { UserResource } from '@/components/user/resource/Container'
+
+import { getActions } from './actions'
 
 export const revalidate = 3
 
@@ -9,10 +11,10 @@ interface Props {
   params: Promise<{ id: string }>
 }
 
-export default async function Kun({ params }: Props) {
+export default async function ResourcePage({ params }: Props) {
   const { id } = await params
 
-  const response = await kunGetActions({
+  const response = await getActions({
     uid: Number(id),
     page: 1,
     limit: 20

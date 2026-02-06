@@ -1,9 +1,12 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { Card, CardBody, CardHeader } from '@heroui/react'
-import { Info } from './Info'
-import type { Introduction } from '@/types/common/detail-container'
+
+import { Card, CardBody } from '@heroui/react'
 import { usePathname } from 'next/navigation'
+
+import { Info } from './Info'
+
+import type { Introduction } from '@/types/common/detail-container'
 
 interface Props {
   intro: Introduction
@@ -16,16 +19,16 @@ const typeMap = {
   animate: '动画'
 }
 
-export const IntroductionTab = ({ intro, tagList }: Props) => {
+export const IntroductionTab = ({ intro }: Props) => {
   const pathname = usePathname()
   const [typeLabel, setTypeLabel] = useState('')
   useEffect(() => {
-    for (const key in typeMap) {
-      if (pathname.startsWith(`/${key}`)) {
-        const validKey = key as keyof typeof typeMap
-        setTypeLabel(typeMap[validKey])
-        break
-      }
+    const matchedEntry = Object.entries(typeMap).find(([key]) =>
+      pathname.startsWith(`/${key}`)
+    )
+
+    if (matchedEntry) {
+      setTypeLabel(matchedEntry[1])
     }
   }, [pathname])
 

@@ -1,6 +1,6 @@
-import { prisma } from '../../../../../prisma'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 
+import { prisma } from '../../../../../prisma'
 
 export const updateResetCodeStatus = async (input: { id: number }) => {
   try {
@@ -9,6 +9,7 @@ export const updateResetCodeStatus = async (input: { id: number }) => {
     if (!payload || payload.role < 3) {
       return { success: false, message: '权限不足' }
     }
+
     const message = await prisma.passwordReset.findUnique({
       where: {
         id: input.id
@@ -21,6 +22,7 @@ export const updateResetCodeStatus = async (input: { id: number }) => {
     if (message?.status) {
       return { success: false, message: '该重置码已处理' }
     }
+
     await prisma.passwordReset.update({
       where: {
         id: input.id

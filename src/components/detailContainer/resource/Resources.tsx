@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -12,11 +13,14 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Plus } from 'lucide-react'
-import { FetchDelete, FetchGet } from '@/utils/fetch'
-import { PublishResource } from './publish/PublishResource'
-import { EditResourceDialog } from './edit/EditResourceDialog'
-import { ResourceTabs } from './Tabs'
+
 import { Loading } from '@/components/common/Loading'
+import { FetchDelete, FetchGet } from '@/utils/fetch'
+
+import { ResourceTabs } from './Tabs'
+import { EditResourceDialog } from './edit/EditResourceDialog'
+import { PublishResource } from './publish/PublishResource'
+
 import type { PatchResource } from '@/types/api/patch'
 
 interface Props {
@@ -62,7 +66,7 @@ export const Resources = ({ id, needUpdate = false }: Props) => {
   const handleDeleteResource = async () => {
     setDeleting(true)
 
-    await FetchDelete<{}>('/patch', {
+    await FetchDelete<object>('/patch', {
       patchId: deleteResourceId
     })
 

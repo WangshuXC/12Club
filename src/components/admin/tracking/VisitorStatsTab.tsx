@@ -11,9 +11,11 @@ import {
   Chip,
   Avatar
 } from '@heroui/react'
+
 import { SelfPagination } from '@/components/common/Pagination'
 import { SelfUser } from '@/components/common/user-card/User'
 import { parseUserAgentLabel } from '@/utils/device'
+
 import type { VisitorStats, PaginationInfo } from '@/app/admin/tracking/actions'
 
 interface VisitorStatsTableProps {

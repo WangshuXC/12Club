@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+
 import { addToast, Button, Chip, Input } from '@heroui/react'
 import { Plus } from 'lucide-react'
+
 import { useCreateResourceStore } from '@/store/editStore'
 
 interface Props {
@@ -23,6 +25,7 @@ export const AliasInput = ({ errors }: Props) => {
       })
       return
     }
+
     if (newAlias.trim()) {
       setData({ ...data, alias: [...data.alias, alias] })
       setNewAlias('')

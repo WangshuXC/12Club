@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
+import { getAdminNotification } from '@/app/api/admin/stats/notice/route'
 import { Sidebar } from '@/components/admin/Sidebar'
 import { NotFoundComponent } from '@/components/common/NotFound'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
-import { getAdminNotification } from '@/app/api/admin/stats/notice/route'
+
 import { adminMetadata } from '../metadata'
+
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
 

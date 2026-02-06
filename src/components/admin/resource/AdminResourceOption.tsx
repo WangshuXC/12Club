@@ -11,6 +11,7 @@ import {
   DropdownItem
 } from '@heroui/react'
 import { Settings, ChevronDownIcon } from 'lucide-react'
+
 import { useAdminResourceStore } from '@/store/adminResourceStore'
 
 export const AdminResourceOption = () => {

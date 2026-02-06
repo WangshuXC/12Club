@@ -1,12 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Accordion, AccordionItem, Button } from '@heroui/react'
-import { SelfUser } from '@/components/common/user-card/User'
 import { Download } from 'lucide-react'
+
+import { SelfUser } from '@/components/common/user-card/User'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+
 // import { ResourceLikeButton } from './resource-like'
 import { ResourceDownloadCard } from './DownloadCard'
+
 import type { PatchResource } from '@/types/api/patch'
 
 interface Props {

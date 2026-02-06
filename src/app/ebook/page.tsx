@@ -1,7 +1,8 @@
-import type { Metadata } from 'next'
 import { Button } from '@heroui/button'
 import { Download, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '电子书 - 12Club',

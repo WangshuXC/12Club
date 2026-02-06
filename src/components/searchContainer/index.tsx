@@ -1,21 +1,26 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useSearchStore } from '@/store/searchStore'
-import { useDebounce } from 'use-debounce'
+
 import { Input } from '@heroui/react'
 import { Pagination } from '@heroui/react'
 import { Search } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useDebounce } from 'use-debounce'
+
+import { FilterBar } from '@/components/searchContainer/FilterBar'
+import { SearchOption } from '@/components/searchContainer/SearchOption'
+import FadeContent from '@/components/ui/FadeContent'
+import { cn } from '@/lib/utils'
+import { useSearchStore } from '@/store/searchStore'
 import { FetchPost } from '@/utils/fetch'
-import { SearchHistory } from './SearchHistory'
+
+import { CoverCard } from '../common/CoverCard'
 import { Loading } from '../common/Loading'
 import { Null } from '../common/Null'
+
+import { SearchHistory } from './SearchHistory'
+
 import type { SearchData } from '@/types/api/search'
-import { cn } from '@/lib/utils'
-import FadeContent from '@/components/ui/FadeContent'
-import { CoverCard } from '../common/CoverCard'
-import { SearchOption } from '@/components/searchContainer/SearchOption'
-import { FilterBar } from '@/components/searchContainer/FilterBar'
 
 const MAX_HISTORY_ITEMS = 10
 

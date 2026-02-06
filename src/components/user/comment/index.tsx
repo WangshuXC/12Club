@@ -1,12 +1,15 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { FetchGet } from '@/utils/fetch'
+
+import { Loading } from '@/components/common/Loading'
+import { Null } from '@/components/common/Null'
 import { SelfPagination } from '@/components/common/Pagination'
 import { useMounted } from '@/hooks/useMounted'
-import { Null } from '@/components/common/Null'
-import { Loading } from '@/components/common/Loading'
+import { FetchGet } from '@/utils/fetch'
+
 import { UserCommentCard } from './Card'
+
 import type { UserComment as UserCommentType } from '@/types/api/user'
 
 interface Props {
@@ -40,6 +43,7 @@ export const UserComment = ({ initComments, total, uid }: Props) => {
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page])
 

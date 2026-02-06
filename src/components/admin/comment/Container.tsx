@@ -1,14 +1,18 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import { Input } from '@heroui/react'
 import { Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { FetchGet } from '@/utils/fetch'
-import { Loading } from '@/components/common/Loading'
-import { useMounted } from '@/hooks/useMounted'
-import { CommentCard } from './Card'
 import { useDebounce } from 'use-debounce'
+
+import { Loading } from '@/components/common/Loading'
 import { SelfPagination } from '@/components/common/Pagination'
+import { useMounted } from '@/hooks/useMounted'
+import { FetchGet } from '@/utils/fetch'
+
+import { CommentCard } from './Card'
+
 import type { AdminComment } from '@/types/api/admin'
 
 interface Props {
@@ -46,6 +50,7 @@ export const Comment = ({ initialComments, initialTotal }: Props) => {
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page, debouncedQuery])
 

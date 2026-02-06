@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+
 import { Button, Chip, Input, addToast, Spinner } from '@heroui/react'
 import { Plus, Tag } from 'lucide-react'
 import { useDebounce } from 'use-debounce'
-import { FetchGet } from '@/utils/fetch'
+
 import { useOutsideClick } from '@/hooks/useOutsideClick'
+import { FetchGet } from '@/utils/fetch'
 
 interface Props {
   tags: string[]
@@ -39,6 +41,7 @@ export const AdminTagInput = ({ tags, onChange, errors }: Props) => {
       }
 
       setIsSearching(true)
+
       try {
         const response = await FetchGet<{ data: TagSuggestion[] }>('/tag', {
           search: debouncedSearch.trim()
@@ -76,6 +79,7 @@ export const AdminTagInput = ({ tags, onChange, errors }: Props) => {
       })
       return
     }
+
     if (tag) {
       onChange([...tags, tag])
       setNewTag('')
@@ -97,6 +101,7 @@ export const AdminTagInput = ({ tags, onChange, errors }: Props) => {
     if (!keyword.trim()) return text
 
     const parts = text.split(new RegExp(`(${keyword})`, 'gi'))
+
     return (
       <>
         {parts.map((part, index) =>

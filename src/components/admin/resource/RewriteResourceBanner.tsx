@@ -1,12 +1,22 @@
 'use client'
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@heroui/react'
-import toast from 'react-hot-toast'
 import { useState } from 'react'
-import { FetchFormData } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
+
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure
+} from '@heroui/react'
+import toast from 'react-hot-toast'
+
 import { ImageCropper } from '@/components/common/cropper/ImageCropper'
 import { dataURItoBlob } from '@/utils/dataURItoBlob'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchFormData } from '@/utils/fetch'
 
 interface Props {
   resourceId: number
@@ -35,10 +45,7 @@ export const RewriteResourceBanner = ({ resourceId }: Props) => {
 
     setUpdating(true)
 
-    const res = await FetchFormData<{}>(
-      '/admin/resource/banner',
-      formData
-    )
+    const res = await FetchFormData<object>('/admin/resource/banner', formData)
     ErrorHandler(res, () => {
       setBanner(null)
       setPreviewUrl('')

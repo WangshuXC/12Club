@@ -1,11 +1,13 @@
 'use client'
 import { Tooltip, Button } from '@heroui/react'
-import { ShareButton } from './buttons/ShareButton'
 import { Download, Pencil } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
-import { FavoriteButton } from './buttons/FavoriteButton'
+
 import { useUserStore } from '@/store/userStore'
+
+import { FavoriteButton } from './buttons/FavoriteButton'
 import { FeedbackButton } from './buttons/FeedbackButton'
+import { ShareButton } from './buttons/ShareButton'
 
 interface Props {
   name: string
@@ -18,6 +20,7 @@ export const ButtonList = ({ name, dbId, isFavorite, handleClickDownloadNav }: P
   const pathName = usePathname()
   const user = useUserStore(state => state.user)
   const router = useRouter()
+
   return (
     <div className="flex gap-2 ml-auto">
       <Tooltip content="下载资源">

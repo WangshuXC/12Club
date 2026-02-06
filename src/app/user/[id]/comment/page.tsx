@@ -1,7 +1,9 @@
 import { Suspense } from 'react'
-import { getActions } from './actions'
-import { UserComment } from '@/components/user/comment'
+
 import { ErrorComponent } from '@/components/common/Error'
+import { UserComment } from '@/components/user/comment'
+
+import { getActions } from './actions'
 
 interface Props {
   params: Promise<{ id: string }>

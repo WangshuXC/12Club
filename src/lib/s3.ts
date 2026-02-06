@@ -1,7 +1,8 @@
 import { createReadStream } from 'fs'
-import { dirname } from 'path'
-import { S3Client } from '@aws-sdk/client-s3'
 import { readFile, rm } from 'fs/promises'
+import { dirname } from 'path'
+
+import { S3Client } from '@aws-sdk/client-s3'
 import {
   DeleteObjectCommand,
   PutObjectCommand,

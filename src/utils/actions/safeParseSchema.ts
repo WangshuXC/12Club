@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import type { ZodSchema } from 'zod'
 
 export const safeParseSchema = <T extends ZodSchema>(
@@ -9,5 +10,6 @@ export const safeParseSchema = <T extends ZodSchema>(
   if (!result.success) {
     return result.error.message
   }
+
   return result.data
 }

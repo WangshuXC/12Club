@@ -1,11 +1,13 @@
 'use client'
 
-import { AppProgressBar } from 'next-nprogress-bar'
 import { HeroUIProvider, ToastProvider } from '@heroui/react'
-import { ThemeProvider } from 'next-themes'
+import { AppProgressBar } from 'next-nprogress-bar'
 import { useRouter } from 'next-nprogress-bar'
-import { TrackingProvider } from '@/components/tracking'
+import { ThemeProvider } from 'next-themes'
+
 import { DeviceInitializer } from '@/components/common/DeviceInitializer'
+import { TrackingProvider } from '@/components/tracking'
+
 import type { GlobalDeviceInfo } from '@/utils/device'
 
 interface ProvidersProps {

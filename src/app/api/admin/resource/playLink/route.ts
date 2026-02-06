@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 import { ParseGetQuery, ParsePostBody, ParsePutBody, ParseDeleteQuery } from '@/utils/parseQuery'
 import { 
   adminGetResourcePlayLinksSchema,
@@ -6,11 +8,11 @@ import {
   adminUpdateResourcePlayLinkSchema,
   adminDeleteResourcePlayLinkQuerySchema
 } from '@/validations/admin'
-import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
-import { getResourcePlayLinks } from './get'
+
 import { createResourcePlayLink } from './create'
-import { updateResourcePlayLink } from './update'
 import { deleteResourcePlayLink } from './delete'
+import { getResourcePlayLinks } from './get'
+import { updateResourcePlayLink } from './update'
 
 export async function GET(req: NextRequest) {
   const input = ParseGetQuery(req, adminGetResourcePlayLinksSchema)
@@ -28,6 +30,7 @@ export async function GET(req: NextRequest) {
   }
 
   const res = await getResourcePlayLinks(input)
+
   return NextResponse.json(res)
 }
 
@@ -47,6 +50,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = await createResourcePlayLink(input, payload.uid)
+
   return NextResponse.json(res)
 }
 
@@ -66,6 +70,7 @@ export async function PUT(req: NextRequest) {
   }
 
   const res = await updateResourcePlayLink(input)
+
   return NextResponse.json(res)
 }
 
@@ -85,5 +90,6 @@ export async function DELETE(req: NextRequest) {
   }
 
   const res = await deleteResourcePlayLink(input)
+
   return NextResponse.json(res)
 } 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -16,10 +17,12 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Edit2 } from 'lucide-react'
+
 import { USER_ROLE_MAP, USER_STATUS_MAP } from '@/constants/user'
-import { FetchPut } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
 import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPut } from '@/utils/fetch'
+
 import type { AdminUser } from '@/types/api/admin'
 
 interface Props {
@@ -57,7 +60,7 @@ export const UserEdit = ({ initialUser, onUpdate }: Props) => {
     }
 
     setUpdating(true)
-    const res = await FetchPut<{}>('/admin/user', requestData)
+    const res = await FetchPut<object>('/admin/user', requestData)
     setUpdating(false)
 
     ErrorHandler(res, () => {

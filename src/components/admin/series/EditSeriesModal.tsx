@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import {
   Modal,
   ModalContent,
@@ -12,8 +13,11 @@ import {
   Textarea,
   addToast
 } from '@heroui/react'
-import { SeriesResourceManager } from './SeriesResourceManager'
+
 import { FetchPut, FetchPost, FetchDelete } from '@/utils/fetch'
+
+import { SeriesResourceManager } from './SeriesResourceManager'
+
 import type { AdminSeries, AdminSeriesResource } from '@/types/api/admin'
 
 interface EditSeriesModalProps {
@@ -44,6 +48,7 @@ export const EditSeriesModal = ({
       setName(series.name)
       setDescription(series.description)
       setError('')
+
       // 直接使用外层传递的 series.resources
       const seriesResources = series.resources || []
       setResources(seriesResources)
@@ -73,6 +78,7 @@ export const EditSeriesModal = ({
     const currentDbIds = resources.map((r) => r.dbId)
     const toAdd = currentDbIds.filter((id) => !originalDbIds.includes(id))
     const toRemove = originalDbIds.filter((id) => !currentDbIds.includes(id))
+
     return { toAdd, toRemove }
   }
 
@@ -178,6 +184,7 @@ export const EditSeriesModal = ({
     const nameChanged = name.trim() !== series.name
     const descChanged = description.trim() !== series.description
     const { toAdd, toRemove } = getResourceChanges()
+
     return nameChanged || descChanged || toAdd.length > 0 || toRemove.length > 0
   }
 

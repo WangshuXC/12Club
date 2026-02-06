@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Modal,
   ModalContent,
@@ -11,8 +12,11 @@ import {
   Input,
   Textarea
 } from '@heroui/react'
-import { ResourceSelector } from './ResourceSelector'
+
 import { FetchPost } from '@/utils/fetch'
+
+import { ResourceSelector } from './ResourceSelector'
+
 import type { AdminSeriesResource } from '@/types/api/admin'
 
 interface CreateSeriesModalProps {

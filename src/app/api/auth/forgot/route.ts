@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
+
 import { ParsePostBody, ParsePutBody } from '@/utils/parseQuery'
 import {
   forgotRequestSchema,
   updateResetCodeStatusSchema
 } from '@/validations/auth'
-import { requestPasswordReset } from './post'
-import { getResetCodes } from './get'
+
 import { deleteResetCode } from './delete'
+import { getResetCodes } from './get'
+import { requestPasswordReset } from './post'
 import { updateResetCodeStatus } from './put'
 
 // POST - 申请重置密码
@@ -17,6 +19,7 @@ export const POST = async (req: NextRequest) => {
   }
 
   const response = await requestPasswordReset(input)
+
   return NextResponse.json(response)
 }
 
@@ -121,6 +124,7 @@ export const PUT = async (req: NextRequest) => {
         { status: 400 }
       )
     }
+
     const response = await updateResetCodeStatus(id)
 
     if (!response.success) {

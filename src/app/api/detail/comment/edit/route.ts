@@ -1,9 +1,11 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseGetQuery } from '@/utils/parseQuery'
-import { prisma } from '../../../../../../prisma'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+import { ParseGetQuery } from '@/utils/parseQuery'
 import { processComments } from '@/utils/processComments'
+
+import { prisma } from '../../../../../../prisma'
 
 const commentIdSchema = z.object({
   commentId: z.coerce
@@ -78,5 +80,6 @@ export const GET = async (req: NextRequest) => {
   }
 
   const response = await getComment(input, payload.uid)
+
   return NextResponse.json(response)
 }

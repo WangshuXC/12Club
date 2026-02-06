@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -16,19 +17,22 @@ import {
   Checkbox
 } from '@heroui/react'
 import { Edit2 } from 'lucide-react'
-import { FetchPut } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
+
+import { SelfUser } from '@/components/common/user-card/User'
+import { Resources } from '@/components/detailContainer/resource/Resources'
 import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPut } from '@/utils/fetch'
+
 import { AdminAliasInput } from './AdminAliasInput'
-import { AdminTagInput } from './AdminTagInput'
 import { AdminLanguageSelect } from './AdminLanguageSelect'
 import { AdminReleasedDateInput } from './AdminReleasedDateInput'
-import { ResourcePlayLinkManager } from './ResourcePlayLinkManager'
-import { GetBangumiData } from './GetBangumiData'
-import { Resources } from '@/components/detailContainer/resource/Resources'
-import type { AdminResource } from '@/types/api/admin'
-import { SelfUser } from '@/components/common/user-card/User'
+import { AdminTagInput } from './AdminTagInput'
 import { AutoPlayUrl } from './AutoPlayUrl'
+import { GetBangumiData } from './GetBangumiData'
+import { ResourcePlayLinkManager } from './ResourcePlayLinkManager'
+
+import type { AdminResource } from '@/types/api/admin'
 
 interface Props {
   initialResource: AdminResource
@@ -74,6 +78,7 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
         description: '更新资源成功',
         color: 'success'
       })
+
       if (onUpdate) {
         onUpdate(resource.id, {
           name: resource.name,
@@ -89,6 +94,7 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
           tags: tags
         })
       }
+
       onClose()
     })
   }

@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import {
   ParsePutBody,
 } from '@/utils/parseQuery'
-import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import {
   adminUpdateAnnouncementSchema,
 } from '@/validations/admin'
-import { updateAnnouncement } from '../update'
+
 import { deleteAnnouncement } from '../delete'
+import { updateAnnouncement } from '../update'
 
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   const announcementId = parseInt(params.id)
@@ -24,6 +26,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   if (!payload) {
     return NextResponse.json({ message: '用户未登录', status: 401 })
   }
+
   if (payload.role < 3) {
     return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
   }
@@ -49,6 +52,7 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
   if (!payload) {
     return NextResponse.json({ message: '用户未登录', status: 401 })
   }
+
   if (payload.role < 3) {
     return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
   }

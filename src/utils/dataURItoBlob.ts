@@ -5,5 +5,6 @@ export const dataURItoBlob = (dataURI: string) => {
   for (let i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i)
   }
+
   return new Blob([ab], { type: 'image/webp' })
 }

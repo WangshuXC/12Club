@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Card,
@@ -13,13 +14,16 @@ import {
   Tab
 } from '@heroui/react'
 import { Edit, MoreHorizontal, Trash2 } from 'lucide-react'
-import { useUserStore } from '@/store/userStore'
-import { ResourceInfo } from './ResourceInfo'
-import { ResourceDownload } from './ResourceDownload'
+
 import {
   SUPPORTED_RESOURCE_SECTION,
   RESOURCE_SECTION_MAP
 } from '@/constants/resource'
+import { useUserStore } from '@/store/userStore'
+
+import { ResourceDownload } from './ResourceDownload'
+import { ResourceInfo } from './ResourceInfo'
+
 import type { PatchResource } from '@/types/api/patch'
 
 type ResourceSection = (typeof SUPPORTED_RESOURCE_SECTION)[number]

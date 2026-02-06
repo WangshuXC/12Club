@@ -1,5 +1,6 @@
-import type { Metadata, Viewport } from 'next'
 import { Config } from '@/config/config'
+
+import type { Metadata, Viewport } from 'next'
 
 // ==================== Viewport 配置 ====================
 export const clubViewport: Viewport = {

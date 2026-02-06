@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -17,10 +18,12 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { MoreVertical } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+
 import { useUserStore } from '@/store/userStore'
 import { FetchPost } from '@/utils/fetch'
+
 import type { AdminReport } from '@/types/api/admin'
-import { useRouter } from 'next/navigation'
 
 interface Props {
   initialReport: AdminReport
@@ -47,6 +50,7 @@ export const ReportHandler = ({ initialReport }: Props) => {
       })
       return
     }
+
     setUpdating(true)
     const res = await FetchPost<AdminReport>(
       '/admin/report/handle',
@@ -71,6 +75,7 @@ export const ReportHandler = ({ initialReport }: Props) => {
       })
       router.refresh()
     }
+
     setUpdating(false)
   }
 

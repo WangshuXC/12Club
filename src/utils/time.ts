@@ -53,6 +53,7 @@ const replaceTimeUnits = (input: string) => {
   }
 
   const regex = new RegExp(Object.keys(replacements).join('|'), 'g')
+
   return input.replace(regex, (matched) => replacements[matched])
 }
 
@@ -81,5 +82,6 @@ export const formatDistanceToNow = (pastTime: number | Date | string) => {
   }
 
   const localizedTime = replaceTimeUnits(time()).replace(/s\b/g, '')
+
   return `${localizedTime}前`
 }

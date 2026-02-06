@@ -1,11 +1,13 @@
 'use client'
 
 import { RadioGroup, Radio } from '@heroui/react'
-import { ErrorType } from '../share'
+
 import {
   SUPPORTED_RESOURCE_SECTION,
   RESOURCE_SECTION_MAP
 } from '@/constants/resource'
+
+import { ErrorType } from '../share'
 
 interface Props {
   errors: ErrorType

@@ -1,7 +1,10 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
-import { adminPaginationSchema } from '@/validations/admin'
+
 import { markdownToText } from '@/utils/markdownToText'
+import { adminPaginationSchema } from '@/validations/admin'
+
+import { prisma } from '../../../../../prisma'
+
 import type { AdminComment } from '@/types/api/admin'
 
 export const getComment = async (
@@ -12,23 +15,23 @@ export const getComment = async (
 
   const where = search
     ? {
-        OR: [
-          {
-            content: {
+      OR: [
+        {
+          content: {
+            contains: search,
+            mode: 'insensitive' as const
+          }
+        },
+        {
+          user: {
+            name: {
               contains: search,
               mode: 'insensitive' as const
             }
-          },
-          {
-            user: {
-              name: {
-                contains: search,
-                mode: 'insensitive' as const
-              }
-            }
           }
-        ]
-      }
+        }
+      ]
+    }
     : {}
 
   const [data, total] = await Promise.all([

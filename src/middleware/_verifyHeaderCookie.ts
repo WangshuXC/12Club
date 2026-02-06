@@ -1,5 +1,6 @@
 import { parseCookies } from '@/utils/cookies'
 import { verifyToken } from '@/utils/jwt'
+
 import type { NextRequest } from 'next/server'
 
 export const verifyHeaderCookie = async (req: NextRequest) => {

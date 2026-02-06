@@ -1,15 +1,15 @@
-import { getAllPosts } from '@/lib/mdx/getPosts'
-import { AboutHeader } from '@/components/doc/Header'
-import { AboutCard } from '@/components/doc/Card'
 import { MasonryGrid } from '@/components/common/MasonryGrid'
+import { AboutCard } from '@/components/doc/Card'
+import { AboutHeader } from '@/components/doc/Header'
+import { getAllPosts } from '@/lib/mdx/getPosts'
+
 import { clubMetadata } from './metadata'
+
 import type { Metadata } from 'next'
-
-
 
 export const metadata: Metadata = clubMetadata
 
-export default function () {
+export default function DocPage() {
   const posts = getAllPosts()
 
   return (

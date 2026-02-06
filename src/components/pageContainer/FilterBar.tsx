@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Card,
@@ -15,6 +16,7 @@ import {
   SelectItem
 } from '@heroui/react'
 import { ArrowDownAZ, ArrowUpAZ, ChevronDown, ChevronUp, Filter } from 'lucide-react'
+
 import {
   ALL_SUPPORTED_LANGUAGE,
   SUPPORTED_LANGUAGE_MAP,
@@ -159,6 +161,7 @@ export const FilterBar = ({
                     if (!event.target.value) {
                       return
                     }
+
                     setSelectedLanguage(event.target.value)
                   }}
                   startContent={<Filter className="size-4 text-default-400" />}
@@ -180,6 +183,7 @@ export const FilterBar = ({
                     if (!event.target.value) {
                       return
                     }
+
                     setSelectedStatus(event.target.value)
                   }}
                   startContent={<Filter className="size-4 text-default-400" />}

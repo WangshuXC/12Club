@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Button } from '@heroui/react'
 import {
   addToast,
@@ -19,8 +20,10 @@ import {
 } from '@heroui/react'
 import { Textarea } from '@heroui/react'
 import { MoreVertical } from 'lucide-react'
+
 import { useUserStore } from '@/store/userStore'
 import { FetchDelete, FetchPut } from '@/utils/fetch'
+
 import type { AdminComment } from '@/types/api/admin'
 
 interface Props {
@@ -58,6 +61,7 @@ export const CommentEdit = ({ initialComment, onDelete, onUpdate }: Props) => {
         description: '评论删除成功',
         color: 'success'
       })
+
       // 调用删除回调，从UI中移除该评论
       onDelete(initialComment.id)
     }
@@ -79,6 +83,7 @@ export const CommentEdit = ({ initialComment, onDelete, onUpdate }: Props) => {
       })
       return
     }
+
     setUpdating(true)
     const res = await FetchPut('/admin/comment', {
       commentId: initialComment.id,
@@ -99,6 +104,7 @@ export const CommentEdit = ({ initialComment, onDelete, onUpdate }: Props) => {
         description: '更新评论成功!',
         color: 'success'
       })
+
       // 调用更新回调，更新UI中的评论内容
       onUpdate(initialComment.id, editContent.trim())
       setEditContent('')

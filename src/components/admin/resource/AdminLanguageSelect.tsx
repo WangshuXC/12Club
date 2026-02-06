@@ -1,11 +1,12 @@
 'use client'
 
 import { Select, SelectItem } from '@heroui/react'
+import { Languages } from 'lucide-react'
+
 import {
   SUPPORTED_LANGUAGE,
   SUPPORTED_LANGUAGE_MAP
 } from '@/constants/resource'
-import { Languages } from 'lucide-react'
 
 interface Props {
   language: string

@@ -1,8 +1,8 @@
 'use client'
 
 import { Button, Tooltip } from '@heroui/react'
-import { Bell, BellRing } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Bell, BellRing } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
 
 interface AnimatedNotificationBellProps {
@@ -18,6 +18,7 @@ export const UserMessageBell = ({
 
   const handleClickButton = () => {
     router.push('/message/notice')
+
     if (hasUnreadMessages) {
       setReadMessage()
     }

@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
+
+import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import {
   ParseGetQuery,
   ParsePostBody,
   ParsePutBody,
   ParseDeleteQuery
 } from '@/utils/parseQuery'
-import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import {
   adminPaginationSchema,
   adminCreateAnnouncementSchema,
   adminUpdateAnnouncementSchema,
   adminDeleteAnnouncementSchema
 } from '@/validations/admin'
-import { getAnnouncementInfo } from './get'
+
 import { createAnnouncement } from './create'
-import { updateAnnouncement } from './update'
 import { deleteAnnouncement } from './delete'
+import { getAnnouncementInfo } from './get'
+import { updateAnnouncement } from './update'
 
 export const GET = async (req: NextRequest) => {
   const input = ParseGetQuery(req, adminPaginationSchema)
@@ -41,6 +43,7 @@ export const POST = async (req: NextRequest) => {
   if (!payload) {
     return NextResponse.json({ message: '用户未登录', status: 401 })
   }
+
   if (payload.role < 3) {
     return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
   }
@@ -63,6 +66,7 @@ export const PUT = async (req: NextRequest) => {
   if (!payload) {
     return NextResponse.json({ message: '用户未登录', status: 401 })
   }
+
   if (payload.role < 3) {
     return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
   }
@@ -85,6 +89,7 @@ export const DELETE = async (req: NextRequest) => {
   if (!payload) {
     return NextResponse.json({ message: '用户未登录', status: 401 })
   }
+
   if (payload.role < 3) {
     return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
   }

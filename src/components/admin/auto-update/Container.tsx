@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import {
   Table,
   TableBody,
@@ -11,16 +13,18 @@ import {
   Button
 } from '@heroui/react'
 import { Search, Play } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { RenderCell } from './RenderCell'
-import { FetchGet, FetchPost } from '@/utils/fetch'
-import { Loading } from '@/components/common/Loading'
-import { useMounted } from '@/hooks/useMounted'
-import { useDebounce } from 'use-debounce'
-import { SelfPagination } from '@/components/common/Pagination'
-import type { AutoUpdateResource } from '@/app/api/admin/auto-update/get'
-import { AddResourceModal } from './AddResourceModal'
 import toast from 'react-hot-toast'
+import { useDebounce } from 'use-debounce'
+
+import { Loading } from '@/components/common/Loading'
+import { SelfPagination } from '@/components/common/Pagination'
+import { useMounted } from '@/hooks/useMounted'
+import { FetchGet, FetchPost } from '@/utils/fetch'
+
+import { AddResourceModal } from './AddResourceModal'
+import { RenderCell } from './RenderCell'
+
+import type { AutoUpdateResource } from '@/app/api/admin/auto-update/get'
 
 const columns = [
   { name: '封面', uid: 'banner' },
@@ -75,6 +79,7 @@ export const AutoUpdateContainer = ({
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page, debouncedQuery])
 
@@ -118,6 +123,7 @@ export const AutoUpdateContainer = ({
 
       if (response.success) {
         toast.success(response.message, { id: 'batch-update' })
+
         // 刷新列表
         await fetchData()
       } else {

@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+
 import { addToast, Button } from '@heroui/react'
 import { Upload } from 'lucide-react'
+
 import { cn } from '@/lib/utils'
 
 interface ImageUploaderProps {
@@ -21,6 +23,7 @@ export const ImageUploader = ({ onImageSelect }: ImageUploaderProps) => {
       })
       return
     }
+
     if (!file.type.startsWith('image/')) {
       addToast({
         title: '错误',
@@ -43,6 +46,7 @@ export const ImageUploader = ({ onImageSelect }: ImageUploaderProps) => {
     if (e.target.files && e.target.files.length > 0) {
       handleFileSelect(e.target.files[0])
     }
+
     e.target.value = ''
   }
 

@@ -1,16 +1,19 @@
 'use client'
 
 import { useState, memo, useCallback } from 'react'
-import { DetailTabs } from './Tabs'
-import { ButtonList } from './ButtonList'
-import { DetailCover } from './Detail'
+
 import { Button } from '@heroui/react'
 import { usePathname } from 'next/navigation'
-import { FetchPost } from '@/utils/fetch'
-import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { Introduction, Cover } from '@/types/common/detail-container'
+import { FetchPost } from '@/utils/fetch'
+
 import { ArtPlayer } from './ArtPlayer'
+import { ButtonList } from './ButtonList'
+import { DetailCover } from './Detail'
+import { DetailTabs } from './Tabs'
+
 interface DetailContainerProps {
   id: string
   introduce: Introduction

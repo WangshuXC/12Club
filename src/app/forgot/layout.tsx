@@ -1,5 +1,6 @@
-import type { Metadata } from 'next'
 import { forgotMetadata } from '../metadata'
+
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = forgotMetadata
 

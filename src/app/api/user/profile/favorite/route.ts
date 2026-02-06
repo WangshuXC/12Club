@@ -1,9 +1,11 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseGetQuery } from '@/utils/parseQuery'
-import { prisma } from '../../../../../../prisma'
-import { getUserInfoSchema } from '@/validations/user'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import { ParseGetQuery } from '@/utils/parseQuery'
+import { getUserInfoSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../prisma'
 
 export const getUserFavorite = async (
   input: z.infer<typeof getUserInfoSchema>,
@@ -19,11 +21,13 @@ export const GET = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie()
   if (!payload) {
     return NextResponse.json('用户登陆失效')
   }
 
   const response = await getUserFavorite(input)
+
   return NextResponse.json(response)
 }

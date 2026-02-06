@@ -1,9 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { z } from 'zod'
-import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 import {
   Button,
   Card,
@@ -14,10 +12,15 @@ import {
   Input,
   Link
 } from '@heroui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { passwordSchema } from '@/validations/user'
-import { FetchPost } from '@/utils/fetch'
+import { z } from 'zod'
+
 import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPost } from '@/utils/fetch'
+import { passwordSchema } from '@/validations/user'
+
 type PasswordFormData = z.infer<typeof passwordSchema>
 
 export const Password = () => {
@@ -39,10 +42,7 @@ export const Password = () => {
   const handleUpdatePassword = async () => {
     setLoading(true)
 
-    const res = await FetchPost<{}>(
-      '/user/setting/password',
-      watch()
-    )
+    const res = await FetchPost<object>('/user/setting/password', watch())
     ErrorHandler(res, () => {
       reset()
       toast.success('更改密码成功!')

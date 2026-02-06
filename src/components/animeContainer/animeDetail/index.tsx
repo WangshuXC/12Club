@@ -1,16 +1,18 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { Card, CardBody } from '@heroui/react'
-import { Cover, Introduction } from '@/types/common/detail-container'
-import { formatDate } from '@/utils/time'
-import { formatNumber } from '@/utils/formatNumber'
 
+import { Card, CardBody } from '@heroui/react'
+
+import { Cover, Introduction } from '@/types/common/detail-container'
+import { formatNumber } from '@/utils/formatNumber'
+import { formatDate } from '@/utils/time'
+
+import { AliasList } from './AliasList'
 import { CoverImage } from './CoverImage'
+import { IntroText } from './IntroText'
 import { MetaInfo } from './MetaInfo'
 import { TagList } from './TagList'
-import { IntroText } from './IntroText'
-import { AliasList } from './AliasList'
 
 interface AnimeDetailProps {
   coverData: Cover
@@ -154,6 +156,7 @@ function buildMetaItems(params: BuildMetaItemsParams): MetaItemsResult {
   const createdDate = created ? formatDate(created, { isShowYear: true }) : null
   const updatedDate = updated ? formatDate(updated, { isShowYear: true }) : null
   if (createdDate) secondaryItems.push(`发布：${createdDate}`)
+
   if (updatedDate && updatedDate !== createdDate) {
     secondaryItems.push(`更新：${updatedDate}`)
   }

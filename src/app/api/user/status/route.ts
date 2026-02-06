@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import type { UserState } from '@/store/userStore'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+
 import { prisma } from '../../../../../prisma'
+
+import type { UserState } from '@/store/userStore'
 
 export const getStatus = async (uid: number | undefined) => {
   try {
@@ -52,5 +55,6 @@ export async function GET(req: NextRequest) {
   }
 
   const status = await getStatus(payload?.uid)
+
   return NextResponse.json(status)
 }

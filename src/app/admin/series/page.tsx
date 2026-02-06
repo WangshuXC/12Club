@@ -1,7 +1,9 @@
-import { Series } from '@/components/admin/series/Container'
-import { GetSeriesActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
+
+import { Series } from '@/components/admin/series/Container'
+import { ErrorComponent } from '@/components/common/Error'
+
+import { GetSeriesActions } from './actions'
 
 export const revalidate = 3
 

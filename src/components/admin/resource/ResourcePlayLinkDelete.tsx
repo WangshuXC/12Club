@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Modal,
@@ -11,6 +12,7 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
+
 import type { ResourcePlayLink } from '@/types/api/resource-play-link'
 
 interface Props {
@@ -24,6 +26,7 @@ export const ResourcePlayLinkDelete = ({ resource, onDelete }: Props) => {
 
   const handleDelete = async () => {
     setLoading(true)
+
     try {
       await onDelete(resource.id)
       onClose()

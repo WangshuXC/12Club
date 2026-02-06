@@ -1,5 +1,6 @@
-import { prisma } from '../../../../../prisma'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+
+import { prisma } from '../../../../../prisma'
 
 export const deleteResetCode = async (id: number) => {
   try {

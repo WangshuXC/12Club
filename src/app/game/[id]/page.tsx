@@ -1,8 +1,10 @@
-import type { Metadata } from 'next'
-import { DetailContainer } from '@/components/detailContainer'
-import { getResourceActions } from './actions'
 import { ErrorComponent } from '@/components/common/Error'
+import { DetailContainer } from '@/components/detailContainer'
 import { Config } from '@/config/config'
+
+import { getResourceActions } from './actions'
+
+import type { Metadata } from 'next'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -54,6 +56,7 @@ export default async function Page({ params }: Props) {
   }
 
   const { introduce, coverData } = resource
+
   return (
     <div className="container py-6 mx-auto space-y-6">
       <DetailContainer id={id} introduce={introduce} coverData={coverData} />

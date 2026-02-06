@@ -1,17 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { z } from 'zod'
-import { Controller, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+
 import { addToast, Button, Input, Link } from '@heroui/react'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Eye, EyeOff } from 'lucide-react'
-import { FetchPost } from '@/utils/fetch'
-import { loginSchema } from '@/validations/auth'
+import { useRouter } from 'next-nprogress-bar'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
+
 import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
-import { useRouter } from 'next-nprogress-bar'
+import { FetchPost } from '@/utils/fetch'
+import { loginSchema } from '@/validations/auth'
+
 import { TextDivider } from './TextDivider'
+
 import type { UserState } from '@/store/userStore'
 
 type LoginFormData = z.infer<typeof loginSchema>

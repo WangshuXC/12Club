@@ -1,8 +1,10 @@
 'use client'
 
 import { Snippet } from '@heroui/react'
-import type { PatchResource } from '@/types/api/patch'
+
 import { cn } from '@/lib/utils'
+
+import type { PatchResource } from '@/types/api/patch'
 
 interface Props {
   resource: PatchResource

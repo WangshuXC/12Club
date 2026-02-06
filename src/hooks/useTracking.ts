@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useRef, useEffect } from 'react'
+
 import { useTrackingStore, TrackingEvent } from '@/store/trackingStore'
 
 // 设备类型检测
@@ -11,11 +12,13 @@ const getDeviceType = (): 'desktop' | 'mobile' | 'tablet' => {
   if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
     return 'tablet'
   }
+
   if (
     /mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)
   ) {
     return 'mobile'
   }
+
   return 'desktop'
 }
 
@@ -42,6 +45,7 @@ const reportEvents = async (guid: string, events: TrackingEvent[]) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ guid, events }),
+
       // 使用 keepalive 确保页面关闭时也能发送
       keepalive: true
     })
@@ -55,10 +59,13 @@ const reportEvents = async (guid: string, events: TrackingEvent[]) => {
 }
 
 export interface UseTrackingOptions {
+
   // 批量上报的间隔时间（毫秒）
   flushInterval?: number
+
   // 队列达到多少条时触发上报
   flushThreshold?: number
+
   // 是否启用调试模式
   debug?: boolean
 }
@@ -98,6 +105,7 @@ export const useTracking = (options: UseTrackingOptions = {}) => {
       if (debug) {
         console.log('[Tracking] Flushing events:', events)
       }
+
       await reportEvents(guid, events)
     }
   }, [flushEvents, getGUID, debug])
@@ -112,6 +120,7 @@ export const useTracking = (options: UseTrackingOptions = {}) => {
         extra_data: extraData
       }
       addEvent(event)
+
       if (debug) {
         console.log('[Tracking] Expose:', event)
       }
@@ -135,6 +144,7 @@ export const useTracking = (options: UseTrackingOptions = {}) => {
         extra_data: extraData
       }
       addEvent(event)
+
       if (debug) {
         console.log('[Tracking] Click:', event)
       }
@@ -152,6 +162,7 @@ export const useTracking = (options: UseTrackingOptions = {}) => {
         extra_data: extraData
       }
       addEvent(event)
+
       if (debug) {
         console.log('[Tracking] Custom:', event)
       }

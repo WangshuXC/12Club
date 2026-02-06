@@ -1,7 +1,10 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../../../prisma'
-import { createFavoriteFolderSchema } from '@/validations/user'
+
 import { USER_FAVORITE_PATCH_FOLDER_LIMIT } from '@/config/user'
+import { createFavoriteFolderSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../../prisma'
+
 import type { UserFavoriteResourceFolder } from '@/types/api/user'
 
 export const createFolder = async (

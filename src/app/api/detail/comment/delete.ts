@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
+
 import { processComments } from '@/utils/processComments'
+
+import { prisma } from '../../../../../prisma'
 
 const commentIdSchema = z.object({
   commentId: z.coerce

@@ -1,7 +1,9 @@
 'use client'
-import Image from 'next/image'
 import React, { useEffect, useId, useRef, useState } from 'react'
+
 import { AnimatePresence, motion } from 'framer-motion'
+import Image from 'next/image'
+
 import { useOutsideClick } from '@/hooks/useOutsideClick'
 
 type cards = {
@@ -15,7 +17,7 @@ type cards = {
 export function ExpandableCard({ cards }: { cards: cards }) {
   const [active, setActive] = useState<
     (typeof cardList)[number] | boolean | null
-  >(null)
+      >(null)
   const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 

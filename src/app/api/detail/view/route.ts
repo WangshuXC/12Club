@@ -1,7 +1,9 @@
-import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
 import { ParsePostBody } from '@/utils/parseQuery'
+
+import { prisma } from '../../../../../prisma'
 
 const resourceIdSchema = z.object({
   resourceDbId: z.coerce.string().min(7).max(7)
@@ -16,6 +18,7 @@ export const updateView = async (
   if (!resource) {
     return '资源不存在'
   }
+
   await prisma.resource.update({
     where: { id: resource.id },
     data: { view: resource.view + 1, updated: resource.updated }
@@ -28,6 +31,8 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const response = await updateView(input)
+
   return NextResponse.json(response)
 }

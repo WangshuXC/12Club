@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -12,9 +13,11 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
-import { FetchDelete } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
+
 import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchDelete } from '@/utils/fetch'
+
 import type { AdminResource } from '@/types/api/admin'
 
 interface Props {
@@ -30,7 +33,7 @@ export const ResourceDelete = ({ resource, onDelete }: Props) => {
 
   const handleDeleteResource = async () => {
     setDeleting(true)
-    const res = await FetchDelete<{}>('/admin/resource', {
+    const res = await FetchDelete<object>('/admin/resource', {
       id: resource.id
     })
     setDeleting(false)
@@ -41,9 +44,11 @@ export const ResourceDelete = ({ resource, onDelete }: Props) => {
         description: '删除资源成功',
         color: 'success'
       })
+
       if (onDelete) {
         onDelete(resource.id)
       }
+
       onClose()
     })
   }
@@ -67,7 +72,9 @@ export const ResourceDelete = ({ resource, onDelete }: Props) => {
           <ModalBody>
             <div className="space-y-4">
               <div className="bg-danger-50 border border-danger-200 rounded-lg p-4">
-                <h2 className="text-lg font-semibold text-danger">⚠️ 危险操作</h2>
+                <h2 className="text-lg font-semibold text-danger">
+                  ⚠️ 危险操作
+                </h2>
                 <p className="text-danger-700">
                   您确定要删除资源 <strong>{resource.name}</strong> 吗？
                 </p>
@@ -80,7 +87,9 @@ export const ResourceDelete = ({ resource, onDelete }: Props) => {
                   <li>删除所有相关的下载包</li>
                   <li>删除所有相关的评论</li>
                   <li>删除所有相关的收藏记录</li>
-                  <li>此操作<strong>不可撤销</strong></li>
+                  <li>
+                    此操作<strong>不可撤销</strong>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -102,4 +111,4 @@ export const ResourceDelete = ({ resource, onDelete }: Props) => {
       </Modal>
     </>
   )
-} 
+}

@@ -17,6 +17,7 @@ export default function imageLoader({ src, width, quality }: ImageLoaderProps): 
   if (match) {
     // 将 12club.nankai.edu.cn/openlist/d/... 转换为 localhost:5244/d/...
     const path = match[1]
+
     // 直接返回代理后的 URL（不通过 /_next/image）
     return `http://localhost:5244/d/${path}`
   }

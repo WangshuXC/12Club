@@ -1,18 +1,21 @@
 'use client'
 
 import { useState, memo, useRef, useCallback } from 'react'
-import { ArtPlayer } from '../detailContainer/ArtPlayer'
-import { AnimeDetail } from './animeDetail'
-import { ActionBar } from './actionBar'
-import { PlaylistTab } from './PlaylistTab'
-import { ResourceTab } from './ResourceTab'
-import { Comments } from '../detailContainer/comment/Comments'
+
 import { Tab, Tabs, Card, CardBody, Image } from '@heroui/react'
-import { FetchPost } from '@/utils/fetch'
-import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import Link from 'next/link'
 
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { Introduction, Cover } from '@/types/common/detail-container'
+import { FetchPost } from '@/utils/fetch'
+
+import { ArtPlayer } from '../detailContainer/ArtPlayer'
+import { Comments } from '../detailContainer/comment/Comments'
+
+import { PlaylistTab } from './PlaylistTab'
+import { ResourceTab } from './ResourceTab'
+import { ActionBar } from './actionBar'
+import { AnimeDetail } from './animeDetail'
 
 // 系列资源类型
 interface SeriesResource {

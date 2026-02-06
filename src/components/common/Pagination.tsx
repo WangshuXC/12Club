@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import type { KeyboardEvent } from 'react'
+
 import { Input, Button } from '@heroui/react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import type { KeyboardEvent } from 'react'
 
 interface Props {
   total: number

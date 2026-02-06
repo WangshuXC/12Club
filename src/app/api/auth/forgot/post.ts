@@ -1,6 +1,8 @@
-import { prisma } from '../../../../../prisma'
-import { forgotRequestSchema } from '@/validations/auth'
 import { randomUUID } from 'crypto'
+
+import { forgotRequestSchema } from '@/validations/auth'
+
+import { prisma } from '../../../../../prisma'
 
 export const requestPasswordReset = async (input: {
   name: string
@@ -48,6 +50,7 @@ export const requestPasswordReset = async (input: {
 
     return {
       message: '重置密码请求已发送，请检查您的邮箱',
+
       // 开发环境下返回重置码，生产环境应该移除
       ...(process.env.NODE_ENV === 'development' && { resetCode })
     }

@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { adminGetSeriesSchema } from '@/validations/admin'
+
 import { getSeries } from '@/app/api/admin/series/get'
+import { adminGetSeriesSchema } from '@/validations/admin'
+
 import type { AdminSeriesListResponse } from '@/types/api/admin'
 
 export const GetSeriesActions = async (

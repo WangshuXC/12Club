@@ -1,13 +1,17 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+
 import { Input, Button, type SortDescriptor } from '@heroui/react'
 import { Search, Plus } from 'lucide-react'
-import { SeriesTable } from './SeriesTable'
-import { CreateSeriesModal } from './CreateSeriesModal'
-import { EditSeriesModal } from './EditSeriesModal'
-import { DeleteSeriesConfirm } from './DeleteSeriesConfirm'
+
 import { FetchGet } from '@/utils/fetch'
+
+import { CreateSeriesModal } from './CreateSeriesModal'
+import { DeleteSeriesConfirm } from './DeleteSeriesConfirm'
+import { EditSeriesModal } from './EditSeriesModal'
+import { SeriesTable } from './SeriesTable'
+
 import type { AdminSeries } from '@/types/api/admin'
 
 interface SeriesProps {
@@ -54,6 +58,7 @@ export const Series = ({
     setLoading(true)
     const sortField = sortDescriptor.column as string
     const sortOrder = sortDescriptor.direction === 'ascending' ? 'asc' : 'desc'
+
     try {
       const params: Record<string, string | number> = {
         page,
@@ -85,9 +90,11 @@ export const Series = ({
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
+
       // 初始数据已从服务端传入，不需要再次获取
       return
     }
+
     fetchSeries()
   }, [fetchSeries])
 
@@ -103,6 +110,7 @@ export const Series = ({
     } else {
       params.delete('query')
     }
+
     params.set('page', '1')
     window.history.replaceState(
       {},

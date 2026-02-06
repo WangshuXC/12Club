@@ -1,8 +1,8 @@
 'use client'
 
 import { Card, CardBody, Tab, Tabs } from '@heroui/react'
-import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 interface UserActivityProps {
   id: number

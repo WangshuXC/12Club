@@ -1,5 +1,6 @@
-import { prisma } from '../../../../../prisma'
 import { processComments } from '@/utils/processComments'
+
+import { prisma } from '../../../../../prisma'
 
 export const getResourceComment = async (resourceId?: string, uid?: number) => {
   try {

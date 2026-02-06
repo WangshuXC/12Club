@@ -1,10 +1,12 @@
 'use client'
 
 import { useState } from 'react'
+
 import { Link } from "@heroui/react"
-import { TreeNode } from '@/lib/mdx/types'
 import { ChevronRight, FileText, FolderOpen } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
+
+import { TreeNode } from '@/lib/mdx/types'
 import { cn } from '@/lib/utils'
 
 interface TreeItemProps {

@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+
 import { Tabs, Tab } from '@heroui/react'
+
 import {
   getTrackingOverview,
   getPageStats,
@@ -15,10 +17,10 @@ import {
 } from '@/app/admin/tracking/actions'
 
 // 拆分后的子组件
+import { AnimeStatsTable } from './AnimeStatsTab'
 import { DateRangeSelector } from './DateRangeSelector'
 import { OverviewCards } from './OverviewTab'
 import { PageStatsTable } from './PageStatsTab'
-import { AnimeStatsTable } from './AnimeStatsTab'
 import { VisitorStatsTable } from './VisitorStatsTab'
 
 // 主组件
@@ -47,6 +49,7 @@ export const TrackingStatsContainer = () => {
     async (tab?: string) => {
       const currentTab = tab || selectedTab
       setLoading(true)
+
       try {
         const start = startDate
           ? new Date(startDate).toISOString()
@@ -56,35 +59,41 @@ export const TrackingStatsContainer = () => {
           : undefined
 
         switch (currentTab) {
-          case 'overview': {
-            const data = await getTrackingOverview(start, end)
-            setOverview(data)
-            break
+        case 'overview': {
+          const data = await getTrackingOverview(start, end)
+          setOverview(data)
+          break
+        }
+
+        case 'pages': {
+          const data = await getPageStats(start, end, 1, 20)
+          if (data) {
+            setPageStats(data.list)
+            setPagePagination(data.pagination)
           }
-          case 'pages': {
-            const data = await getPageStats(start, end, 1, 20)
-            if (data) {
-              setPageStats(data.list)
-              setPagePagination(data.pagination)
-            }
-            break
+
+          break
+        }
+
+        case 'anime': {
+          const data = await getAnimeStats(start, end, 1, 20)
+          if (data) {
+            setAnimeStats(data.list)
+            setAnimePagination(data.pagination)
           }
-          case 'anime': {
-            const data = await getAnimeStats(start, end, 1, 20)
-            if (data) {
-              setAnimeStats(data.list)
-              setAnimePagination(data.pagination)
-            }
-            break
+
+          break
+        }
+
+        case 'visitors': {
+          const data = await getVisitorStats(start, end, 1, 20)
+          if (data) {
+            setVisitorStats(data.list)
+            setVisitorPagination(data.pagination)
           }
-          case 'visitors': {
-            const data = await getVisitorStats(start, end, 1, 20)
-            if (data) {
-              setVisitorStats(data.list)
-              setVisitorPagination(data.pagination)
-            }
-            break
-          }
+
+          break
+        }
         }
       } catch (error) {
         console.error('Failed to load data:', error)
@@ -110,6 +119,7 @@ export const TrackingStatsContainer = () => {
     // 初始化完成后立即加载数据
     const loadInitialData = async () => {
       setLoading(true)
+
       try {
         const startISO = new Date(startStr).toISOString()
         const endISO = new Date(endStr + 'T23:59:59').toISOString()
@@ -127,6 +137,7 @@ export const TrackingStatsContainer = () => {
   // Tab 切换时加载数据
   const handleTabChange = (key: string) => {
     setSelectedTab(key)
+
     if (startDate && endDate) {
       loadData(key)
     }
@@ -135,6 +146,7 @@ export const TrackingStatsContainer = () => {
   // 页面统计分页
   const handlePageStatsPageChange = async (page: number) => {
     setLoading(true)
+
     try {
       const start = startDate ? new Date(startDate).toISOString() : undefined
       const end = endDate
@@ -153,6 +165,7 @@ export const TrackingStatsContainer = () => {
   // 动漫统计分页
   const handleAnimeStatsPageChange = async (page: number) => {
     setLoading(true)
+
     try {
       const start = startDate ? new Date(startDate).toISOString() : undefined
       const end = endDate
@@ -171,6 +184,7 @@ export const TrackingStatsContainer = () => {
   // 访客统计分页
   const handleVisitorStatsPageChange = async (page: number) => {
     setLoading(true)
+
     try {
       const start = startDate ? new Date(startDate).toISOString() : undefined
       const end = endDate

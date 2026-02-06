@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   Button,
   Modal,
@@ -9,10 +11,11 @@ import {
   ModalFooter,
   useDisclosure
 } from '@heroui/react'
-import { Trash2 } from 'lucide-react'
 import { addToast } from '@heroui/react'
+import { Trash2 } from 'lucide-react'
+
 import { FetchDelete } from '@/utils/fetch'
-import { useState } from 'react'
+
 import type { ResetCode } from '@/types/api/admin/forgot'
 
 interface ResetCodeDeleteProps {
@@ -29,6 +32,7 @@ export const ResetCodeDelete = ({
 
   const handleDelete = async () => {
     setLoading(true)
+
     try {
       const res = await FetchDelete<{ status: number; message: string }>(
         '/auth/forgot',

@@ -1,10 +1,14 @@
 'use client'
 
 import { useEffect } from 'react'
+
 import { addToast, Button, Chip, Input } from '@heroui/react'
 import { Plus, X } from 'lucide-react'
-import { ErrorType } from '../share'
+
 import { SUPPORTED_RESOURCE_LINK_MAP } from '@/constants/resource'
+
+import { ErrorType } from '../share'
+
 import { fetchLinkData, fetchListData } from './fetchAlistSize'
 
 interface ResourceLinksInputProps {
@@ -41,6 +45,7 @@ export const ResourceLinksInput = ({
         const listSize = await fetchListData(data.data.key)
         sizeInGB = listSize ? (listSize / 1024 ** 3).toFixed(3) : ''
       }
+
       addToast({
         title: '成功',
         description: '获取文件大小成功',
@@ -54,6 +59,7 @@ export const ResourceLinksInput = ({
     if (!links.length || size) {
       return
     }
+
     if (links.some((link) => link.includes('pan.touchgal.net/s/'))) {
       checkLinkSize(links[0])
     }

@@ -1,7 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+
 import matter from 'gray-matter'
+
 import { docDirectoryLabelMap } from '@/constants/doc'
+
 import type { TreeNode } from './types'
 
 const POSTS_PATH = path.join(process.cwd(), 'posts')

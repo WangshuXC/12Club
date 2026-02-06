@@ -1,14 +1,16 @@
 'use client'
-import { Badge, Card, CardBody, CardFooter, Image, Tooltip } from '@heroui/react'
-import { Download, Eye, Heart, MessageSquare } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatNumber } from '@/utils/formatNumber'
-import type { PageData } from '@/types/api/page'
 import { useState, useEffect } from 'react'
 
+import { Badge, Card, CardBody, CardFooter, Image, Tooltip } from '@heroui/react'
+import { Download, Eye, Heart, MessageSquare } from 'lucide-react'
 import { useTransitionRouter } from 'next-view-transitions'
+
 import { upPage } from '@/lib/routerTransition'
+import { cn } from '@/lib/utils'
+import { formatNumber } from '@/utils/formatNumber'
 import { getRouteByDbId } from '@/utils/router'
+
+import type { PageData } from '@/types/api/page'
 
 interface CardStatusProps {
   data: PageData

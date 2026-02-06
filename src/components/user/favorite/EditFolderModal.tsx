@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+
 import {
   Button,
   Checkbox,
@@ -14,9 +15,11 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Pencil, Plus } from 'lucide-react'
-import { FetchPost, FetchPut } from '@/utils/fetch'
 import toast from 'react-hot-toast'
+
 import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPost, FetchPut } from '@/utils/fetch'
+
 import type { UserFavoriteResourceFolder } from '@/types/api/user'
 
 interface Props {

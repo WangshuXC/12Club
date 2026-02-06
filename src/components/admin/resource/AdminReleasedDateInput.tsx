@@ -47,9 +47,11 @@ export const AdminReleasedDateInput = ({ date, onChange, errors }: Props) => {
         const day = value.slice(6, 8)
 
         value = year
+
         if (month) {
           value += `-${month}`
         }
+
         if (day) {
           value += `-${day}`
         }

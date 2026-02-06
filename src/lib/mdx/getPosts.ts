@@ -1,7 +1,10 @@
 import fs from 'fs'
 import path from 'path'
+
 import matter from 'gray-matter'
+
 import { getWordCount } from '@/utils/markdownToText'
+
 import type { PostMetadata } from './types'
 import type { Blog, Frontmatter } from './types'
 

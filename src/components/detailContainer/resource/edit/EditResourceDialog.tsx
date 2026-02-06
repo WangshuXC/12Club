@@ -1,17 +1,21 @@
 'use client'
 
-import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast } from '@heroui/react'
-import { z } from 'zod'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+
+import { Button, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPut } from '@/utils/fetch'
 import { patchResourceCreateSchema } from '@/validations/patch'
-import { ResourceLinksInput } from '../publish/ResourceLinksInput'
-import { ErrorHandler } from '@/utils/errorHandler'
+
 import { ResourceDetailsForm } from '../publish/ResourceDetailsForm'
+import { ResourceLinksInput } from '../publish/ResourceLinksInput'
+
 import type { PatchResource } from '@/types/api/patch'
-import { useUserStore } from '@/store/userStore'
 
 type EditResourceFormData = z.infer<typeof patchResourceCreateSchema>
 

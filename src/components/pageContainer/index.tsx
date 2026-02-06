@@ -1,16 +1,21 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import FadeContent from '@/components/ui/FadeContent'
-import { CoverCard } from '../common/CoverCard'
-import { FilterBar } from './FilterBar'
-import { useMounted } from '@/hooks/useMounted'
-import { useRouter } from 'next/navigation'
-import type { SortField, SortOrder } from './_sort'
+
 import { Pagination } from '@heroui/react'
-import type { PageData } from '@/types/api/page'
+import { useRouter } from 'next/navigation'
+
+import FadeContent from '@/components/ui/FadeContent'
+import { useMounted } from '@/hooks/useMounted'
 import { FetchGet } from '@/utils/fetch'
+
 import { scrollToTop } from '../common/BackToTop'
+import { CoverCard } from '../common/CoverCard'
+
+import { FilterBar } from './FilterBar'
+
+import type { SortField, SortOrder } from './_sort'
+import type { PageData } from '@/types/api/page'
 
 export const PageContainer = ({
   initPageData,
@@ -57,6 +62,7 @@ export const PageContainer = ({
     if (!isMounted) {
       return
     }
+
     fetchPageData()
   }, [sortField, sortOrder, selectedType, selectedLanguage, selectedStatus, page])
 

@@ -1,14 +1,16 @@
 'use server'
 
-import { z } from 'zod'
 import { cache } from 'react'
-import { safeParseSchema } from '@/utils/actions/safeParseSchema'
-import { FetchGet } from '@/utils/fetch'
-import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+
+import { z } from 'zod'
+
 import {
   Introduction,
   Cover,
 } from '@/types/common/detail-container'
+import { safeParseSchema } from '@/utils/actions/safeParseSchema'
+import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import { FetchGet } from '@/utils/fetch'
 
 const idSchema = z.object({
   id: z.string().min(7).max(7)
@@ -33,6 +35,7 @@ const _getResourceActions = async (params: z.infer<typeof idSchema>) => {
   if (typeof response === 'string') return response
 
   const { introduce, coverData } = response
+
   return { introduce, coverData }
 }
 

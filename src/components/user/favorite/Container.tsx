@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+
 import {
   Button,
   Card,
@@ -15,16 +15,20 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Folder } from 'lucide-react'
-import { FetchDelete, FetchGet } from '@/utils/fetch'
-import { ErrorHandler } from '@/utils/errorHandler'
-import { EditFolderModal } from './EditFolderModal'
-import { UserFavoriteDataCard } from './Card'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+
 import { Loading } from '@/components/common/Loading'
 import { Null } from '@/components/common/Null'
-import toast from 'react-hot-toast'
 import { SelfPagination } from '@/components/common/Pagination'
-import type { UserFavoriteResourceFolder } from '@/types/api/user'
+import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchDelete, FetchGet } from '@/utils/fetch'
+
+import { UserFavoriteDataCard } from './Card'
+import { EditFolderModal } from './EditFolderModal'
+
 import type { ResourceData } from '@/types/api/resource'
+import type { UserFavoriteResourceFolder } from '@/types/api/user'
 
 interface Props {
   initialFolders: UserFavoriteResourceFolder[]
@@ -54,9 +58,10 @@ export const UserFavorite = ({
   } = useDisclosure()
   const fetchPatchesInFolder = async (folderId: number) => {
     startTransition(async () => {
-      const res = await FetchGet
-        <{ resources: ResourceData[]; total: number }>
-      (`/user/profile/favorite/folder/resource`, { folderId, page, limit: 48 })
+      const res = await FetchGet<{ resources: ResourceData[]; total: number }>(
+        `/user/profile/favorite/folder/resource`,
+        { folderId, page, limit: 48 }
+      )
       ErrorHandler(res, (value) => {
         setResource(value.resources)
         setTotal(value.total)
@@ -77,10 +82,9 @@ export const UserFavorite = ({
   } = useDisclosure()
   const handleDeleteFolder = async () => {
     startTransition(async () => {
-      const res = await FetchDelete<{}>(
-        `/user/profile/favorite/folder`,
-        { folderId: selectedFolder?.id ?? 0 }
-      )
+      const res = await FetchDelete<object>(`/user/profile/favorite/folder`, {
+        folderId: selectedFolder?.id ?? 0
+      })
       ErrorHandler(res, () => {
         setFolders((prev) => prev.filter((p) => p.id !== selectedFolder?.id))
         onCloseDelete()
@@ -109,11 +113,13 @@ export const UserFavorite = ({
             ...folder,
             _count: {
               ...folder._count,
+
               // 计数减 1，并确保不小于 0
               resource: Math.max(0, folder._count.resource - 1)
             }
           }
         }
+
         return folder
       })
     )
@@ -159,7 +165,9 @@ export const UserFavorite = ({
                 {folder.description}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-small">{folder._count.resource} 个资源</span>
+                <span className="text-small">
+                  {folder._count.resource} 个资源
+                </span>
                 {folder.is_public ? (
                   <span className="text-small text-primary">公开</span>
                 ) : (
@@ -206,9 +214,7 @@ export const UserFavorite = ({
                   </div>
                 )}
 
-                {!isPending && !resource && (
-                  <Null message="收藏夹为空" />
-                )}
+                {!isPending && !resource && <Null message="收藏夹为空" />}
 
                 {!isPending && Math.ceil(total / 48) > 1 && (
                   <div className="flex justify-center">

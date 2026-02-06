@@ -1,11 +1,14 @@
 'use client'
 
-import { Config } from '@/config/config'
 import { Avatar, Card, CardBody, CardHeader, Chip, Divider } from '@heroui/react'
-import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import { Calendar, Link as LinkIcon } from 'lucide-react'
+
+import { Config } from '@/config/config'
 import { USER_ROLE_MAP } from '@/constants/user'
+import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+
 import { SelfButton } from './SelfButton'
+
 import type { UserInfo } from '@/types/api/user'
 
 export const UserProfile = ({ user }: { user: UserInfo }) => {

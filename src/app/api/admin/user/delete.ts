@@ -1,6 +1,7 @@
 import { z } from 'zod'
-import { deleteResource } from '../../patch/delete'
+
 import { prisma } from '../../../../../prisma'
+import { deleteResource } from '../../patch/delete'
 
 const userIdSchema = z.object({
   uid: z.coerce.number({ message: '用户 ID 必须为数字' }).min(1).max(9999999)

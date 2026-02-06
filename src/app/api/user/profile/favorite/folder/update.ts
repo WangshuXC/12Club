@@ -1,6 +1,9 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../../../prisma'
+
 import { updateFavoriteFolderSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../../prisma'
+
 import type { UserFavoriteResourceFolder } from '@/types/api/user'
 
 export const updateFolder = async (

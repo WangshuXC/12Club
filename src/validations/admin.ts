@@ -103,10 +103,12 @@ export const adminAutoCreateResourcePlayLinkSchema = z.object({
     if (data.onlyUpdatePatch) {
       return true
     }
+
     // 如果不是只更新 Patch，则 linkList 必须存在且不能为空
     if (!data.linkList || data.linkList.length === 0) {
       return false
     }
+
     return true
   },
   {

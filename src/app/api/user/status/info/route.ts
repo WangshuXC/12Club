@@ -1,8 +1,10 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { UserInfo } from '@/types/api/user'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+import { UserInfo } from '@/types/api/user'
 import { ParseGetQuery } from '@/utils/parseQuery'
+
 import { prisma } from '../../../../../../prisma'
 
 const getProfileSchema = z.object({
@@ -71,8 +73,10 @@ export async function GET(req: NextRequest) {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
 
   const user = await getUserProfile(input, payload?.uid ?? 0)
+
   return NextResponse.json(user)
 }

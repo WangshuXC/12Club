@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { JSX } from 'react'
+
 import {
   addToast,
   Button,
@@ -32,19 +34,21 @@ import {
   Database,
   Download
 } from 'lucide-react'
-import { FetchDelete, FetchGet, FetchPut } from '@/utils/fetch'
-import { useUserStore } from '@/store/userStore'
-import { PublishResource } from '../detailContainer/resource/publish/PublishResource'
-import { EditResourceDialog } from '../detailContainer/resource/edit/EditResourceDialog'
-import { Loading } from '@/components/common/Loading'
+
 import { ExternalLink } from '@/components/common/ExternalLink'
+import { Loading } from '@/components/common/Loading'
 import {
   SUPPORTED_RESOURCE_SECTION,
   RESOURCE_SECTION_MAP,
   SUPPORTED_RESOURCE_LINK_MAP
 } from '@/constants/resource'
+import { useUserStore } from '@/store/userStore'
+import { FetchDelete, FetchGet, FetchPut } from '@/utils/fetch'
+
+import { EditResourceDialog } from '../detailContainer/resource/edit/EditResourceDialog'
+import { PublishResource } from '../detailContainer/resource/publish/PublishResource'
+
 import type { PatchResource } from '@/types/api/patch'
-import type { JSX } from 'react'
 
 type ResourceSection = (typeof SUPPORTED_RESOURCE_SECTION)[number]
 
@@ -101,7 +105,7 @@ export const ResourceTab = ({ id, needUpdate = false }: ResourceTabProps) => {
 
   const handleDeleteResource = async () => {
     setDeleting(true)
-    await FetchDelete<{}>('/patch', {
+    await FetchDelete<object>('/patch', {
       patchId: deleteResourceId
     })
     setResources((prev) =>
@@ -129,7 +133,7 @@ export const ResourceTab = ({ id, needUpdate = false }: ResourceTabProps) => {
     }
 
     // 统计下载量
-    await FetchPut<{}>('/patch/download', {
+    await FetchPut<object>('/patch/download', {
       resourceId: resource.resourceId,
       patchId: resource.id
     })

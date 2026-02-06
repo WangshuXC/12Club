@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop'
+
 import {
   Button,
   Modal,
@@ -10,8 +10,11 @@ import {
   ModalFooter,
   ModalHeader
 } from '@heroui/react'
+import ReactCrop, { type Crop, type PixelCrop } from 'react-image-crop'
+
 import { CropControls } from './CropControls'
 import { centerAspectCrop, createCroppedImage } from './utils'
+
 import type { Aspect } from './types'
 import 'react-image-crop/dist/ReactCrop.css'
 

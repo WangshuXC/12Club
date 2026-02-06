@@ -38,6 +38,7 @@ export const extractMemesFromText = (text: string): MemeItem[] => {
   return matches
     .map(match => {
       const memeName = match[1]
+
       return memeList.find(meme => meme.name === memeName)
     })
     .filter((meme): meme is MemeItem => meme !== undefined)

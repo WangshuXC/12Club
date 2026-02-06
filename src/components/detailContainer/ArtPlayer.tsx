@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react'
+
 import Artplayer from 'artplayer'
 
 interface VideoPlayerProps {
@@ -57,6 +58,7 @@ export const ArtPlayer = ({ src, className = '', onPlay }: VideoPlayerProps) => 
       // 确保鼠标指针正常显示
       if (artRef.current) {
         artRef.current.style.cursor = 'default'
+
         // 为播放器容器添加鼠标事件监听
         const container = artRef.current.querySelector('.art-video-player')
         if (container) {

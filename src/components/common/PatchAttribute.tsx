@@ -1,6 +1,7 @@
 'use client'
 
 import { Chip } from '@heroui/react'
+
 import {
   SUPPORTED_LANGUAGE_MAP,
   SUPPORTED_TYPE_MAP

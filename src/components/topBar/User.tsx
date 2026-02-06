@@ -1,16 +1,20 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+
 import { addToast, Button, NavbarContent, NavbarItem, Skeleton } from '@heroui/react'
 import Link from 'next/link'
-import { useUserStore } from '@/store/userStore'
 import { useRouter } from 'next-nprogress-bar'
-import { FetchGet } from '@/utils/fetch'
-import { ThemeSwitcher } from './ThemeSwitcher'
+
 import { useMounted } from '@/hooks/useMounted'
-import { UserDropdown } from './UserDropdown'
+import { useUserStore } from '@/store/userStore'
+import { FetchGet } from '@/utils/fetch'
+
 import { SearchButton } from './Search'
+import { ThemeSwitcher } from './ThemeSwitcher'
+import { UserDropdown } from './UserDropdown'
 import { UserMessageBell } from './UserMessageBell'
+
 import type { UserState } from '@/store/userStore'
 import type { Message } from '@/types/api/message'
 
@@ -24,6 +28,7 @@ export const TopBarUser = () => {
     if (!isMounted) {
       return
     }
+
     if (!user.uid) {
       return
     }
@@ -57,6 +62,7 @@ export const TopBarUser = () => {
     }
 
     getUserStatus()
+
     // getUserUnreadMessage()
   }, [isMounted])
 

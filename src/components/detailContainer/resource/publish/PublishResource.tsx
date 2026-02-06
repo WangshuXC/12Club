@@ -1,20 +1,25 @@
 'use client'
 
-import { Button, ModalBody, ModalContent, ModalFooter, addToast } from '@heroui/react'
-import { z } from 'zod'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+
+import { Button, ModalBody, ModalContent, ModalFooter, addToast } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Upload } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { useUserStore } from '@/store/userStore'
+import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPost } from '@/utils/fetch'
 import { patchResourceCreateSchema } from '@/validations/patch'
-import { ResourceLinksInput } from './ResourceLinksInput'
+
 import { ResourceDetailsForm } from './ResourceDetailsForm'
-import { ResourceTypeSelect } from './ResourceTypeSelect'
+import { ResourceLinksInput } from './ResourceLinksInput'
 import { ResourceSectionSelect } from './ResourceSectionSelect'
-import { Upload } from 'lucide-react'
+import { ResourceTypeSelect } from './ResourceTypeSelect'
+
 // import { FileUploadContainer } from '../upload/FileUploadContainer'
-import { ErrorHandler } from '@/utils/errorHandler'
-import { useUserStore } from '@/store/userStore'
+
 import type { PatchResource } from '@/types/api/patch'
 
 export type ResourceFormData = z.infer<typeof patchResourceCreateSchema>

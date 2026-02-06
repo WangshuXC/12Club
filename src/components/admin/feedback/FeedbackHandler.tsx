@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Dropdown,
@@ -16,11 +17,13 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { MoreVertical } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
+
 import { useUserStore } from '@/store/userStore'
 import { FetchPost } from '@/utils/fetch'
+
 import type { AdminFeedback } from '@/types/api/admin'
-import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
 
 interface Props {
   initialFeedback: AdminFeedback
@@ -55,6 +58,7 @@ export const FeedbackHandler = ({ initialFeedback }: Props) => {
       toast.success('处理反馈成功!')
       router.refresh()
     }
+
     setUpdating(false)
   }
 

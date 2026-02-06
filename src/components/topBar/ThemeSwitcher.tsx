@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTheme } from 'next-themes'
+
 import {
   Button,
   Dropdown,
@@ -12,6 +12,7 @@ import {
   Tooltip
 } from '@heroui/react'
 import { Moon, Sun, SunMoon } from 'lucide-react'
+import { useTheme } from 'next-themes'
 
 enum Theme {
   dark = 'dark',
@@ -64,9 +65,11 @@ export const ThemeSwitcher = () => {
     if (selectedTheme.has(Theme.light)) {
       return <Sun />
     }
+
     if (selectedTheme.has(Theme.dark)) {
       return <Moon />
     }
+
     return <SunMoon />
   }, [selectedTheme])
 

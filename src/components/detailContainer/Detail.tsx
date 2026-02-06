@@ -1,13 +1,16 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { ButtonList } from './ButtonList'
-import Image from 'next/image'
-import { Cover } from '@/types/common/detail-container'
 import { useState } from 'react'
+
 import { Tooltip } from '@heroui/react'
 import { Eye, Download, MessageSquare, Heart } from 'lucide-react'
+import Image from 'next/image'
+
+import { cn } from '@/lib/utils'
+import { Cover } from '@/types/common/detail-container'
 import { formatNumber } from '@/utils/formatNumber'
+
+import { ButtonList } from './ButtonList'
 
 interface DetailCoverProps {
   setSelected: (value: string) => void
@@ -77,6 +80,7 @@ export const DetailStatus = ({
 export const DetailCover = ({ setSelected, coverData, dbId, isFavorite, view, download, comment, favorited }: DetailCoverProps) => {
   const { title, author, image, translator } = coverData
   const [imageError, setImageError] = useState(false)
+
   return (
     <div className="relative h-fit shadow-xl w-full rounded-2xl overflow-hidden ">
       <div

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+
 import { prisma } from '../../../../../../../prisma'
 
 const folderIdSchema = z.object({
@@ -15,6 +16,7 @@ export const deleteFolder = async (
   if (!folder) {
     return '未找到该收藏夹'
   }
+
   if (folder.user_id !== uid) {
     return '您没有权限删除该收藏夹'
   }

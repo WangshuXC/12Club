@@ -1,10 +1,12 @@
-import type { Metadata } from 'next'
 import { ErrorComponent } from '@/components/common/Error'
 import { UserActivity } from '@/components/user/Activity'
-import { UserStats } from '@/components/user/Status'
 import { UserProfile } from '@/components/user/Profile'
-import { getActions } from './actions'
+import { UserStats } from '@/components/user/Status'
 import { Config } from '@/config/config'
+
+import { getActions } from './actions'
+
+import type { Metadata } from 'next'
 
 interface Props {
   children: React.ReactNode

@@ -1,9 +1,11 @@
 'use client'
 
-import { getMemeList } from '@/utils/memeUtils'
-import { cn } from '@/lib/utils'
-import DOMPurify from 'isomorphic-dompurify'
 import { useMemo } from 'react'
+
+import DOMPurify from 'isomorphic-dompurify'
+
+import { cn } from '@/lib/utils'
+import { getMemeList } from '@/utils/memeUtils'
 
 interface CommentContentProps {
   content: string
@@ -63,6 +65,7 @@ export const CommentContent = ({
         if (meme) {
           return `<img src="${meme.path}" alt="${meme.displayName}" class="inline-block mx-1 rounded align-bottom ${isPreview ? 'w-10 h-10' : 'w-14 h-14'}" title="${meme.displayName}" loading="lazy" />`
         }
+
         return match
       }
     )
@@ -141,6 +144,7 @@ export const CommentContent = ({
             />
           )
         }
+
         // 如果找不到对应的 meme，显示原文本
         return <span key={`${part}-${index}`}>{part}</span>
       }

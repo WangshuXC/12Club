@@ -1,6 +1,9 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../../prisma'
+
 import { adminGetResourcePlayLinksSchema } from '@/validations/admin'
+
+import { prisma } from '../../../../../../prisma'
+
 import type { ResourcePlayLink } from '@/types/api/resource-play-link'
 
 export const getResourcePlayLinks = async (

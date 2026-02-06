@@ -1,9 +1,10 @@
 'use client'
 
-import { PostMetadata } from '@/lib/mdx/types'
 import { Button } from "@heroui/react"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+
+import { PostMetadata } from '@/lib/mdx/types'
 
 interface NavigationProps {
   prev: PostMetadata | null

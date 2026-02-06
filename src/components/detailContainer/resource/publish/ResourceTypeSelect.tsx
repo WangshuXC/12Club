@@ -1,11 +1,13 @@
 'use client'
 
 import { Select, SelectItem } from '@heroui/react'
-import { z } from 'zod'
 import { Controller } from 'react-hook-form'
-import { patchResourceCreateSchema } from '@/validations/patch'
-import { useUserStore } from '@/store/userStore'
+import { z } from 'zod'
+
 import { storageTypes } from '@/constants/resource'
+import { useUserStore } from '@/store/userStore'
+import { patchResourceCreateSchema } from '@/validations/patch'
+
 import type { ControlType, ErrorType } from '../share'
 
 export type ResourceFormData = z.infer<typeof patchResourceCreateSchema>
@@ -23,12 +25,15 @@ export const ResourceTypeSelect = ({ section, control, errors }: Props) => {
     if (user.role > 3 && section === 'individual') {
       return []
     }
+
     if (user.role > 3 && section === 'club') {
       return ['user']
     }
+
     if (user.role > 1 && section === 'individual') {
       return ['alist']
     }
+
     return ['user', 'alist']
   }
 

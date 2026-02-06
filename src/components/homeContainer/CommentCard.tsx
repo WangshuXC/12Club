@@ -1,5 +1,4 @@
 'use client'
-import { HomeComments } from '@/types/common/home'
 import {
   Card,
   CardHeader,
@@ -8,10 +7,12 @@ import {
   User,
   Link
 } from '@heroui/react'
-import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import { LinkIcon } from 'lucide-react'
-import { getRouteByDbId } from '@/utils/router'
+
 import { CommentContent } from '@/components/ui/CommentContent'
+import { HomeComments } from '@/types/common/home'
+import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
+import { getRouteByDbId } from '@/utils/router'
 
 export default function CommentCard({ data }: { data: HomeComments }) {
   return (

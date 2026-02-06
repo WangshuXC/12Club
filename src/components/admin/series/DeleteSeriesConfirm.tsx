@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Modal,
   ModalContent,
@@ -13,7 +14,9 @@ import {
   Chip
 } from '@heroui/react'
 import { AlertTriangle } from 'lucide-react'
+
 import { FetchDelete } from '@/utils/fetch'
+
 import type { AdminSeries } from '@/types/api/admin'
 
 interface DeleteSeriesConfirmProps {

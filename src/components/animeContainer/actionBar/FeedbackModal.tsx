@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+
 import {
   Button,
   Modal,
@@ -11,6 +12,7 @@ import {
   Textarea,
   addToast
 } from '@heroui/react'
+
 import { FetchPost } from '@/utils/fetch'
 
 interface FeedbackModalProps {
@@ -31,7 +33,7 @@ export const FeedbackModal = ({
 
   const handleSubmitFeedback = async () => {
     setSubmitting(true)
-    const res = await FetchPost<{}>('/detail/feedback', {
+    const res = await FetchPost<object>('/detail/feedback', {
       dbId,
       content: feedbackInput
     })
@@ -48,6 +50,7 @@ export const FeedbackModal = ({
         color: 'success'
       })
     }
+
     onClose()
     setSubmitting(false)
   }
@@ -63,9 +66,7 @@ export const FeedbackModal = ({
       backdrop="blur"
     >
       <ModalContent>
-        <ModalHeader className="flex flex-col gap-1">
-          提交资源反馈
-        </ModalHeader>
+        <ModalHeader className="flex flex-col gap-1">提交资源反馈</ModalHeader>
         <ModalBody>
           <Textarea
             label={`资源 ${title} 的反馈`}

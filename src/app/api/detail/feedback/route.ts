@@ -1,11 +1,13 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParsePostBody } from '@/utils/parseQuery'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { createMessage } from '@/utils/message'
-import { prisma } from '../../../../../prisma'
+import { ParsePostBody } from '@/utils/parseQuery'
 import { getRouteByDbId } from '@/utils/router'
 import { createResourceFeedbackSchema } from '@/validations/resource'
+
+import { prisma } from '../../../../../prisma'
 
 export const createFeedback = async (
   input: z.infer<typeof createResourceFeedbackSchema>,
@@ -38,6 +40,7 @@ export const POST = async (req: NextRequest) => {
     // 如果验证失败，返回第一个错误的message
     if (!result.success) {
       const firstError = result.error.issues[0]
+
       return NextResponse.json(firstError.message)
     }
     
@@ -47,6 +50,7 @@ export const POST = async (req: NextRequest) => {
     }
 
     const response = await createFeedback(result.data, payload.uid)
+
     return NextResponse.json(response)
   } catch (error) {
     return NextResponse.json({ error: '请求解析失败' }, { status: 400 })

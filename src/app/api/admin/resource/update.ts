@@ -1,8 +1,10 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
-import { adminUpdateResourceSchema } from '@/validations/admin'
-import { getRouteByDbId } from '@/utils/router'
+
 import { getOpenlistToken } from '@/lib/openlist'
+import { getRouteByDbId } from '@/utils/router'
+import { adminUpdateResourceSchema } from '@/validations/admin'
+
+import { prisma } from '../../../../../prisma'
 
 export const renameResource = async (
   dbId: string,
@@ -18,9 +20,7 @@ export const renameResource = async (
   }
 
   const openlistToken = tokenResult.token
-
   const path = `/resource${getRouteByDbId(dbId)}`
-
   const reName = await fetch(
     `${process.env.NEXT_OPENLIST_API_ADRESS}/fs/rename`,
     {
@@ -46,6 +46,67 @@ export const renameResource = async (
   return {
     success: true,
     message: '重命名成功'
+  }
+}
+
+// 处理单个标签的创建或获取
+const processTag = async (tagName: string, userId: number, resourceId: number) => {
+  const trimmedTagName = tagName.trim()
+
+  if (!trimmedTagName) return
+
+  // 查找或创建标签
+  let tag = await prisma.resourceTag.findUnique({
+    where: { name: trimmedTagName }
+  })
+
+  if (!tag) {
+    tag = await prisma.resourceTag.create({
+      data: {
+        name: trimmedTagName,
+        user_id: userId,
+        count: 0
+      }
+    })
+  }
+
+  // 创建资源-标签关联
+  await prisma.resourceTagRelation.create({
+    data: {
+      resource_id: resourceId,
+      tag_id: tag.id
+    }
+  })
+
+  // 更新标签计数
+  await prisma.resourceTag.update({
+    where: { id: tag.id },
+    data: {
+      count: { increment: 1 }
+    }
+  })
+}
+
+// 更新资源标签
+const updateResourceTags = async (resourceId: number, tags: string[]) => {
+  // 删除旧的标签关联
+  await prisma.resourceTagRelation.deleteMany({
+    where: { resource_id: resourceId }
+  })
+
+  if (tags.length === 0) return
+
+  // 获取资源的用户ID
+  const resource = await prisma.resource.findUnique({
+    where: { id: resourceId },
+    select: { user_id: true }
+  })
+
+  if (!resource) return
+
+  // 处理每个标签
+  for (const tagName of tags) {
+    await processTag(tagName, resource.user_id, resourceId)
   }
 }
 
@@ -119,61 +180,7 @@ export const updateResource = async (
 
     // 更新标签
     if (input.tags !== undefined) {
-      // 删除旧的标签关联
-      await prisma.resourceTagRelation.deleteMany({
-        where: { resource_id: input.id }
-      })
-
-      // 添加新标签
-      if (input.tags.length > 0) {
-        // 获取当前用户（从资源中获取）
-        const resource = await prisma.resource.findUnique({
-          where: { id: input.id },
-          select: { user_id: true }
-        })
-
-        if (resource) {
-          // 处理每个标签
-          for (const tagName of input.tags) {
-            const trimmedTagName = tagName.trim()
-            if (!trimmedTagName) continue
-
-            // 查找或创建标签
-            let tag = await prisma.resourceTag.findUnique({
-              where: { name: trimmedTagName }
-            })
-
-            if (!tag) {
-              // 创建新标签
-              tag = await prisma.resourceTag.create({
-                data: {
-                  name: trimmedTagName,
-                  user_id: resource.user_id,
-                  count: 0
-                }
-              })
-            }
-
-            // 创建资源-标签关联
-            await prisma.resourceTagRelation.create({
-              data: {
-                resource_id: input.id,
-                tag_id: tag.id
-              }
-            })
-
-            // 更新标签计数
-            await prisma.resourceTag.update({
-              where: { id: tag.id },
-              data: {
-                count: {
-                  increment: 1
-                }
-              }
-            })
-          }
-        }
-      }
+      await updateResourceTags(input.id, input.tags)
     }
 
     if (input.dbId !== currentResource?.db_id) {

@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
+
 import {
   Table,
   TableBody,
@@ -12,12 +14,14 @@ import {
   SortDescriptor
 } from '@heroui/react'
 import { Search } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { RenderCell } from './RenderCell'
-import { FetchGet } from '@/utils/fetch'
+import { useDebounce } from 'use-debounce'
+
 import { Loading } from '@/components/common/Loading'
 import { useMounted } from '@/hooks/useMounted'
-import { useDebounce } from 'use-debounce'
+import { FetchGet } from '@/utils/fetch'
+
+import { RenderCell } from './RenderCell'
+
 import type { AdminUser } from '@/types/api/admin'
 
 const columns = [
@@ -77,6 +81,7 @@ export const User = ({ initialUsers, initialTotal }: Props) => {
     if (!isMounted) {
       return
     }
+
     fetchData()
   }, [page, debouncedQuery, sortDescriptor])
 

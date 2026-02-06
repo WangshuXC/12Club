@@ -1,7 +1,9 @@
 'use client'
 
 import { useEffect } from 'react'
+
 import { useGlobalStore } from '@/store/globalStore'
+
 import type { GlobalDeviceInfo } from '@/utils/device'
 
 interface DeviceInitializerProps {

@@ -1,9 +1,10 @@
 'use client'
 
 import { Button, Input, Tooltip } from '@heroui/react'
-import { useCreateResourceStore } from '@/store/editStore'
 import { Info } from 'lucide-react'
+
 import { ExternalLink } from '@/components/common/ExternalLink'
+import { useCreateResourceStore } from '@/store/editStore'
 
 interface Props {
   errors: string | undefined

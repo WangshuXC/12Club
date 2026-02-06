@@ -1,16 +1,16 @@
+import { BlogHeader } from '@/components/doc/BlogHeader'
+import { BottomNavigation } from '@/components/doc/Navigation'
+import { TableOfContents } from '@/components/doc/TableOfContents'
+import { CustomMDX } from '@/lib/mdx/CustomMDX'
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug
 } from '@/lib/mdx/getPosts'
-import { CustomMDX } from '@/lib/mdx/CustomMDX'
-import { TableOfContents } from '@/components/doc/TableOfContents'
-import { BottomNavigation } from '@/components/doc/Navigation'
+
 import { generateMetadataTemplate } from './metadata'
-import { BlogHeader } from '@/components/doc/BlogHeader'
+
 import type { Metadata } from 'next'
-
-
 
 interface Props {
   params: Promise<{
@@ -20,6 +20,7 @@ interface Props {
 
 export const generateStaticParams = async () => {
   const posts = getAllPosts()
+
   return posts.map((post) => ({
     slug: post.slug.split('/')
   }))
@@ -31,10 +32,11 @@ export const generateMetadata = async ({
   const { slug } = await params
   const url = slug.join('/')
   const blog = getPostBySlug(url)
+
   return generateMetadataTemplate(blog)
 }
 
-export default async function ({ params }: Props) {
+export default async function DocPage({ params }: Props) {
   const { slug } = await params
   const url = slug.join('/')
   const { content, frontmatter } = getPostBySlug(url)

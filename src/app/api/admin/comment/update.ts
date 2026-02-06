@@ -1,6 +1,8 @@
 import { z } from 'zod'
-import { prisma } from '../../../../../prisma'
+
 import { patchCommentUpdateSchema } from '@/validations/patch'
+
+import { prisma } from '../../../../../prisma'
 
 export const updateComment = async (
   input: z.infer<typeof patchCommentUpdateSchema>,
@@ -12,6 +14,7 @@ export const updateComment = async (
   if (!comment) {
     return '未找到对应的评论'
   }
+
   const admin = await prisma.user.findUnique({ where: { id: uid } })
   if (!admin) {
     return '未找到该管理员'

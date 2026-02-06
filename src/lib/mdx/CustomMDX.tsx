@@ -1,8 +1,9 @@
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc'
-import { docLink } from './element/link'
-import { docTable } from './element/table'
+
 import { docCode } from './element/code'
 import { createHeading } from './element/heading'
+import { docLink } from './element/link'
+import { docTable } from './element/table'
 
 const components = {
   h1: createHeading(1),

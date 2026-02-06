@@ -1,9 +1,12 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseGetQuery } from '@/utils/parseQuery'
-import { prisma } from '../../../../../../prisma'
-import { getUserInfoSchema } from '@/validations/user'
+import { z } from 'zod'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
+import { ParseGetQuery } from '@/utils/parseQuery'
+import { getUserInfoSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../prisma'
+
 import type { UserResource } from '@/types/api/user'
 
 export const getUserPatchResource = async (
@@ -49,11 +52,13 @@ export async function GET(req: NextRequest) {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户登陆失效')
   }
 
   const response = await getUserPatchResource(input)
+
   return NextResponse.json(response)
 }

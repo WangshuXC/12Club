@@ -1,8 +1,9 @@
 'use server'
 
-import { adminPaginationSchema } from '@/validations/admin'
-import { FetchGet } from '@/utils/fetch'
 import { z } from 'zod'
+
+import { FetchGet } from '@/utils/fetch'
+import { adminPaginationSchema } from '@/validations/admin'
 
 export const getActions = async (input: z.infer<typeof adminPaginationSchema>) => {
   try {

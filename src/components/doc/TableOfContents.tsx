@@ -71,7 +71,7 @@ export const TableOfContents = () => {
                 className={`block py-1 text-sm hover:text-primary-500 ${activeId === heading.id
                   ? 'font-medium text-primary-500'
                   : 'text-default-600 dark:text-default-400'
-                  }`}
+                }`}
               >
                 {heading.text}
               </a>

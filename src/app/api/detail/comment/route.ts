@@ -1,16 +1,18 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import {
   ParseGetQuery,
   ParsePutBody,
   ParsePostBody,
   ParseDeleteQuery
 } from '@/utils/parseQuery'
-import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { resourceCommentCreateSchema, resourceCommentUpdateSchema } from '@/validations/comment'
-import { getResourceComment } from './get'
+
 import { createResourceComment } from './create'
 import { deleteResourceComment } from './delete'
+import { getResourceComment } from './get'
 import { updateComment } from './update'
 
 const detailIdSchema = z.object({
@@ -34,6 +36,7 @@ export const GET = async (req: NextRequest) => {
   const payload = await verifyHeaderCookie(req)
 
   const response = await getResourceComment(input.dbId, payload?.uid ?? -1)
+
   return NextResponse.json(response)
 }
 
@@ -42,12 +45,14 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await createResourceComment(input, payload.uid)
+
   return NextResponse.json(response)
 }
 
@@ -56,12 +61,14 @@ export const PUT = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await updateComment(input, payload.uid, payload.role)
+
   return NextResponse.json(response)
 }
 
@@ -70,11 +77,13 @@ export const DELETE = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
   }
 
   const response = await deleteResourceComment(input, payload.uid, payload.role)
+
   return NextResponse.json(response)
 }

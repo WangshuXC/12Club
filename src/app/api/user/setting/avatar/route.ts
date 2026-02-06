@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ParseFormData } from '@/utils/parseQuery'
+
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
-import { prisma } from '../../../../../../prisma'
+import { ParseFormData } from '@/utils/parseQuery'
 import { avatarSchema } from '@/validations/user'
+
+import { prisma } from '../../../../../../prisma'
 import { uploadUserAvatar } from '../_upload'
 
 export const updateUserAvatar = async (uid: number, avatar: ArrayBuffer) => {
@@ -33,6 +35,7 @@ export const POST = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户未登录')
@@ -41,5 +44,6 @@ export const POST = async (req: NextRequest) => {
   const avatar = await new Response(input.avatar)?.arrayBuffer()
 
   const res = await updateUserAvatar(payload.uid, avatar)
+
   return NextResponse.json(res)
 }

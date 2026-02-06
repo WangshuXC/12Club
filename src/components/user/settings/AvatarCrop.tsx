@@ -1,8 +1,7 @@
 'use client'
 
 import React, { useRef, useState } from 'react'
-import ReactCrop, { type Crop } from 'react-image-crop'
-import 'react-image-crop/dist/ReactCrop.css'
+
 import {
   addToast,
   Avatar,
@@ -14,8 +13,11 @@ import {
   ModalHeader,
   useDisclosure
 } from '@heroui/react'
-import { useUserStore } from '@/store/userStore'
 import { Camera } from 'lucide-react'
+import ReactCrop, { type Crop } from 'react-image-crop'
+import 'react-image-crop/dist/ReactCrop.css'
+
+import { useUserStore } from '@/store/userStore'
 import { dataURItoBlob } from '@/utils/dataURItoBlob'
 import { FetchFormData } from '@/utils/fetch'
 
@@ -77,7 +79,10 @@ export const AvatarCrop = () => {
     formData.append('avatar', avatarBlob)
 
     setLoading(true)
-    const res = await FetchFormData<{ avatar: string }>('/user/setting/avatar', formData)
+    const res = await FetchFormData<{ avatar: string }>(
+      '/user/setting/avatar',
+      formData
+    )
     if (typeof res === 'string') {
       addToast({
         title: '错误',

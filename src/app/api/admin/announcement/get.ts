@@ -1,7 +1,10 @@
 import { z } from 'zod'
+
 import { adminPaginationSchema } from '@/validations/admin'
-import type { AdminAnnouncement } from '@/types/api/admin'
+
 import { prisma } from '../../../../../prisma'
+
+import type { AdminAnnouncement } from '@/types/api/admin'
 
 export const getAnnouncementInfo = async (
   input: z.infer<typeof adminPaginationSchema>
@@ -13,11 +16,11 @@ export const getAnnouncementInfo = async (
     // 构建查询条件 - 支持搜索公告标题和内容
     const whereCondition = search 
       ? {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' as const } },
-            { content: { contains: search, mode: 'insensitive' as const } }
-          ]
-        }
+        OR: [
+          { title: { contains: search, mode: 'insensitive' as const } },
+          { content: { contains: search, mode: 'insensitive' as const } }
+        ]
+      }
       : {}
 
     // 获取公告数据

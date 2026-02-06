@@ -1,11 +1,14 @@
 'use client'
 
+import type { JSX } from 'react'
+
 import { Chip } from '@heroui/react'
 import { Cloud, Link as LinkIcon, Database } from 'lucide-react'
+
+import { ExternalLink } from '@/components/common/ExternalLink'
 import { SUPPORTED_RESOURCE_LINK_MAP } from '@/constants/resource'
 import { FetchPut } from '@/utils/fetch'
-import { ExternalLink } from '@/components/common/ExternalLink'
-import type { JSX } from 'react'
+
 import type { PatchResource } from '@/types/api/patch'
 
 const storageIcons: { [key: string]: JSX.Element } = {
@@ -19,7 +22,7 @@ interface Props {
 
 export const ResourceDownloadCard = ({ resource }: Props) => {
   const handleClickDownload = async () => {
-    await FetchPut<{}>('/patch/download', {
+    await FetchPut<object>('/patch/download', {
       resourceId: resource.resourceId,
       patchId: resource.id
     })

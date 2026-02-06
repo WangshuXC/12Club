@@ -1,11 +1,13 @@
 'use client'
 
-import { Controller } from 'react-hook-form'
 import { Input, Select, SelectItem, Textarea } from '@heroui/react'
+import { Controller } from 'react-hook-form'
+
 import {
   SUPPORTED_LANGUAGE,
   SUPPORTED_LANGUAGE_MAP
 } from '@/constants/resource'
+
 import { ControlType, ErrorType } from '../share'
 
 interface ResourceDetailsFormProps {

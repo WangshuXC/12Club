@@ -1,10 +1,13 @@
-import { z } from 'zod'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+
+import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
 import { ParseGetQuery } from '@/utils/parseQuery'
 import { getUserInfoSchema } from '@/validations/user'
-import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
-import type { UserComment } from '@/types/api/user'
+
 import { prisma } from '../../../../../../prisma'
+
+import type { UserComment } from '@/types/api/user'
 
 export const getUserComment = async (
   input: z.infer<typeof getUserInfoSchema>
@@ -75,11 +78,13 @@ export const GET = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
+
   const payload = await verifyHeaderCookie(req)
   if (!payload) {
     return NextResponse.json('用户登陆失效')
   }
 
   const response = await getUserComment(input)
+
   return NextResponse.json(response)
 }

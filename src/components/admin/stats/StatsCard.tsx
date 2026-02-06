@@ -1,7 +1,8 @@
 'use client'
 
-import { Card, CardBody } from '@heroui/react'
 import type { FC } from 'react'
+
+import { Card, CardBody } from '@heroui/react'
 
 export const StatsCard: FC<{ title: string; value: number }> = ({
   title,

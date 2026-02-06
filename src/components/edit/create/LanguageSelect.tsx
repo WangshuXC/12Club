@@ -1,12 +1,13 @@
 'use client'
 
 import { Select, SelectItem } from '@heroui/react'
-import { useCreateResourceStore } from '@/store/editStore'
+import { Languages } from 'lucide-react'
+
 import {
   SUPPORTED_LANGUAGE,
   SUPPORTED_LANGUAGE_MAP
 } from '@/constants/resource'
-import { Languages } from 'lucide-react'
+import { useCreateResourceStore } from '@/store/editStore'
 
 interface Props {
   errors: string | undefined
@@ -25,6 +26,7 @@ export const LanguageSelect = ({ errors }: Props) => {
           if (!event.target.value) {
             return
           }
+
           setData({ ...data, language: event.target.value })
         }}
         startContent={<Languages className="size-4 text-default-400" />}

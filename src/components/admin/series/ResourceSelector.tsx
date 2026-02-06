@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+
 import {
   Input,
   Select,
@@ -16,7 +17,9 @@ import {
   Button
 } from '@heroui/react'
 import { Search, X } from 'lucide-react'
+
 import { FetchPost } from '@/utils/fetch'
+
 import type { AdminSeriesResource } from '@/types/api/admin'
 
 interface Resource {
@@ -52,8 +55,10 @@ export const ResourceSelector = ({
 
   // 使用 ref 来存储排除的资源dbId，避免每次渲染时重新创建
   const excludeDbIdsRef = useRef<string[]>(excludeDbIds)
+
   // 标记是否已进行过首次搜索
   const hasSearched = useRef(false)
+
   // 防抖定时器
   const debounceTimer = useRef<NodeJS.Timeout | null>(null)
 
@@ -187,28 +192,28 @@ export const ResourceSelector = ({
   // 获取资源状态文本
   const getStatusText = (status: number) => {
     switch (status) {
-      case 0:
-        return '连载中'
-      case 1:
-        return '已完结'
-      case 2:
-        return '老站数据'
-      default:
-        return '未知'
+    case 0:
+      return '连载中'
+    case 1:
+      return '已完结'
+    case 2:
+      return '老站数据'
+    default:
+      return '未知'
     }
   }
 
   // 获取资源状态颜色
   const getStatusColor = (status: number) => {
     switch (status) {
-      case 0:
-        return 'warning'
-      case 1:
-        return 'success'
-      case 2:
-        return 'danger'
-      default:
-        return 'default'
+    case 0:
+      return 'warning'
+    case 1:
+      return 'success'
+    case 2:
+      return 'danger'
+    default:
+      return 'default'
     }
   }
 

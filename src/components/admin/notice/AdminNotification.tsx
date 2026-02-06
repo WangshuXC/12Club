@@ -1,8 +1,9 @@
 'use client'
 
 import { FC } from 'react'
-import { BadgeAlert } from 'lucide-react'
+
 import { Card, CardBody, CardFooter, Link } from '@heroui/react'
+import { BadgeAlert } from 'lucide-react'
 
 interface NotificationCardsProps {
   passwordResets: number

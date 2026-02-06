@@ -1,9 +1,9 @@
-import { Feedback } from '@/components/admin/feedback'
-import { getActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
 
+import { Feedback } from '@/components/admin/feedback'
+import { ErrorComponent } from '@/components/common/Error'
 
+import { getActions } from './actions'
 
 export const revalidate = 3
 

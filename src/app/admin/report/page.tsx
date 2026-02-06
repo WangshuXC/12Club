@@ -1,9 +1,9 @@
-import { Report } from '@/components/admin/report'
-import { getActions } from './actions'
-import { ErrorComponent } from '@/components/common/Error'
 import { Suspense } from 'react'
 
+import { Report } from '@/components/admin/report'
+import { ErrorComponent } from '@/components/common/Error'
 
+import { getActions } from './actions'
 
 export const revalidate = 3
 

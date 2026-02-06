@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import {
   addToast,
   Button,
@@ -15,10 +17,10 @@ import {
   ModalHeader,
   useDisclosure
 } from '@heroui/react'
+
 import { useUserStore } from '@/store/userStore'
-import { useState } from 'react'
-import { FetchPost } from '@/utils/fetch'
 import { ErrorHandler } from '@/utils/errorHandler'
+import { FetchPost } from '@/utils/fetch'
 import { usernameSchema } from '@/validations/user'
 
 export const Username = () => {
@@ -37,10 +39,9 @@ export const Username = () => {
 
       setLoading(true)
 
-      const res = await FetchPost<{}>(
-        '/user/setting/username',
-        { username }
-      )
+      const res = await FetchPost<object>('/user/setting/username', {
+        username
+      })
       ErrorHandler(res, () => {
         addToast({
           title: '成功',
@@ -75,9 +76,7 @@ export const Username = () => {
       </CardBody>
 
       <CardFooter className="flex-wrap">
-        <p className="text-default-500">
-          用户名长度最大为 17, 可以是任意字符
-        </p>
+        <p className="text-default-500">用户名长度最大为 17, 可以是任意字符</p>
 
         <Button
           color="primary"

@@ -1,7 +1,9 @@
 'use client'
 
 import { FC } from 'react'
+
 import { Divider } from '@heroui/react'
+
 import { AdminStatistic } from './AdminStatistic'
 
 export const Stats: FC = () => {
