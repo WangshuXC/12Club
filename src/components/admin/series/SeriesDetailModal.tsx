@@ -33,7 +33,7 @@ export const SeriesDetailModal = ({
       case 1:
         return '已完结'
       case 2:
-        return '已停更'
+        return '老站数据'
       default:
         return '未知'
     }
@@ -45,7 +45,7 @@ export const SeriesDetailModal = ({
       case 0:
         return 'warning'
       case 1:
-        return 'success'
+        return 'primary'
       case 2:
         return 'danger'
       default:

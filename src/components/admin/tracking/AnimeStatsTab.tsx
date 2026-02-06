@@ -14,20 +14,26 @@ import {
   AccordionItem,
   Image,
   Badge,
-  SortDescriptor
+  SortDescriptor,
+  Button,
+  Tooltip
 } from '@heroui/react'
+import { Users } from 'lucide-react'
 import Link from 'next/link'
 import { SelfPagination } from '@/components/common/Pagination'
 import type { AnimeStats, PaginationInfo } from '@/app/admin/tracking/actions'
 import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
 import { cn } from '@/lib/utils'
 import { TYPE_CHINESE_MAP } from '@/constants/resource'
+import { VisitorsModal } from './VisitorsModal'
 
 interface AnimeStatsTableProps {
   data: AnimeStats[]
   pagination: PaginationInfo | null
   onPageChange: (page: number) => void
   loading: boolean
+  startDate?: string
+  endDate?: string
 }
 
 const columns = [
@@ -43,12 +49,19 @@ export const AnimeStatsTable = ({
   data,
   pagination,
   onPageChange,
-  loading
+  loading,
+  startDate,
+  endDate
 }: AnimeStatsTableProps) => {
   const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
     column: 'playCount',
     direction: 'descending'
   })
+  const [selectedAnime, setSelectedAnime] = useState<{
+    dbid: string
+    name: string
+  } | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
 
   // 排序后的数据
   const sortedData = useMemo(() => {
@@ -80,6 +93,11 @@ export const AnimeStatsTable = ({
 
   const handleSortChange = (descriptor: SortDescriptor) => {
     setSortDescriptor(descriptor)
+  }
+
+  const handleViewVisitors = (dbid: string, name: string) => {
+    setSelectedAnime({ dbid, name })
+    setModalOpen(true)
   }
 
   return (
@@ -160,9 +178,21 @@ export const AnimeStatsTable = ({
                 </Chip>
               </TableCell>
               <TableCell>
-                <Chip size="sm" variant="flat" color="success">
-                  {item.uniqueVisitors.toLocaleString()}
-                </Chip>
+                <div className="flex items-center justify-center gap-2">
+                  <Chip size="sm" variant="flat" color="success">
+                    {item.uniqueVisitors.toLocaleString()}
+                  </Chip>
+                  <Tooltip content="查看访客详情">
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      onPress={() => handleViewVisitors(item.dbid, item.name)}
+                    >
+                      <Users size={16} />
+                    </Button>
+                  </Tooltip>
+                </div>
               </TableCell>
               <TableCell>
                 {item.accordionStats.length > 0 && (
@@ -202,6 +232,22 @@ export const AnimeStatsTable = ({
             onPageChange={onPageChange}
           />
         </div>
+      )}
+
+      {/* 访客详情 Modal */}
+      {selectedAnime && (
+        <VisitorsModal
+          isOpen={modalOpen}
+          onClose={() => {
+            setModalOpen(false)
+            setSelectedAnime(null)
+          }}
+          type="anime"
+          dbid={selectedAnime.dbid}
+          animeName={selectedAnime.name}
+          startDate={startDate}
+          endDate={endDate}
+        />
       )}
     </div>
   )

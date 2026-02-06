@@ -6,11 +6,11 @@ import { ThemeProvider } from 'next-themes'
 import { useRouter } from 'next-nprogress-bar'
 import { TrackingProvider } from '@/components/tracking'
 import { DeviceInitializer } from '@/components/common/DeviceInitializer'
-import type { DeviceInfo } from '@/utils/device'
+import type { GlobalDeviceInfo } from '@/utils/device'
 
 interface ProvidersProps {
   children: React.ReactNode
-  initialDeviceInfo: DeviceInfo
+  initialDeviceInfo: GlobalDeviceInfo
 }
 
 export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {

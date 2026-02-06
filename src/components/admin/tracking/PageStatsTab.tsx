@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import {
   Table,
   TableHeader,
@@ -8,16 +9,22 @@ import {
   TableRow,
   TableCell,
   Spinner,
-  Chip
+  Chip,
+  Button,
+  Tooltip
 } from '@heroui/react'
+import { Users } from 'lucide-react'
 import { SelfPagination } from '@/components/common/Pagination'
 import type { PageStats, PaginationInfo } from '@/app/admin/tracking/actions'
+import { VisitorsModal } from './VisitorsModal'
 
 interface PageStatsTableProps {
   data: PageStats[]
   pagination: PaginationInfo | null
   onPageChange: (page: number) => void
   loading: boolean
+  startDate?: string
+  endDate?: string
 }
 
 // 页面访问统计表格
@@ -25,8 +32,16 @@ export const PageStatsTable = ({
   data,
   pagination,
   onPageChange,
-  loading
+  loading,
+  startDate,
+  endDate
 }: PageStatsTableProps) => {
+  const [selectedPage, setSelectedPage] = useState<{
+    url: string
+    title: string
+  } | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
+
   // 从 URL 中提取路径显示
   const extractPath = (url: string) => {
     try {
@@ -35,6 +50,11 @@ export const PageStatsTable = ({
     } catch {
       return url
     }
+  }
+
+  const handleViewVisitors = (pageUrl: string, pageTitle: string) => {
+    setSelectedPage({ url: pageUrl, title: pageTitle })
+    setModalOpen(true)
   }
 
   return (
@@ -70,9 +90,23 @@ export const PageStatsTable = ({
                 </Chip>
               </TableCell>
               <TableCell>
-                <Chip size="sm" variant="flat" color="success">
-                  {item.unique_visitors.toLocaleString()}
-                </Chip>
+                <div className="flex items-center justify-center gap-2">
+                  <Chip size="sm" variant="flat" color="success">
+                    {item.unique_visitors.toLocaleString()}
+                  </Chip>
+                  <Tooltip content="查看访客详情">
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      variant="light"
+                      onPress={() =>
+                        handleViewVisitors(item.page_url, item.page_title)
+                      }
+                    >
+                      <Users size={16} />
+                    </Button>
+                  </Tooltip>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -86,6 +120,22 @@ export const PageStatsTable = ({
             onPageChange={onPageChange}
           />
         </div>
+      )}
+
+      {/* 访客详情 Modal */}
+      {selectedPage && (
+        <VisitorsModal
+          isOpen={modalOpen}
+          onClose={() => {
+            setModalOpen(false)
+            setSelectedPage(null)
+          }}
+          type="page"
+          pageUrl={selectedPage.url}
+          pageTitle={selectedPage.title}
+          startDate={startDate}
+          endDate={endDate}
+        />
       )}
     </div>
   )

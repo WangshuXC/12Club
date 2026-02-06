@@ -11,6 +11,7 @@ type Testimonial = {
   designation: string
   src: string
 }
+
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false

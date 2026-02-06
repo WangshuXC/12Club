@@ -9,6 +9,7 @@ import {
   ReactNode
 } from 'react'
 import { useTracking, UseTrackingOptions } from '@/hooks/useTracking'
+import { getDeviceInfo } from '@/utils/device'
 
 // Context 类型
 interface TrackingContextValue {
@@ -52,19 +53,6 @@ const parseExtraData = (element: HTMLElement): Record<string, unknown> => {
   })
 
   return extraData
-}
-
-// 获取设备类型
-const getDeviceType = (): 'desktop' | 'mobile' | 'tablet' => {
-  if (typeof window === 'undefined') return 'desktop'
-  const ua = navigator.userAgent.toLowerCase()
-  if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-    return 'tablet'
-  }
-  if (/mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)) {
-    return 'mobile'
-  }
-  return 'desktop'
 }
 
 interface TrackingProviderProps {
@@ -217,8 +205,10 @@ export const TrackingProvider = ({
       document.addEventListener('click', handleClick, true)
 
       // 追踪页面访问
+      const deviceInfo = getDeviceInfo()
       trackCustom('page_view', {
-        device_type: getDeviceType(),
+        device_type: deviceInfo.device_type,
+        source: deviceInfo.source,
         screen_width: window.screen.width,
         screen_height: window.screen.height,
         viewport_width: window.innerWidth,
@@ -253,8 +243,10 @@ export const TrackingProvider = ({
         })
 
         // 追踪新页面访问
+        const deviceInfo = getDeviceInfo()
         trackCustom('page_view', {
-          device_type: getDeviceType(),
+          device_type: deviceInfo.device_type,
+          source: deviceInfo.source,
           screen_width: window.screen.width,
           screen_height: window.screen.height,
           viewport_width: window.innerWidth,

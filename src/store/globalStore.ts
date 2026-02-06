@@ -2,27 +2,27 @@
 
 import { create } from 'zustand'
 import {
-  type DeviceInfo,
+  type GlobalDeviceInfo,
   detectMobile,
   detectTablet
 } from '@/utils/device'
 
 // 重新导出类型供外部使用
-export type { DeviceInfo }
+export type { GlobalDeviceInfo as DeviceInfo }
 
 export interface GlobalState {
-  device: DeviceInfo
+  device: GlobalDeviceInfo
   isHydrated: boolean
 }
 
 export interface GlobalStore extends GlobalState {
-  setDevice: (device: DeviceInfo) => void
+  setDevice: (device: GlobalDeviceInfo) => void
   initDevice: () => void
   setHydrated: (hydrated: boolean) => void
 }
 
 // 获取设备信息（客户端）
-function getDeviceInfo(): DeviceInfo {
+function getDeviceInfo(): GlobalDeviceInfo {
   if (typeof window === 'undefined') {
     return {
       isMobile: false,
@@ -57,7 +57,7 @@ const initialState: GlobalState = {
 
 export const useGlobalStore = create<GlobalStore>()((set) => ({
   ...initialState,
-  setDevice: (device: DeviceInfo) => set({ device }),
+  setDevice: (device: GlobalDeviceInfo) => set({ device }),
   initDevice: () => {
     const device = getDeviceInfo()
     set({ device, isHydrated: true })

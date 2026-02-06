@@ -1,0 +1,527 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-02-05T06:12:11.938Z
+provider: 
+---
+
+# 项目文件结构规范
+
+本规范定义了 12Club 项目的标准目录结构和文件组织方式。
+
+## 一、项目根目录结构
+
+```
+12Club/
+├── .codebuddy/           # CodeBuddy 配置目录（勿删除）
+├── posts/                # MDX 博客/文档文章
+├── prisma/               # Prisma 数据库配置
+│   ├── schema.prisma     # 数据库模型定义
+│   └── index.ts          # Prisma Client 导出
+├── public/               # 静态资源
+├── scripts/              # 脚本文件
+├── src/                  # 源代码目录
+├── .env                  # 环境变量（不提交）
+├── .env.example          # 环境变量示例
+├── components.json       # 组件配置
+├── next.config.mjs       # Next.js 配置
+├── package.json          # 项目依赖
+├── postcss.config.mjs    # PostCSS 配置
+├── tailwind.config.ts    # Tailwind 配置
+└── tsconfig.json         # TypeScript 配置
+```
+
+---
+
+## 二、src 目录结构总览
+
+```
+src/
+├── app/                  # Next.js App Router 页面和 API
+├── components/           # React 组件库
+├── lib/                  # 第三方服务集成和核心库
+├── middleware/           # Next.js 中间件
+├── store/                # Zustand 状态管理
+├── types/                # TypeScript 类型定义
+├── utils/                # 工具函数
+└── validations/          # Zod 验证 Schema
+```
+
+---
+
+## 三、页面和 API 路由规范 (`src/app/`)
+
+### 3.1 目录结构
+
+```
+src/app/
+├── layout.tsx            # 根布局
+├── page.tsx              # 首页
+├── providers.tsx         # 全局 Context Providers
+├── metadata.ts           # SEO 元数据
+├── actions.ts            # 全局 Server Actions
+├── error.tsx             # 全局错误页
+├── not-found.tsx         # 404 页面
+│
+├── [业务模块]/            # 业务模块目录
+│   ├── layout.tsx        # 模块布局（可选）
+│   ├── page.tsx          # 模块首页
+│   ├── actions.ts        # 模块 Server Actions
+│   └── [id]/             # 动态路由
+│       └── page.tsx
+│
+└── api/                  # API 路由
+    └── [domain]/         # API 领域目录
+        └── [resource]/   # 资源目录
+            ├── route.ts
+            ├── get.ts
+            ├── create.ts
+            ├── update.ts
+            └── delete.ts
+```
+
+### 3.2 业务模块示例
+
+```
+# 资源类模块（anime/comic/novel/game）
+src/app/anime/
+├── page.tsx              # 动漫列表页
+├── actions.ts            # Server Actions
+└── [id]/
+    └── page.tsx          # 动漫详情页
+
+# 管理后台模块
+src/app/admin/
+├── layout.tsx            # 管理后台布局
+├── page.tsx              # 管理后台首页
+├── announcement/         # 公告管理
+├── auto-update/          # 自动更新
+├── comment/              # 评论管理
+├── feedback/             # 反馈管理
+├── report/               # 举报管理
+├── resource/             # 资源管理
+├── series/               # 系列管理
+├── tracking/             # 追踪管理
+└── user/                 # 用户管理
+
+# 用户模块
+src/app/user/
+├── page.tsx              # 用户中心
+└── [id]/
+    └── page.tsx          # 用户详情页
+```
+
+### 3.3 API 路由结构
+
+```
+src/app/api/
+├── admin/                # 管理后台 API
+│   ├── announcement/
+│   ├── auto-update/
+│   ├── comment/
+│   ├── feedback/
+│   ├── report/
+│   ├── resource/
+│   │   ├── route.ts      # 入口文件
+│   │   ├── get.ts        # GET 业务逻辑
+│   │   ├── update.ts     # PUT 业务逻辑
+│   │   ├── delete.ts     # DELETE 业务逻辑
+│   │   ├── banner/       # 子功能
+│   │   ├── playLink/
+│   │   └── autoCreate/
+│   ├── series/
+│   ├── tracking/
+│   └── user/
+├── auth/                 # 认证 API
+├── detail/               # 详情 API
+├── edit/                 # 编辑 API
+├── home/                 # 首页 API
+├── page/                 # 分页 API
+├── patch/                # 补丁 API
+├── search/               # 搜索 API
+├── tag/                  # 标签 API
+├── tracking/             # 追踪 API
+└── user/                 # 用户 API
+```
+
+---
+
+## 四、组件目录规范 (`src/components/`)
+
+### 4.1 组件分类
+
+| 目录 | 用途 | 命名规范 |
+|-----|------|---------|
+| `ui/` | 基础 UI 组件 | `PascalCase.tsx` |
+| `common/` | 公共业务组件 | `PascalCase.tsx` |
+| `topBar/` | 顶部导航组件 | `PascalCase.tsx` |
+| `[module]Container/` | 页面容器组件 | `*Container/` |
+| `admin/` | 管理后台组件 | `PascalCase.tsx` |
+| `edit/` | 编辑功能组件 | `PascalCase.tsx` |
+| `doc/` | 文档页面组件 | `PascalCase.tsx` |
+
+### 4.2 标准目录结构
+
+```
+src/components/
+├── ui/                     # 基础 UI 组件（可复用）
+│   ├── AnimatedTestimonials.tsx
+│   ├── CommentContent.tsx
+│   ├── ExpandableCard.tsx
+│   ├── FadeContent.tsx
+│   └── ...
+│
+├── common/                 # 公共业务组件
+│   ├── BackToTop.tsx
+│   ├── CoverCard.tsx
+│   ├── Error.tsx
+│   ├── Footer.tsx
+│   ├── Loading.tsx
+│   ├── NotFound.tsx
+│   ├── Pagination.tsx
+│   ├── cropper/            # 复杂组件子目录
+│   │   └── ...
+│   └── user-card/
+│       └── ...
+│
+├── topBar/                 # 顶部导航组件
+│   ├── index.tsx           # 入口组件
+│   ├── Brand.tsx
+│   ├── Search.tsx
+│   ├── User.tsx
+│   ├── UserDropdown.tsx
+│   └── ThemeSwitcher.tsx
+│
+├── homeContainer/          # 首页容器
+│   ├── index.tsx
+│   ├── AnimeCarousel.tsx
+│   ├── AnnouncementCard.tsx
+│   └── CommentCard.tsx
+│
+├── pageContainer/          # 列表页容器
+│   ├── index.tsx
+│   └── FilterBar.tsx
+│
+├── searchContainer/        # 搜索容器
+│   ├── index.tsx
+│   ├── FilterBar.tsx
+│   ├── SearchHistory.tsx
+│   └── SearchOption.tsx
+│
+├── detailContainer/        # 详情页容器
+│   ├── index.tsx
+│   ├── Detail.tsx
+│   ├── Tabs.tsx
+│   ├── ArtPlayer.tsx
+│   ├── buttons/
+│   ├── comment/
+│   └── resource/
+│
+├── animeContainer/         # 动漫页容器
+│   ├── index.tsx
+│   ├── PlaylistTab.tsx
+│   ├── ResourceTab.tsx
+│   └── actionBar/
+│
+├── admin/                  # 管理后台组件
+│   ├── Sidebar.tsx
+│   ├── SidebarContent.tsx
+│   ├── announcement/
+│   ├── auto-update/
+│   ├── comment/
+│   ├── feedback/
+│   ├── resource/
+│   ├── series/
+│   ├── stats/
+│   └── user/
+│
+├── edit/                   # 编辑功能组件
+│   └── create/
+│
+├── doc/                    # 文档组件
+│   ├── Header.tsx
+│   ├── Sidebar.tsx
+│   └── TableOfContents.tsx
+│
+├── user/                   # 用户相关组件
+├── tracking/               # 追踪功能组件
+└── LoginRegister/          # 登录注册组件
+    ├── Login.tsx
+    ├── Register.tsx
+    └── Forgot.tsx
+```
+
+### 4.3 组件文件命名规范
+
+```typescript
+// ✅ 正确：PascalCase 命名
+CoverCard.tsx
+UserDropdown.tsx
+SearchHistory.tsx
+
+// ✅ 正确：容器组件以 Container 结尾
+homeContainer/
+pageContainer/
+detailContainer/
+
+// ✅ 正确：入口文件使用 index.tsx
+components/topBar/index.tsx
+
+// ❌ 错误：camelCase 命名
+coverCard.tsx
+userDropdown.tsx
+
+// ❌ 错误：kebab-case 命名
+cover-card.tsx
+user-dropdown.tsx
+```
+
+---
+
+## 五、工具库规范 (`src/lib/`)
+
+### 5.1 目录结构
+
+```
+src/lib/
+├── imageLoader.ts          # 图片加载器
+├── openlist.ts             # OpenList 配置
+├── redis.ts                # Redis 客户端封装
+├── routerTransition.ts     # 路由过渡动画
+├── s3.ts                   # AWS S3 存储服务
+├── utils.ts                # 通用工具（Tailwind cn 等）
+│
+└── mdx/                    # MDX 相关
+    ├── CustomMDX.tsx       # 自定义 MDX 组件
+    ├── directoryTree.ts    # 目录树生成
+    ├── getPosts.ts         # 文章获取
+    ├── types.d.ts          # MDX 类型
+    └── element/            # MDX 元素组件
+        ├── code.tsx
+        ├── heading.ts
+        ├── link.tsx
+        └── table.tsx
+```
+
+### 5.2 lib vs utils 区分
+
+| 目录 | 存放内容 | 示例 |
+|-----|---------|------|
+| `lib/` | 第三方服务集成、核心库封装 | Redis、S3、MDX |
+| `utils/` | 纯工具函数、业务无关 | 时间格式化、Cookie 操作 |
+
+---
+
+## 六、工具函数规范 (`src/utils/`)
+
+### 6.1 目录结构
+
+```
+src/utils/
+├── actions/                # Server Action 专用工具
+│   ├── safeParseSchema.ts  # Schema 安全解析
+│   └── verifyHeaderCookie.ts  # Cookie 验证
+│
+├── fetch.ts                # HTTP 请求封装（必须使用）
+├── parseQuery.ts           # API 请求解析（必须使用）
+├── cookies.ts              # Cookie 操作
+├── jwt.ts                  # JWT 处理
+├── router.ts               # 路由工具
+├── validate.ts             # 通用验证
+│
+├── time.ts                 # 时间处理
+├── formatDistanceToNow.ts  # 相对时间
+├── formatNumber.ts         # 数字格式化
+│
+├── device.ts               # 设备检测
+├── copy.ts                 # 剪贴板
+├── dataURItoBlob.ts        # 数据转换
+├── checkBufferSize.ts      # Buffer 检查
+├── algorithm.ts            # 算法工具
+├── errorHandler.ts         # 错误处理
+├── getRemoteIp.ts          # IP 获取
+├── markdownToText.tsx      # Markdown 转换
+├── memeUtils.ts            # 表情包工具
+├── message.ts              # 消息处理
+├── processComments.ts      # 评论处理
+└── sliceUntilDelimiterFromEnd.ts  # 字符串处理
+```
+
+### 6.2 命名规范
+
+```typescript
+// ✅ 正确：camelCase 文件名
+formatDistanceToNow.ts
+processComments.ts
+checkBufferSize.ts
+
+// ✅ 正确：功能明确的命名
+cookies.ts           // Cookie 操作
+jwt.ts               // JWT 处理
+router.ts            // 路由工具
+
+// ❌ 错误：模糊命名
+helper.ts
+common.ts
+index.ts（直接在 utils 下）
+```
+
+---
+
+## 七、状态管理规范 (`src/store/`)
+
+### 7.1 目录结构
+
+```
+src/store/
+├── globalStore.ts          # 全局状态（主题、设备等）
+├── userStore.ts            # 用户状态（认证、信息）
+├── searchStore.ts          # 搜索状态（历史、筛选）
+├── editStore.ts            # 编辑状态（表单数据）
+├── trackingStore.ts        # 追踪状态
+└── adminResourceStore.ts   # 管理资源状态
+```
+
+### 7.2 命名规范
+
+```typescript
+// ✅ 正确：以 Store 结尾
+userStore.ts
+searchStore.ts
+globalStore.ts
+
+// ✅ 正确：业务模块 + Store
+adminResourceStore.ts
+trackingStore.ts
+
+// ❌ 错误：不以 Store 结尾
+user.ts
+search.ts
+```
+
+---
+
+## 八、类型定义规范 (`src/types/`)
+
+### 8.1 目录结构
+
+```
+src/types/
+├── user.d.ts               # 全局用户类型
+├── tracking.d.ts           # 全局追踪类型
+│
+├── api/                    # API 相关类型
+│   ├── admin.d.ts          # 管理员 API 类型
+│   ├── user.d.ts           # 用户 API 类型
+│   ├── resource.d.ts       # 资源 API 类型
+│   ├── comment.d.ts        # 评论 API 类型
+│   ├── message.d.ts        # 消息 API 类型
+│   ├── search.d.ts         # 搜索 API 类型
+│   ├── page.d.ts           # 分页 API 类型
+│   ├── patch.d.ts          # 补丁 API 类型
+│   ├── announcement.d.ts   # 公告 API 类型
+│   ├── tracking.d.ts       # 追踪 API 类型
+│   ├── resource-play-link.d.ts  # 播放链接类型
+│   └── admin/              # 管理员子模块类型
+│       └── forgot.ts
+│
+└── common/                 # 客户端组件类型
+    ├── index.d.ts          # 全局类型扩展
+    ├── home.d.ts           # 首页组件类型
+    ├── page.d.ts           # 页面通用类型
+    └── detail-container.d.ts  # 详情容器类型
+```
+
+### 8.2 类型文件规范
+
+```typescript
+// ✅ 正确：使用 .d.ts 声明文件
+admin.d.ts
+user.d.ts
+
+// ✅ 正确：按模块分类
+types/api/admin.d.ts      // API 响应类型
+types/common/home.d.ts    // 组件类型
+
+// ❌ 错误：类型文件放在组件目录
+components/admin/types.ts
+```
+
+---
+
+## 九、验证规则规范 (`src/validations/`)
+
+### 9.1 目录结构
+
+```
+src/validations/
+├── admin.ts                # 管理后台验证
+├── auth.ts                 # 认证验证
+├── user.ts                 # 用户验证
+├── resource.ts             # 资源验证
+├── comment.ts              # 评论验证
+├── edit.ts                 # 编辑验证
+├── search.ts               # 搜索验证
+├── page.ts                 # 分页验证
+├── patch.ts                # 补丁验证
+└── series.ts               # 系列验证
+```
+
+### 9.2 命名规范
+
+```typescript
+// Schema 命名格式：[模块名][操作][目标]Schema
+adminGetResourceSchema
+adminCreateResourceSchema
+adminUpdateResourceSchema
+adminDeleteResourceSchema
+userLoginSchema
+userRegisterSchema
+```
+
+---
+
+## 十、中间件规范 (`src/middleware/`)
+
+### 10.1 目录结构
+
+```
+src/middleware/
+├── auth.ts                 # 认证中间件
+└── _verifyHeaderCookie.ts  # Cookie 验证（内部使用）
+```
+
+### 10.2 根中间件
+
+```
+src/middleware.ts           # Next.js 根中间件入口
+```
+
+---
+
+## 十一、文件创建检查清单
+
+### 新增页面
+- [ ] 在 `src/app/[模块]/` 创建 `page.tsx`
+- [ ] 如需要，创建 `layout.tsx` 和 `actions.ts`
+- [ ] 动态路由使用 `[id]/` 目录
+
+### 新增 API
+- [ ] 在 `src/app/api/[domain]/[resource]/` 创建目录
+- [ ] 创建 `route.ts` 入口文件
+- [ ] 抽离业务逻辑到 `get.ts`、`create.ts`、`update.ts`、`delete.ts`
+- [ ] 在 `src/validations/` 添加对应 Schema
+- [ ] 在 `src/types/api/` 添加响应类型
+
+### 新增组件
+- [ ] 确定组件类型：UI 组件 → `ui/`，业务组件 → `common/`
+- [ ] 容器组件放入 `[模块]Container/` 目录
+- [ ] 复杂组件使用子目录，入口为 `index.tsx`
+
+### 新增状态
+- [ ] 在 `src/store/` 创建 `[模块]Store.ts`
+
+### 新增工具函数
+- [ ] 第三方集成 → `src/lib/`
+- [ ] 纯工具函数 → `src/utils/`

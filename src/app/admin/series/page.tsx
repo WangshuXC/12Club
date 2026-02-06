@@ -6,7 +6,7 @@ import { Suspense } from 'react'
 export const revalidate = 3
 
 interface PageProps {
-  searchParams: Promise<{ 
+  searchParams: Promise<{
     query?: string
     page?: string
     limit?: string
@@ -20,7 +20,7 @@ export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams
   const query = params.query || ''
   const page = parseInt(params.page || '1', 10)
-  const limit = parseInt(params.limit || '20', 10)
+  const limit = parseInt(params.limit || '9', 10)
   const sortField = params.sortField || 'updated'
   const sortOrder = params.sortOrder || 'desc'
 

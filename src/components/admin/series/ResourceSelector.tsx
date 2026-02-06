@@ -192,7 +192,7 @@ export const ResourceSelector = ({
       case 1:
         return '已完结'
       case 2:
-        return '已停更'
+        return '老站数据'
       default:
         return '未知'
     }
@@ -273,7 +273,7 @@ export const ResourceSelector = ({
               <SelectItem key="all">全部</SelectItem>
               <SelectItem key="0">连载中</SelectItem>
               <SelectItem key="1">已完结</SelectItem>
-              <SelectItem key="2">已停更</SelectItem>
+              <SelectItem key="2">老站数据</SelectItem>
             </Select>
           </div>
         </div>

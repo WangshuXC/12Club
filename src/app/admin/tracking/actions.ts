@@ -608,3 +608,251 @@ export async function getTrendData(
         return null
     }
 }
+
+// 页面访客信息类型
+export type PageVisitor = {
+    id: number
+    guid: string
+    user_id: number | null
+    user_agent: string | null
+    ip: string | null
+    first_seen: string
+    last_seen: string
+    visit_count: number
+    user: {
+        id: number
+        name: string
+        avatar: string
+        email: string
+    } | null
+}
+
+// 获取指定页面的访客列表
+export async function getPageVisitors(
+    pageUrl: string,
+    startDate?: string,
+    endDate?: string,
+    page = 1,
+    pageSize = 20
+): Promise<TrackingPaginationResult<PageVisitor> | null> {
+    try {
+        const payload = await verifyHeaderCookie()
+        if (!payload || payload.role < 2) {
+            return null
+        }
+
+        const skip = (page - 1) * pageSize
+
+        // 构建时间范围条件
+        const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
+        if (startDate || endDate) {
+            dateFilter.timestamp = {}
+            if (startDate) {
+                dateFilter.timestamp.gte = new Date(startDate)
+            }
+            if (endDate) {
+                dateFilter.timestamp.lte = new Date(endDate)
+            }
+        }
+
+        // 获取访问过该页面的所有访客ID及其访问次数
+        const visitorEvents = await prisma.trackingEvent.groupBy({
+            by: ['visitor_id'],
+            where: {
+                ...dateFilter,
+                page_url: pageUrl,
+                event_type: 'expose'
+            },
+            _count: { id: true },
+            orderBy: {
+                _count: { id: 'desc' }
+            }
+        })
+
+        const total = visitorEvents.length
+        const paginatedVisitorEvents = visitorEvents.slice(skip, skip + pageSize)
+        const visitorIds = paginatedVisitorEvents.map((v) => v.visitor_id)
+
+        // 获取访客详细信息
+        const visitors = await prisma.trackingVisitor.findMany({
+            where: {
+                id: { in: visitorIds }
+            }
+        })
+
+        // 创建访客ID到访客信息的映射
+        const visitorMap = new Map(visitors.map((v) => [v.id, v]))
+
+        // 获取所有关联的用户ID
+        const userIds = visitors
+            .map((v) => v.user_id)
+            .filter((id): id is number => id !== null)
+
+        // 批量查询用户信息
+        const users = userIds.length > 0
+            ? await prisma.user.findMany({
+                where: { id: { in: userIds } },
+                select: { id: true, name: true, avatar: true, email: true }
+            })
+            : []
+
+        // 创建用户ID到用户信息的映射
+        const userMap = new Map(users.map((u) => [u.id, u]))
+
+        // 创建访客ID到访问次数的映射
+        const visitCountMap = new Map(
+            paginatedVisitorEvents.map((v) => [v.visitor_id, v._count.id])
+        )
+
+        // 组装结果，保持按访问次数排序
+        const result: PageVisitor[] = paginatedVisitorEvents.map((ve) => {
+            const visitor = visitorMap.get(ve.visitor_id)!
+            return {
+                id: visitor.id,
+                guid: visitor.guid,
+                user_id: visitor.user_id,
+                user_agent: visitor.user_agent,
+                ip: visitor.ip,
+                first_seen: visitor.first_seen.toISOString(),
+                last_seen: visitor.last_seen.toISOString(),
+                visit_count: visitCountMap.get(ve.visitor_id) || 0,
+                user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
+            }
+        })
+
+        return {
+            list: result,
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.ceil(total / pageSize)
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch page visitors:', error)
+        return null
+    }
+}
+
+// 动漫访客信息类型（复用 PageVisitor）
+export type AnimeVisitor = PageVisitor
+
+// 获取指定动漫的访客列表
+export async function getAnimeVisitors(
+    dbid: string,
+    startDate?: string,
+    endDate?: string,
+    page = 1,
+    pageSize = 20
+): Promise<TrackingPaginationResult<AnimeVisitor> | null> {
+    try {
+        const payload = await verifyHeaderCookie()
+        if (!payload || payload.role < 2) {
+            return null
+        }
+
+        const skip = (page - 1) * pageSize
+
+        // 构建时间范围条件
+        const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
+        if (startDate || endDate) {
+            dateFilter.timestamp = {}
+            if (startDate) {
+                dateFilter.timestamp.gte = new Date(startDate)
+            }
+            if (endDate) {
+                dateFilter.timestamp.lte = new Date(endDate)
+            }
+        }
+
+        // 获取观看过该动漫的所有访客ID及其观看次数
+        const animeEvents = await prisma.trackingEvent.findMany({
+            where: {
+                ...dateFilter,
+                event_name: 'accordion-play'
+            },
+            select: {
+                visitor_id: true,
+                extra_data: true
+            }
+        })
+
+        // 过滤出匹配 dbid 的事件并统计
+        const visitorCountMap = new Map<number, number>()
+        animeEvents.forEach((event) => {
+            const extraData = event.extra_data as Record<string, unknown> | null
+            if (!extraData) return
+            const eventDbid = String(extraData['dbid'] || '')
+            if (eventDbid !== dbid) return
+
+            visitorCountMap.set(
+                event.visitor_id,
+                (visitorCountMap.get(event.visitor_id) || 0) + 1
+            )
+        })
+
+        // 按观看次数排序
+        const sortedVisitors = Array.from(visitorCountMap.entries())
+            .sort((a, b) => b[1] - a[1])
+
+        const total = sortedVisitors.length
+        const paginatedVisitors = sortedVisitors.slice(skip, skip + pageSize)
+        const visitorIds = paginatedVisitors.map(([id]) => id)
+
+        // 获取访客详细信息
+        const visitors = await prisma.trackingVisitor.findMany({
+            where: {
+                id: { in: visitorIds }
+            }
+        })
+
+        // 创建访客ID到访客信息的映射
+        const visitorMap = new Map(visitors.map((v) => [v.id, v]))
+
+        // 获取所有关联的用户ID
+        const userIds = visitors
+            .map((v) => v.user_id)
+            .filter((id): id is number => id !== null)
+
+        // 批量查询用户信息
+        const users = userIds.length > 0
+            ? await prisma.user.findMany({
+                where: { id: { in: userIds } },
+                select: { id: true, name: true, avatar: true, email: true }
+            })
+            : []
+
+        // 创建用户ID到用户信息的映射
+        const userMap = new Map(users.map((u) => [u.id, u]))
+
+        // 组装结果，保持按观看次数排序
+        const result: AnimeVisitor[] = paginatedVisitors.map(([visitorId, count]) => {
+            const visitor = visitorMap.get(visitorId)!
+            return {
+                id: visitor.id,
+                guid: visitor.guid,
+                user_id: visitor.user_id,
+                user_agent: visitor.user_agent,
+                ip: visitor.ip,
+                first_seen: visitor.first_seen.toISOString(),
+                last_seen: visitor.last_seen.toISOString(),
+                visit_count: count,
+                user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
+            }
+        })
+
+        return {
+            list: result,
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.ceil(total / pageSize)
+            }
+        }
+    } catch (error) {
+        console.error('Failed to fetch anime visitors:', error)
+        return null
+    }
+}

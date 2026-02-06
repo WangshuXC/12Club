@@ -67,7 +67,7 @@ export const SeriesResourceManager = ({
       case 1:
         return '已完结'
       case 2:
-        return '已停更'
+        return '老站数据'
       default:
         return '未知'
     }

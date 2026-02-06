@@ -2,10 +2,10 @@
 
 import { useEffect } from 'react'
 import { useGlobalStore } from '@/store/globalStore'
-import type { DeviceInfo } from '@/utils/device'
+import type { GlobalDeviceInfo } from '@/utils/device'
 
 interface DeviceInitializerProps {
-  initialDeviceInfo: DeviceInfo
+  initialDeviceInfo: GlobalDeviceInfo
 }
 
 export const DeviceInitializer = ({

@@ -81,81 +81,68 @@ export const Series = ({
     }
   }, [page, limit, query, sortDescriptor])
 
-  // 初始加载时获取数据
+  // 监听分页、搜索、排序变化，自动获取数据
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
       // 初始数据已从服务端传入，不需要再次获取
+      return
     }
-  }, [])
+    fetchSeries()
+  }, [fetchSeries])
 
   // 搜索处理
-  const handleSearch = useCallback(
-    (searchQuery: string) => {
-      setQuery(searchQuery)
-      setPage(1)
+  const handleSearch = useCallback((searchQuery: string) => {
+    setQuery(searchQuery)
+    setPage(1)
 
-      // 更新URL
-      const params = new URLSearchParams(window.location.search)
-      if (searchQuery) {
-        params.set('query', searchQuery)
-      } else {
-        params.delete('query')
-      }
-      params.set('page', '1')
-      window.history.replaceState(
-        {},
-        '',
-        `${window.location.pathname}?${params}`
-      )
-
-      fetchSeries()
-    },
-    [fetchSeries]
-  )
+    // 更新URL
+    const params = new URLSearchParams(window.location.search)
+    if (searchQuery) {
+      params.set('query', searchQuery)
+    } else {
+      params.delete('query')
+    }
+    params.set('page', '1')
+    window.history.replaceState(
+      {},
+      '',
+      `${window.location.pathname}?${params}`
+    )
+  }, [])
 
   // 分页处理
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      setPage(newPage)
+  const handlePageChange = useCallback((newPage: number) => {
+    setPage(newPage)
 
-      // 更新URL
-      const params = new URLSearchParams(window.location.search)
-      params.set('page', newPage.toString())
-      window.history.replaceState(
-        {},
-        '',
-        `${window.location.pathname}?${params}`
-      )
-
-      fetchSeries()
-    },
-    [fetchSeries]
-  )
+    // 更新URL
+    const params = new URLSearchParams(window.location.search)
+    params.set('page', newPage.toString())
+    window.history.replaceState(
+      {},
+      '',
+      `${window.location.pathname}?${params}`
+    )
+  }, [])
 
   // 排序处理
-  const handleSortChange = useCallback(
-    (descriptor: SortDescriptor) => {
-      setSortDescriptor(descriptor)
-      setPage(1)
+  const handleSortChange = useCallback((descriptor: SortDescriptor) => {
+    setSortDescriptor(descriptor)
+    setPage(1)
 
-      // 更新URL
-      const sortField = descriptor.column as string
-      const sortOrder = descriptor.direction === 'ascending' ? 'asc' : 'desc'
-      const params = new URLSearchParams(window.location.search)
-      params.set('sortField', sortField)
-      params.set('sortOrder', sortOrder)
-      params.set('page', '1')
-      window.history.replaceState(
-        {},
-        '',
-        `${window.location.pathname}?${params}`
-      )
-
-      fetchSeries()
-    },
-    [fetchSeries]
-  )
+    // 更新URL
+    const sortField = descriptor.column as string
+    const sortOrder = descriptor.direction === 'ascending' ? 'asc' : 'desc'
+    const params = new URLSearchParams(window.location.search)
+    params.set('sortField', sortField)
+    params.set('sortOrder', sortOrder)
+    params.set('page', '1')
+    window.history.replaceState(
+      {},
+      '',
+      `${window.location.pathname}?${params}`
+    )
+  }, [])
 
   // 编辑系列
   const handleEdit = useCallback((seriesItem: AdminSeries) => {

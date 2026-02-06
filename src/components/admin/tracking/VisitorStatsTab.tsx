@@ -13,6 +13,7 @@ import {
 } from '@heroui/react'
 import { SelfPagination } from '@/components/common/Pagination'
 import { SelfUser } from '@/components/common/user-card/User'
+import { parseUserAgentLabel } from '@/utils/device'
 import type { VisitorStats, PaginationInfo } from '@/app/admin/tracking/actions'
 
 interface VisitorStatsTableProps {
@@ -31,15 +32,6 @@ export const VisitorStatsTable = ({
 }: VisitorStatsTableProps) => {
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString('zh-CN')
-  }
-
-  // 从 User-Agent 提取简短信息
-  const parseUserAgent = (ua: string) => {
-    if (ua.includes('Mobile')) return '移动端'
-    if (ua.includes('Windows')) return 'Windows'
-    if (ua.includes('Mac')) return 'Mac'
-    if (ua.includes('Linux')) return 'Linux'
-    return '未知'
   }
 
   // 渲染用户/访客信息
@@ -107,7 +99,7 @@ export const VisitorStatsTable = ({
               <TableCell>{renderUserCell(item)}</TableCell>
               <TableCell>
                 <span className="text-sm" title={item.user_agent}>
-                  {parseUserAgent(item.user_agent)}
+                  {parseUserAgentLabel(item.user_agent)}
                 </span>
               </TableCell>
               <TableCell>

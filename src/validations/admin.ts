@@ -33,7 +33,7 @@ export const adminGetResourceSchema = z.object({
     return val.split(',').filter(type => ['a', 'c', 'g', 'n'].includes(type)) as ('a' | 'c' | 'g' | 'n')[]
   }),
   sortField: z.enum(['created', 'view', 'download', 'favorite_by', 'comment', 'updated', 'released']).default('updated'),
-  sortOrder: z.enum(['asc', 'desc']).optional()
+  sortOrder: z.enum(['asc', 'desc']).default('desc')
 })
 
 export const adminUpdateResourceSchema = z.object({

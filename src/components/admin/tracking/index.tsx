@@ -218,6 +218,8 @@ export const TrackingStatsContainer = () => {
             pagination={pagePagination}
             onPageChange={handlePageStatsPageChange}
             loading={loading}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Tab>
         <Tab key="anime" title="动漫播放">
@@ -226,6 +228,8 @@ export const TrackingStatsContainer = () => {
             pagination={animePagination}
             onPageChange={handleAnimeStatsPageChange}
             loading={loading}
+            startDate={startDate}
+            endDate={endDate}
           />
         </Tab>
         <Tab key="visitors" title="访客列表">

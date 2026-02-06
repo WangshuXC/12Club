@@ -14,13 +14,13 @@ import {
   Tooltip,
   Spinner,
   Image,
-  Pagination,
   type SortDescriptor
 } from '@heroui/react'
 import { Edit, Trash2, Eye } from 'lucide-react'
 import type { AdminSeries } from '@/types/api/admin'
 import { SeriesDetailModal } from './SeriesDetailModal'
 import { ImagesBadge } from '@/components/ui/ImagesBadge'
+import { SelfPagination } from '@/components/common/Pagination'
 
 interface SeriesTableProps {
   series: AdminSeries[]
@@ -141,20 +141,16 @@ export const SeriesTable = ({
     <>
       <Table
         aria-label="系列管理表格"
-        removeWrapper
+        classNames={{ wrapper: 'overflow-visible' }}
         sortDescriptor={sortDescriptor}
         onSortChange={onSortChange}
         bottomContent={
           totalPages > 1 && (
             <div className="flex justify-center w-full">
-              <Pagination
-                isCompact
-                showControls
-                showShadow
-                color="primary"
+              <SelfPagination
                 page={page}
                 total={totalPages}
-                onChange={onPageChange}
+                onPageChange={onPageChange}
               />
             </div>
           )
