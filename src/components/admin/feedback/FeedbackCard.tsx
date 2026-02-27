@@ -69,10 +69,7 @@ export const FeedbackCard = ({ feedback }: Props) => {
       </CardBody>
       <CardFooter>
         <div className="flex items-center gap-4 mt-2">
-          <Chip
-            color={feedback.status ? 'success' : 'danger'}
-            variant="flat"
-          >
+          <Chip color={feedback.status ? 'success' : 'danger'} variant="flat">
             {feedback.status ? '已处理' : '未处理'}
           </Chip>
           <Button

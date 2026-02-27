@@ -1,7 +1,12 @@
 'use client'
 
 import { useDisclosure } from '@heroui/react'
-import { Star, Share2, MessageSquare, MessageCircleQuestion } from 'lucide-react'
+import {
+  Star,
+  Share2,
+  MessageSquare,
+  MessageCircleQuestion
+} from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import toast from 'react-hot-toast'
 

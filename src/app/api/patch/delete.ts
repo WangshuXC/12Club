@@ -31,7 +31,7 @@ export const deleteResource = async (
 
     // 删除patch
     await prisma.resourcePatch.delete({
-      where: { 
+      where: {
         id: currentPatch.id,
         user_id: resourceUserUid
       }

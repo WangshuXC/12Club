@@ -10,7 +10,11 @@ interface VideoPlayerProps {
   onPlay?: () => void
 }
 
-export const ArtPlayer = ({ src, className = '', onPlay }: VideoPlayerProps) => {
+export const ArtPlayer = ({
+  src,
+  className = '',
+  onPlay
+}: VideoPlayerProps) => {
   const artRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<Artplayer | null>(null)
   const hasReportedPlayRef = useRef(false)

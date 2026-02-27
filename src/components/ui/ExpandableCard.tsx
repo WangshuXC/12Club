@@ -17,7 +17,7 @@ type cards = {
 export function ExpandableCard({ cards }: { cards: cards }) {
   const [active, setActive] = useState<
     (typeof cardList)[number] | boolean | null
-      >(null)
+  >(null)
   const id = useId()
   const ref = useRef<HTMLDivElement>(null)
 

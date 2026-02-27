@@ -52,13 +52,10 @@ export const ReportHandler = ({ initialReport }: Props) => {
     }
 
     setUpdating(true)
-    const res = await FetchPost<AdminReport>(
-      '/admin/report/handle',
-      {
-        messageId: initialReport.id,
-        content: handleContent.trim()
-      }
-    )
+    const res = await FetchPost<AdminReport>('/admin/report/handle', {
+      messageId: initialReport.id,
+      content: handleContent.trim()
+    })
     if (typeof res === 'string') {
       addToast({
         title: '失败',

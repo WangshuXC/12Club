@@ -46,10 +46,10 @@ export const UserFavoriteDataCard = ({
   } = useDisclosure()
   const handleRemoveFavorite = () => {
     startTransition(async () => {
-      const res = await FetchPut<{ added: boolean }>(
-        `/patch/favorite`,
-        { patchId: favoriteData.dbId, folderId }
-      )
+      const res = await FetchPut<{ added: boolean }>(`/patch/favorite`, {
+        patchId: favoriteData.dbId,
+        folderId
+      })
       ErrorHandler(res, () => {
         onCloseDelete()
         toast.success('取消收藏成功')
@@ -63,7 +63,10 @@ export const UserFavoriteDataCard = ({
     <Card className="w-full">
       <CardBody className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row relative">
-          <Link href={getRouteByDbId(favoriteData.dbId)} className="relative w-full sm:h-auto sm:w-40">
+          <Link
+            href={getRouteByDbId(favoriteData.dbId)}
+            className="relative w-full sm:h-auto sm:w-40"
+          >
             <Image
               src={favoriteData.image}
               alt={favoriteData.title}
@@ -80,7 +83,12 @@ export const UserFavoriteDataCard = ({
               {favoriteData.title}
             </Link>
 
-            <CardStatus data={{ ...favoriteData, favorite_by: favoriteData._count.favorite_by }} />
+            <CardStatus
+              data={{
+                ...favoriteData,
+                favorite_by: favoriteData._count.favorite_by
+              }}
+            />
 
             <div className="flex absolute bottom-0 right-0">
               <Button

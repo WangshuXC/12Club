@@ -42,7 +42,11 @@ interface Props {
   initialQuery?: string
 }
 
-export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: Props) => {
+export const Resource = ({
+  initialResources,
+  initialTotal,
+  initialQuery = ''
+}: Props) => {
   const [resources, setResources] = useState<AdminResource[]>(initialResources)
   const [total, setTotal] = useState(initialTotal)
   const [page, setPage] = useState(1)
@@ -98,14 +102,19 @@ export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: 
 
   // 删除资源的回调函数
   const handleDeleteResource = (resourceId: number) => {
-    setResources(prevResources => prevResources.filter(resource => resource.id !== resourceId))
-    setTotal(prevTotal => prevTotal - 1)
+    setResources((prevResources) =>
+      prevResources.filter((resource) => resource.id !== resourceId)
+    )
+    setTotal((prevTotal) => prevTotal - 1)
   }
 
   // 更新资源的回调函数
-  const handleUpdateResource = (resourceId: number, updatedResource: Partial<AdminResource>) => {
-    setResources(prevResources =>
-      prevResources.map(resource =>
+  const handleUpdateResource = (
+    resourceId: number,
+    updatedResource: Partial<AdminResource>
+  ) => {
+    setResources((prevResources) =>
+      prevResources.map((resource) =>
         resource.id === resourceId
           ? { ...resource, ...updatedResource }
           : resource
@@ -137,16 +146,18 @@ export const Resource = ({ initialResources, initialTotal, initialQuery = '' }: 
         aria-label="资源管理"
         isHeaderSticky
         classNames={{
-          base: 'max-h-[calc(100vh-365px)]',
+          base: 'max-h-[calc(100vh-365px)]'
         }}
         bottomContent={
           <div className="flex justify-center w-full">
-            {Math.ceil(total / PAGE_SIZE) > 1 && <SelfPagination
-              page={page}
-              total={Math.ceil(total / PAGE_SIZE)}
-              onPageChange={(newPage) => setPage(newPage)}
-              isLoading={loading}
-            />}
+            {Math.ceil(total / PAGE_SIZE) > 1 && (
+              <SelfPagination
+                page={page}
+                total={Math.ceil(total / PAGE_SIZE)}
+                onPageChange={(newPage) => setPage(newPage)}
+                isLoading={loading}
+              />
+            )}
           </div>
         }
         bottomContentPlacement="outside"

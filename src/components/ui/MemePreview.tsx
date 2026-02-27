@@ -4,8 +4,8 @@ import { CommentContent } from '@/components/ui/CommentContent'
 import { cn } from '@/lib/utils'
 
 interface CommentPreviewProps {
-    text: string
-    className?: string
+  text: string
+  className?: string
 }
 
 export const CommentPreview = ({ text, className }: CommentPreviewProps) => {
@@ -22,4 +22,4 @@ export const CommentPreview = ({ text, className }: CommentPreviewProps) => {
       </div>
     </div>
   )
-} 
+}

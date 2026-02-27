@@ -1,4 +1,4 @@
-import { MESSAGE_TYPE } from "@/constants/message"
+import { MESSAGE_TYPE } from '@/constants/message'
 
 export interface Message {
   id: number

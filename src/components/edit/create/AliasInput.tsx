@@ -45,7 +45,11 @@ export const AliasInput = ({ errors }: Props) => {
       <div className="flex gap-2">
         <Input
           labelPlacement="outside"
-          placeholder={data.alias.length > 0 ? `已添加${data.alias.length}个别名` : '输入资源别名'}
+          placeholder={
+            data.alias.length > 0
+              ? `已添加${data.alias.length}个别名`
+              : '输入资源别名'
+          }
           value={newAlias}
           onChange={(e) => setNewAlias(e.target.value)}
           className="flex-1"

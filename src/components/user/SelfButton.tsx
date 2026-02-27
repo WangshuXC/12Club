@@ -2,7 +2,14 @@
 
 import { useState } from 'react'
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react'
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader
+} from '@heroui/react'
 import { BadgeCheck, Pencil, Shield } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
 
@@ -57,7 +64,12 @@ export const SelfButton = ({ user }: Props) => {
         </Button>
       )} */}
 
-      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="3xl" scrollBehavior="outside">
+      <Modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        size="3xl"
+        scrollBehavior="outside"
+      >
         <ModalContent>
           <ModalHeader>编辑信息</ModalHeader>
           <ModalBody>
@@ -66,8 +78,7 @@ export const SelfButton = ({ user }: Props) => {
             <Bio />
             <Password />
           </ModalBody>
-          <ModalFooter>
-          </ModalFooter>
+          <ModalFooter></ModalFooter>
         </ModalContent>
       </Modal>
     </div>

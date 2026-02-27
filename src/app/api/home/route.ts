@@ -78,21 +78,23 @@ export const getHomeData = async () => {
     },
     orderBy: {
       created: 'desc'
-    },
+    }
   })
 
-  const announcementsData: Announcement[] = announcements.map((announcement) => ({
-    id: announcement.id,
-    title: announcement.title,
-    content: announcement.content,
-    created: announcement.created,
-    updated: announcement.updated,
-    user: {
-      id: announcement.user.id,
-      name: announcement.user.name,
-      avatar: announcement.user.avatar
-    }
-  }))
+  const announcementsData: Announcement[] = announcements.map(
+    (announcement) => ({
+      id: announcement.id,
+      title: announcement.title,
+      content: announcement.content,
+      created: announcement.created,
+      updated: announcement.updated,
+      user: {
+        id: announcement.user.id,
+        name: announcement.user.name,
+        avatar: announcement.user.avatar
+      }
+    })
+  )
 
   // 获取评论数据 - 包含用户和资源信息，按创建时间降序排列，取前6条
   const comments = await prisma.resourceComment.findMany({

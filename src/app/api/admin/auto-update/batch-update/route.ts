@@ -109,9 +109,9 @@ export async function POST(req: NextRequest) {
             dbId: autoUpdate.resource.db_id,
             success: false,
             message:
-                            result.errors.length > 0
-                              ? result.errors.join(', ')
-                              : result.message || '创建失败'
+              result.errors.length > 0
+                ? result.errors.join(', ')
+                : result.message || '创建失败'
           })
         }
       } catch (error) {

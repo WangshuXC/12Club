@@ -2,13 +2,7 @@
 
 import { useState, useEffect, useTransition } from 'react'
 
-import {
-  Button,
-  Modal,
-  ModalBody,
-  ModalContent,
-  Chip
-} from '@heroui/react'
+import { Button, Modal, ModalBody, ModalContent, Chip } from '@heroui/react'
 import { Folder } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -102,7 +96,11 @@ const FavoriteModalContent = ({
   )
 }
 
-export const FavoriteModal = ({ dbId, isOpen, onClose }: FavoriteModalProps) => {
+export const FavoriteModal = ({
+  dbId,
+  isOpen,
+  onClose
+}: FavoriteModalProps) => {
   return (
     <Modal
       isOpen={isOpen}

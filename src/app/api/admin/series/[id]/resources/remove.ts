@@ -70,6 +70,8 @@ export const removeResourcesFromSeries = async (
     }
   } catch (error) {
     console.error('从系列移除资源失败:', error)
-    return error instanceof Error ? error.message : '从系列移除资源时发生未知错误'
+    return error instanceof Error
+      ? error.message
+      : '从系列移除资源时发生未知错误'
   }
 }

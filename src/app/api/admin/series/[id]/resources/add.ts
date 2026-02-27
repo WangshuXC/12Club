@@ -36,14 +36,16 @@ export const addResourcesToSeries = async (
     })
 
     // 检查是否有不存在的资源
-    const foundDbIds = resources.map(r => r.db_id)
-    const missingDbIds = input.dbIds.filter(dbId => !foundDbIds.includes(dbId))
+    const foundDbIds = resources.map((r) => r.db_id)
+    const missingDbIds = input.dbIds.filter(
+      (dbId) => !foundDbIds.includes(dbId)
+    )
     if (missingDbIds.length > 0) {
       return `以下资源不存在: ${missingDbIds.join(', ')}`
     }
 
     // 获取资源的整数 ID 列表
-    const resourceIds = resources.map(r => r.id)
+    const resourceIds = resources.map((r) => r.id)
 
     // 检查哪些资源已经在系列中
     const existingRelations = await prisma.resourceSeriesRelation.findMany({
@@ -63,24 +65,28 @@ export const addResourcesToSeries = async (
       }
     })
 
-    const existingResourceIds = existingRelations.map(rel => rel.resource_id)
-    const newResources = resources.filter(r => !existingResourceIds.includes(r.id))
+    const existingResourceIds = existingRelations.map((rel) => rel.resource_id)
+    const newResources = resources.filter(
+      (r) => !existingResourceIds.includes(r.id)
+    )
 
     if (newResources.length === 0) {
-      const existingNames = existingRelations.map(rel => rel.resource.name)
+      const existingNames = existingRelations.map((rel) => rel.resource.name)
 
       return `所有资源都已在系列中: ${existingNames.join(', ')}`
     }
 
     // 添加新的资源关联
     await prisma.resourceSeriesRelation.createMany({
-      data: newResources.map(resource => ({
+      data: newResources.map((resource) => ({
         series_id: input.seriesId,
         resource_id: resource.id
       }))
     })
 
-    const skippedResources = resources.filter(r => existingResourceIds.includes(r.id))
+    const skippedResources = resources.filter((r) =>
+      existingResourceIds.includes(r.id)
+    )
 
     let message = `成功添加 ${newResources.length} 个资源到系列 "${existingSeries.name}"`
     if (skippedResources.length > 0) {
@@ -95,6 +101,8 @@ export const addResourcesToSeries = async (
     }
   } catch (error) {
     console.error('添加资源到系列失败:', error)
-    return error instanceof Error ? error.message : '添加资源到系列时发生未知错误'
+    return error instanceof Error
+      ? error.message
+      : '添加资源到系列时发生未知错误'
   }
 }

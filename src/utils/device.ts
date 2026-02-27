@@ -200,7 +200,9 @@ export const getDeviceInfo = (): DeviceInfo => {
  * @returns 是否为移动设备
  */
 export const detectMobile = (ua: string): boolean => {
-  return /mobile|iphone|ipod|android.*mobile|blackberry|opera mini|iemobile|windows phone/i.test(ua)
+  return /mobile|iphone|ipod|android.*mobile|blackberry|opera mini|iemobile|windows phone/i.test(
+    ua
+  )
 }
 
 /**

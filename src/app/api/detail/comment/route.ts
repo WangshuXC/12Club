@@ -8,7 +8,10 @@ import {
   ParsePostBody,
   ParseDeleteQuery
 } from '@/utils/parseQuery'
-import { resourceCommentCreateSchema, resourceCommentUpdateSchema } from '@/validations/comment'
+import {
+  resourceCommentCreateSchema,
+  resourceCommentUpdateSchema
+} from '@/validations/comment'
 
 import { createResourceComment } from './create'
 import { deleteResourceComment } from './delete'
@@ -32,7 +35,7 @@ export const GET = async (req: NextRequest) => {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
-  
+
   const payload = await verifyHeaderCookie(req)
 
   const response = await getResourceComment(input.dbId, payload?.uid ?? -1)

@@ -19,7 +19,10 @@ const TrackingEventSchema = z.object({
   extra_data: z.record(z.unknown()).optional().nullable(),
   viewport: z.string().max(50).optional().default(''),
   screen: z.string().max(50).optional().default(''),
-  device_type: z.enum(['desktop', 'mobile', 'tablet']).optional().default('desktop'),
+  device_type: z
+    .enum(['desktop', 'mobile', 'tablet'])
+    .optional()
+    .default('desktop'),
   session_id: z.string().max(36).optional().default(''),
   timestamp: z.string().optional()
 })
@@ -108,7 +111,8 @@ export async function POST(req: NextRequest) {
           page_url: event.page_url.slice(0, 500),
           page_title: event.page_title || '',
           referrer: event.referrer || '',
-          extra_data: (event.extra_data as Prisma.InputJsonValue) ?? Prisma.JsonNull,
+          extra_data:
+            (event.extra_data as Prisma.InputJsonValue) ?? Prisma.JsonNull,
           viewport: event.viewport || '',
           screen: event.screen || '',
           device_type: event.device_type || 'desktop',

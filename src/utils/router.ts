@@ -5,17 +5,17 @@ import { ROUTER_MAP, type RouterPrefix } from '@/constants/resource'
  * @param dbId - 数据库ID
  * @returns 完整的路由路径，如果首位字母不匹配则返回null
  */
-export function getRouteByDbId(dbId: string): string{
+export function getRouteByDbId(dbId: string): string {
   if (!dbId || dbId.length === 0) {
     return ''
   }
 
   const prefix = dbId.charAt(0).toLowerCase() as RouterPrefix
-  
+
   if (prefix in ROUTER_MAP) {
     return `/${ROUTER_MAP[prefix]}/${dbId}`
   }
-  
+
   return ''
 }
 
@@ -45,10 +45,10 @@ export function getResourceTypeByDbId(dbId: string): string | null {
   }
 
   const prefix = dbId.charAt(0).toLowerCase() as RouterPrefix
-  
+
   if (prefix in ROUTER_MAP) {
     return ROUTER_MAP[prefix]
   }
-  
+
   return null
-} 
+}

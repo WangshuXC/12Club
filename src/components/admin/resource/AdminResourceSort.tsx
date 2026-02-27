@@ -1,6 +1,13 @@
 'use cilent'
 
-import { Button, ButtonGroup, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@heroui/react'
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem
+} from '@heroui/react'
 import { ArrowDownAZ, ArrowUpAZ } from 'lucide-react'
 
 import { SORT_FIELD_LABEL_MAP } from '@/constants/resource'
@@ -12,14 +19,14 @@ export const AdminResourceSort = () => {
   const searchData = useAdminResourceStore((state) => state.data)
   const setSearchData = useAdminResourceStore((state) => state.setData)
 
-  return(
+  return (
     <ButtonGroup
       variant="flat"
       className="rounded-lg overflow-hidden flex-shrink-0"
     >
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Button variant='solid'>
+          <Button variant="solid">
             {SORT_FIELD_LABEL_MAP[searchData.sortField]}
           </Button>
         </DropdownTrigger>
@@ -56,10 +63,13 @@ export const AdminResourceSort = () => {
         </DropdownMenu>
       </Dropdown>
       <Button
-        variant='solid'
+        variant="solid"
         isIconOnly
         onPress={() => {
-          setSearchData({ ...searchData, sortOrder: searchData.sortOrder === 'asc' ? 'desc' : 'asc' })
+          setSearchData({
+            ...searchData,
+            sortOrder: searchData.sortOrder === 'asc' ? 'desc' : 'asc'
+          })
         }}
       >
         {searchData.sortOrder === 'asc' ? (

@@ -29,12 +29,15 @@ interface AdminResourceStoreState {
 }
 
 export const useAdminResourceStore = create<AdminResourceStoreState>()(
-  persist((set, get) => ({
-    data: initialState,
-    getData: () => get().data,
-    setData: (data: AdminResourceStore) => set({ data }),
-    resetData: () => set({ data: initialState })
-  }), {
-    name: 'admin-resource-store',
-  })
+  persist(
+    (set, get) => ({
+      data: initialState,
+      getData: () => get().data,
+      setData: (data: AdminResourceStore) => set({ data }),
+      resetData: () => set({ data: initialState })
+    }),
+    {
+      name: 'admin-resource-store'
+    }
+  )
 )

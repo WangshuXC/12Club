@@ -39,10 +39,10 @@ export const FavoriteModal = ({ dbId, isOpen, onClose }: Props) => {
 
   const handleAddToFolder = async (folderId: number) => {
     startTransition(async () => {
-      const res = await FetchPut<FavoriteToggleResponse>(
-        `/detail/favorite`,
-        { dbId, folderId }
-      )
+      const res = await FetchPut<FavoriteToggleResponse>(`/detail/favorite`, {
+        dbId,
+        folderId
+      })
       ErrorHandler(res, (value: FavoriteToggleResponse) => {
         toast.success(value.added ? '收藏成功' : '取消收藏成功')
         fetchFolders()

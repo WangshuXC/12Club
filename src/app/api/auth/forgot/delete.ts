@@ -18,9 +18,10 @@ export const deleteResetCode = async (id: number) => {
     return { success: true, message: '删除重置码成功' }
   } catch (error) {
     console.error('Delete reset code error:', error)
-    return { 
-      success: false, 
-      message: error instanceof Error ? error.message : '删除重置码时发生未知错误' 
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : '删除重置码时发生未知错误'
     }
   }
 }

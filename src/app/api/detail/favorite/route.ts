@@ -75,4 +75,4 @@ export const PUT = async (req: NextRequest) => {
   const response = await togglePatchFavorite(input, payload.uid)
 
   return NextResponse.json(response)
-} 
+}

@@ -9,10 +9,10 @@ export const USER_ROLE_COLOR_MAP: Record<
   number,
   'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger'
 > = {
-  1: 'default',     // 用户 - 默认颜色
-  2: 'primary',     // 创作者 - 蓝色
-  3: 'warning',     // 管理员 - 橙色/黄色
-  4: 'danger'       // 超级管理员 - 红色
+  1: 'default', // 用户 - 默认颜色
+  2: 'primary', // 创作者 - 蓝色
+  3: 'warning', // 管理员 - 橙色/黄色
+  4: 'danger' // 超级管理员 - 红色
 }
 
 export const USER_STATUS_MAP: Record<number, string> = {

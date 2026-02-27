@@ -43,13 +43,10 @@ export const FeedbackHandler = ({ initialFeedback }: Props) => {
   const [updating, setUpdating] = useState(false)
   const handleUpdateFeedback = async () => {
     setUpdating(true)
-    const res = await FetchPost<AdminFeedback>(
-      '/admin/feedback/handle',
-      {
-        messageId: initialFeedback.id,
-        content: handleContent.trim()
-      }
-    )
+    const res = await FetchPost<AdminFeedback>('/admin/feedback/handle', {
+      messageId: initialFeedback.id,
+      content: handleContent.trim()
+    })
     if (typeof res === 'string') {
       toast.error(res)
     } else {

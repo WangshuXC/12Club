@@ -64,7 +64,14 @@ export const PageContainer = ({
     }
 
     fetchPageData()
-  }, [sortField, sortOrder, selectedType, selectedLanguage, selectedStatus, page])
+  }, [
+    sortField,
+    sortOrder,
+    selectedType,
+    selectedLanguage,
+    selectedStatus,
+    page
+  ])
 
   return (
     <div className="container mx-auto my-4 space-y-6">

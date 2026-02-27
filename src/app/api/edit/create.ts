@@ -32,7 +32,7 @@ export const createResource = async (
     // 检查 dbId 是否与其他资源重复
     const existingResource = await prisma.resource.findFirst({
       where: {
-        db_id: dbId,
+        db_id: dbId
       },
       select: {
         id: true,

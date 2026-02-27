@@ -18,7 +18,7 @@ import { scrollIntoComment } from './_scrollIntoComment'
 
 interface Props {
   id: string
-  shouldFetchComment: boolean;
+  shouldFetchComment: boolean
 }
 
 export const Comments = ({ id, shouldFetchComment }: Props) => {

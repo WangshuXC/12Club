@@ -29,7 +29,9 @@ export const SearchContainer = () => {
   const [query, setQuery] = useState('')
   const [debouncedQuery] = useDebounce(query, 500)
   const [hasSearched, setHasSearched] = useState(false)
-  const [searchContainerData, setSearchContainerData] = useState<SearchData[]>([])
+  const [searchContainerData, setSearchContainerData] = useState<SearchData[]>(
+    []
+  )
   const [total, setTotal] = useState(0)
 
   const [page, setPage] = useState(currentPage)
@@ -189,7 +191,10 @@ export const SearchContainer = () => {
             color="primary"
             startContent={
               <Search
-                className={cn('text-default-400', showHistory && 'text-primary')}
+                className={cn(
+                  'text-default-400',
+                  showHistory && 'text-primary'
+                )}
               />
             }
           />
@@ -235,7 +240,13 @@ export const SearchContainer = () => {
                   easing="ease-in-out"
                   initialOpacity={0}
                 >
-                  <CoverCard data={{ ...data, favorite_by: data._count.favorite_by, comment: data._count.comment }} />
+                  <CoverCard
+                    data={{
+                      ...data,
+                      favorite_by: data._count.favorite_by,
+                      comment: data._count.comment
+                    }}
+                  />
                 </FadeContent>
               ))}
             </div>

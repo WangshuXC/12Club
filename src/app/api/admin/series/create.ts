@@ -41,8 +41,10 @@ export const createSeries = async (
     })
 
     if (resources.length !== input.dbIds.length) {
-      const foundDbIds = resources.map(r => r.db_id)
-      const missingDbIds = input.dbIds.filter(dbId => !foundDbIds.includes(dbId))
+      const foundDbIds = resources.map((r) => r.db_id)
+      const missingDbIds = input.dbIds.filter(
+        (dbId) => !foundDbIds.includes(dbId)
+      )
 
       return `以下资源不存在: ${missingDbIds.join(', ')}`
     }
@@ -60,7 +62,7 @@ export const createSeries = async (
 
       // 创建资源关联关系
       await tx.resourceSeriesRelation.createMany({
-        data: resources.map(resource => ({
+        data: resources.map((resource) => ({
           series_id: series.id,
           resource_id: resource.id
         }))

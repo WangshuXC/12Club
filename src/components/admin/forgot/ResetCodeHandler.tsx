@@ -24,7 +24,10 @@ interface ResetCodeDetailProps {
   onUpdate?: (resetCodeId: number) => void
 }
 
-export const ResetCodeHandler = ({ resetCode, onUpdate }: ResetCodeDetailProps) => {
+export const ResetCodeHandler = ({
+  resetCode,
+  onUpdate
+}: ResetCodeDetailProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [loading, setLoading] = useState(false)
 
@@ -34,7 +37,8 @@ export const ResetCodeHandler = ({ resetCode, onUpdate }: ResetCodeDetailProps) 
     setLoading(true)
 
     try {
-      const res = await FetchPut<{ status: number; message: string }>('/auth/forgot',
+      const res = await FetchPut<{ status: number; message: string }>(
+        '/auth/forgot',
         { id: resetCode.id }
       )
       if (res.status === 200) {

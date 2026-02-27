@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
-import { ParseGetQuery, ParsePutBody, ParseDeleteQuery } from '@/utils/parseQuery'
 import {
-  adminUpdateResourceSchema, 
+  ParseGetQuery,
+  ParsePutBody,
+  ParseDeleteQuery
+} from '@/utils/parseQuery'
+import {
+  adminUpdateResourceSchema,
   adminDeleteResourceSchema,
   adminGetResourceSchema
 } from '@/validations/admin'

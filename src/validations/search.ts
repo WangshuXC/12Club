@@ -17,9 +17,21 @@ export const searchSchema = z.object({
     searchInIntroduction: z.boolean().default(false),
     searchInAlias: z.boolean().default(false),
     searchInTag: z.boolean().default(false),
-    selectedResourceType: z.array(z.enum(['anime', 'comic', 'game', 'novel'])).default(['anime', 'comic', 'game', 'novel']),
+    selectedResourceType: z
+      .array(z.enum(['anime', 'comic', 'game', 'novel']))
+      .default(['anime', 'comic', 'game', 'novel']),
     selectedType: z.string().default('all'),
-    sortField: z.enum(['created', 'view', 'download', 'favorite_by', 'comment', 'updated', 'released']).default('updated'),
+    sortField: z
+      .enum([
+        'created',
+        'view',
+        'download',
+        'favorite_by',
+        'comment',
+        'updated',
+        'released'
+      ])
+      .default('updated'),
     sortOrder: z.enum(['asc', 'desc']).default('desc'),
     selectedLanguage: z.string().default('all'),
     selectedStatus: z.string().default('all')

@@ -32,16 +32,14 @@ export const toggleCommentLike = async (
     return '您不能给自己点赞'
   }
 
-  const existingLike = await prisma.userResourceCommentLikeRelation.findUnique(
-    {
-      where: {
-        user_id_comment_id: {
-          user_id: uid,
-          comment_id: commentId
-        }
+  const existingLike = await prisma.userResourceCommentLikeRelation.findUnique({
+    where: {
+      user_id_comment_id: {
+        user_id: uid,
+        comment_id: commentId
       }
     }
-  )
+  })
 
   return await prisma.$transaction(async (prisma) => {
     if (existingLike) {

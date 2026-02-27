@@ -14,13 +14,13 @@ export const getAnnouncementInfo = async (
 
   try {
     // 构建查询条件 - 支持搜索公告标题和内容
-    const whereCondition = search 
+    const whereCondition = search
       ? {
-        OR: [
-          { title: { contains: search, mode: 'insensitive' as const } },
-          { content: { contains: search, mode: 'insensitive' as const } }
-        ]
-      }
+          OR: [
+            { title: { contains: search, mode: 'insensitive' as const } },
+            { content: { contains: search, mode: 'insensitive' as const } }
+          ]
+        }
       : {}
 
     // 获取公告数据
@@ -46,18 +46,20 @@ export const getAnnouncementInfo = async (
     ])
 
     // 数据格式转换
-    const announcements: AdminAnnouncement[] = announcementsData.map((announcement) => ({
-      id: announcement.id,
-      title: announcement.title,
-      content: announcement.content,
-      created: announcement.created,
-      updated: announcement.updated,
-      user: {
-        id: announcement.user.id,
-        name: announcement.user.name,
-        avatar: announcement.user.avatar
-      }
-    }))
+    const announcements: AdminAnnouncement[] = announcementsData.map(
+      (announcement) => ({
+        id: announcement.id,
+        title: announcement.title,
+        content: announcement.content,
+        created: announcement.created,
+        updated: announcement.updated,
+        user: {
+          id: announcement.user.id,
+          name: announcement.user.name,
+          avatar: announcement.user.avatar
+        }
+      })
+    )
 
     return {
       data: announcements,
@@ -72,4 +74,4 @@ export const getAnnouncementInfo = async (
     console.error('获取公告列表失败:', error)
     return '获取公告列表失败'
   }
-} 
+}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { Card, CardBody, CardFooter, Image } from "@heroui/react"
+import { Card, CardBody, CardFooter, Image } from '@heroui/react'
 import { Calendar, Type } from 'lucide-react'
 import Link from 'next/link'
 
@@ -27,13 +27,15 @@ export const AboutCard = ({ post }: Props) => {
         <h2 className="mb-2 text-xl font-bold">{post.title}</h2>
         <div className="relative w-full mx-auto overflow-hidden text-center rounded-t-lg opacity-90">
           <div
-            className={`absolute inset-0 animate-pulse bg-default-100 ${imageLoaded ? 'opacity-0' : 'opacity-90'
+            className={`absolute inset-0 animate-pulse bg-default-100 ${
+              imageLoaded ? 'opacity-0' : 'opacity-90'
             } transition-opacity duration-300`}
             style={{ aspectRatio: '16/9' }}
           />
           <Image
             alt={post.title}
-            className={`size-full object-cover transition-all duration-300 ${imageLoaded ? 'scale-100 opacity-90' : 'scale-105 opacity-0'
+            className={`size-full object-cover transition-all duration-300 ${
+              imageLoaded ? 'scale-100 opacity-90' : 'scale-105 opacity-0'
             }`}
             src={post.banner}
             style={{ aspectRatio: '16/9' }}

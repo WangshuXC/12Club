@@ -2,7 +2,14 @@
 
 import { useState, useRef } from 'react'
 
-import { addToast, Button, Card, CardBody, CardHeader, Textarea } from '@heroui/react'
+import {
+  addToast,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Textarea
+} from '@heroui/react'
 import { Send } from 'lucide-react'
 
 import { CommentPreview } from '@/components/ui/MemePreview'
@@ -61,7 +68,10 @@ export const PublishComment = ({
     setTimeout(() => {
       if (textareaRef.current) {
         textareaRef.current.focus()
-        textareaRef.current.setSelectionRange(newCursorPosition, newCursorPosition)
+        textareaRef.current.setSelectionRange(
+          newCursorPosition,
+          newCursorPosition
+        )
       }
     }, 0)
   }
@@ -130,7 +140,9 @@ export const PublishComment = ({
             onKeyUp={handleCursorChange}
             isDisabled={loading || !isLoggedIn}
             maxLength={10000}
-            placeholder={isLoggedIn ? "请输入您的评论..." : "请先登录后再发表评论"}
+            placeholder={
+              isLoggedIn ? '请输入您的评论...' : '请先登录后再发表评论'
+            }
           />
           <CommentPreview text={content} />
         </div>

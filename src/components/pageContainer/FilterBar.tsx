@@ -15,7 +15,13 @@ import {
   Select,
   SelectItem
 } from '@heroui/react'
-import { ArrowDownAZ, ArrowUpAZ, ChevronDown, ChevronUp, Filter } from 'lucide-react'
+import {
+  ArrowDownAZ,
+  ArrowUpAZ,
+  ChevronDown,
+  ChevronUp,
+  Filter
+} from 'lucide-react'
 
 import {
   ALL_SUPPORTED_LANGUAGE,
@@ -55,7 +61,8 @@ export const FilterBar = ({
   setPage
 }: Props) => {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
-  const hasActiveFilters = selectedLanguage !== 'all' || selectedStatus !== 'all'
+  const hasActiveFilters =
+    selectedLanguage !== 'all' || selectedStatus !== 'all'
 
   return (
     <Card className="w-full border border-default-100 bg-content1/50 backdrop-blur-lg">

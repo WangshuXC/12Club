@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { verifyHeaderCookie } from '@/middleware/_verifyHeaderCookie'
-import {
-  ParsePutBody,
-} from '@/utils/parseQuery'
-import {
-  adminUpdateAnnouncementSchema,
-} from '@/validations/admin'
+import { ParsePutBody } from '@/utils/parseQuery'
+import { adminUpdateAnnouncementSchema } from '@/validations/admin'
 
 import { deleteAnnouncement } from '../delete'
 import { updateAnnouncement } from '../update'
 
-export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const PUT = async (
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) => {
   const announcementId = parseInt(params.id)
   if (isNaN(announcementId)) {
     return NextResponse.json({ message: '无效的公告ID', status: 400 })
@@ -28,12 +27,15 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   }
 
   if (payload.role < 3) {
-    return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
+    return NextResponse.json({
+      message: '权限不足，仅管理员可操作',
+      status: 403
+    })
   }
 
   // 确保ID匹配
   const updateInput = { ...input, id: announcementId }
-  
+
   const response = await updateAnnouncement(updateInput)
   if (typeof response === 'string') {
     return NextResponse.json({ message: response, status: 500 })
@@ -42,7 +44,10 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
   return NextResponse.json({ ...response, status: 200 })
 }
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = async (
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) => {
   const announcementId = parseInt(params.id)
   if (isNaN(announcementId)) {
     return NextResponse.json({ message: '无效的公告ID', status: 400 })
@@ -54,7 +59,10 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
   }
 
   if (payload.role < 3) {
-    return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
+    return NextResponse.json({
+      message: '权限不足，仅管理员可操作',
+      status: 403
+    })
   }
 
   const response = await deleteAnnouncement({ id: announcementId })
@@ -63,4 +71,4 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
   }
 
   return NextResponse.json({ ...response, status: 200 })
-} 
+}

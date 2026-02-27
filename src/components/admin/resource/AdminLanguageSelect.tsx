@@ -44,4 +44,4 @@ export const AdminLanguageSelect = ({ language, onChange, errors }: Props) => {
       </p>
     </div>
   )
-} 
+}

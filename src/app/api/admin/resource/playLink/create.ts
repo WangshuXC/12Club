@@ -85,11 +85,11 @@ export const createResourcePlayLink = async (
     }
   } catch (error) {
     console.error('创建播放链接失败:', error)
-    
+
     // 处理特定的 Prisma 错误
     if (error && typeof error === 'object' && 'code' in error) {
       const prismaError = error as { code: string; meta?: any }
-      
+
       if (prismaError.code === 'P2002') {
         // 唯一约束违反
         if (prismaError.meta?.target?.includes('id')) {
@@ -104,7 +104,7 @@ export const createResourcePlayLink = async (
           }
         }
       }
-      
+
       if (prismaError.code === 'P2003') {
         return {
           success: false,
@@ -112,10 +112,11 @@ export const createResourcePlayLink = async (
         }
       }
     }
-    
+
     return {
       success: false,
-      message: error instanceof Error ? error.message : '创建播放链接时发生未知错误'
+      message:
+        error instanceof Error ? error.message : '创建播放链接时发生未知错误'
     }
   }
-} 
+}

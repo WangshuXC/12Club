@@ -56,9 +56,13 @@ export const ResourcePlayLinkDelete = ({ resource, onDelete }: Props) => {
               <p>确定要删除以下播放链接吗？</p>
               <div className="bg-danger-50 p-4 rounded-lg">
                 <p className="font-medium">
-                  集数：{resource.show_accordion || `第 ${resource.accordion} 集`}
+                  集数：
+                  {resource.show_accordion || `第 ${resource.accordion} 集`}
                 </p>
-                <p className="text-sm text-default-600 truncate" title={resource.link}>
+                <p
+                  className="text-sm text-default-600 truncate"
+                  title={resource.link}
+                >
                   链接：{resource.link}
                 </p>
               </div>
@@ -66,18 +70,10 @@ export const ResourcePlayLinkDelete = ({ resource, onDelete }: Props) => {
             </div>
           </ModalBody>
           <ModalFooter>
-            <Button
-              variant="light"
-              onPress={onClose}
-              isDisabled={loading}
-            >
+            <Button variant="light" onPress={onClose} isDisabled={loading}>
               取消
             </Button>
-            <Button
-              color="danger"
-              onPress={handleDelete}
-              isLoading={loading}
-            >
+            <Button color="danger" onPress={handleDelete} isLoading={loading}>
               确认删除
             </Button>
           </ModalFooter>
@@ -85,4 +81,4 @@ export const ResourcePlayLinkDelete = ({ resource, onDelete }: Props) => {
       </Modal>
     </>
   )
-} 
+}

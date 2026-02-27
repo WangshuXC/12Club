@@ -77,7 +77,16 @@ export const DetailStatus = ({
   )
 }
 
-export const DetailCover = ({ setSelected, coverData, dbId, isFavorite, view, download, comment, favorited }: DetailCoverProps) => {
+export const DetailCover = ({
+  setSelected,
+  coverData,
+  dbId,
+  isFavorite,
+  view,
+  download,
+  comment,
+  favorited
+}: DetailCoverProps) => {
   const { title, author, image, translator } = coverData
   const [imageError, setImageError] = useState(false)
 
@@ -110,7 +119,10 @@ export const DetailCover = ({ setSelected, coverData, dbId, isFavorite, view, do
             <p className="text-tiny md:text-md text-gray-500 dark:text-gray-300">
               {translator}
             </p>
-            <DetailStatus data={{ view, download, comment, favorited }} className="mt-2" />
+            <DetailStatus
+              data={{ view, download, comment, favorited }}
+              className="mt-2"
+            />
           </div>
 
           <div className="hidden w-fit p-2 xl:block bg-background/80 dark:bg-default-100/50 z-10 rounded-xl">

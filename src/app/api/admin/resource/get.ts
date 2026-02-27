@@ -7,7 +7,7 @@ import { prisma } from '../../../../../prisma'
 import type { AdminResource } from '@/types/api/admin'
 
 export const getResource = async (
-  input: z.infer<typeof adminGetResourceSchema>,
+  input: z.infer<typeof adminGetResourceSchema>
 ) => {
   const { page, limit, search, sortField, sortOrder, types } = input
   const offset = (page - 1) * limit
@@ -48,7 +48,7 @@ export const getResource = async (
   // 添加类型过滤条件
   if (types && types.length > 0) {
     whereConditions.push({
-      OR: types.map(type => ({
+      OR: types.map((type) => ({
         db_id: {
           startsWith: type
         }
@@ -57,11 +57,12 @@ export const getResource = async (
   }
 
   // 构建最终的 where 条件
-  const where = whereConditions.length > 0
-    ? whereConditions.length === 1
-      ? whereConditions[0]
-      : { AND: whereConditions }
-    : {}
+  const where =
+    whereConditions.length > 0
+      ? whereConditions.length === 1
+        ? whereConditions[0]
+        : { AND: whereConditions }
+      : {}
 
   // 构建排序条件
   let orderBy: any = {}
@@ -101,7 +102,7 @@ export const getResource = async (
           },
           favorite_folders: {
             select: {
-              id: true,
+              id: true
             }
           },
           tag_relations: {
@@ -131,17 +132,18 @@ export const getResource = async (
       introduction: resource.introduction,
       released: resource.released,
       accordionTotal: resource.accordion_total,
-      language: Array.isArray(resource.language) && resource.language.length > 0
-        ? resource.language[0]
-        : 'other', // 安全地取第一个语言作为主语言
+      language:
+        Array.isArray(resource.language) && resource.language.length > 0
+          ? resource.language[0]
+          : 'other', // 安全地取第一个语言作为主语言
       type: resource.type,
       status: resource.status,
       download: resource.download,
       view: resource.view,
       comment: resource.comment,
       favorite_by: resource.favorite_folders.length,
-      aliases: resource.aliases?.map(alias => alias.name) || [], // 转换为字符串数组
-      tags: resource.tag_relations?.map(relation => relation.tag.name) || [] // 转换为字符串数组
+      aliases: resource.aliases?.map((alias) => alias.name) || [], // 转换为字符串数组
+      tags: resource.tag_relations?.map((relation) => relation.tag.name) || [] // 转换为字符串数组
     }))
 
     return { resources, total }
@@ -149,4 +151,4 @@ export const getResource = async (
     console.error('获取资源列表失败:', error)
     return error instanceof Error ? error.message : '获取资源列表时发生未知错误'
   }
-} 
+}

@@ -7,8 +7,8 @@ import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 import type { Announcement } from '@/types/api/announcement'
 
 interface Props {
-    announcements: Announcement[]
-    currentSlide: number
+  announcements: Announcement[]
+  currentSlide: number
 }
 
 export const AnnouncementCard = ({ announcements, currentSlide }: Props) => {
@@ -18,7 +18,9 @@ export const AnnouncementCard = ({ announcements, currentSlide }: Props) => {
     <div className="h-full group">
       <Card className="absolute border-none top-0 bottom-4 left-4 right-4 backdrop-blur-md p-4">
         <CardHeader>
-          <p className="text-2xl text-primary font-bold">{announcement.title}</p>
+          <p className="text-2xl text-primary font-bold">
+            {announcement.title}
+          </p>
         </CardHeader>
         <CardBody>
           <div className="h-full flex flex-col justify-between">

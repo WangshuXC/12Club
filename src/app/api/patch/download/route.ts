@@ -31,8 +31,8 @@ export const downloadStats = async (
       // 更新资源下载数
       await tx.resource.update({
         where: { id: input.resourceId },
-        data: { 
-          download: currentResource.download + 1, 
+        data: {
+          download: currentResource.download + 1,
           updated: currentResource.updated
         }
       })

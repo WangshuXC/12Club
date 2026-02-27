@@ -1,6 +1,7 @@
 // ************* Core ESLint Rules ************
 const commonCoreRules = {
-  indent: ['error', 2], // 强制使用两个空格进行缩进
+  // 注意：indent 规则由 Prettier 处理，这里关闭以避免冲突
+  // indent: ['error', 2],
   'object-curly-spacing': ['error', 'always'], // 强制在对象字面量的大括号内使用空格
   eqeqeq: ['error', 'always'], // 要求使用全等（===）和非全等（!==）运算符
   'no-empty': 'error', // 禁止出现空的代码块
@@ -104,7 +105,7 @@ const commonCoreRules = {
       selector: 'WithStatement',
       message:
         '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.'
-    },
+    }
   ]
 }
 

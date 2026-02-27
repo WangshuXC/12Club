@@ -28,8 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { coverData, introduce } = resource
   const title = coverData.title
   const description =
-    introduce.text?.slice(0, 160) ||
-    `${title} - 在 12Club 观看和下载此动漫资源`
+    introduce.text?.slice(0, 160) || `${title} - 在 12Club 观看和下载此动漫资源`
 
   return {
     title,
@@ -72,7 +71,14 @@ export default async function Page({ params }: Props) {
 
   if (useAnimeLayout) {
     // 有播放链接且是PC设备时使用AnimeContainer（B站风格布局）
-    return <AnimeContainer id={id} introduce={introduce} coverData={coverData} series={series} />
+    return (
+      <AnimeContainer
+        id={id}
+        introduce={introduce}
+        coverData={coverData}
+        series={series}
+      />
+    )
   } else {
     // 无播放链接或移动设备时使用原有的DetailContainer布局
     return (

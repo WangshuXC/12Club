@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
       },
       orderBy: [
         { count: 'desc' }, // 优先显示资源数量多的标签
-        { name: 'asc' }    // 同数量按名称排序
+        { name: 'asc' } // 同数量按名称排序
       ],
       take: 10 // 最多返回10个结果
     })
@@ -42,11 +42,11 @@ export async function GET(req: NextRequest) {
     console.error('搜索标签失败:', error)
     return Response.json(
       {
-        error: error instanceof Error ? error.message : '搜索标签时发生未知错误',
+        error:
+          error instanceof Error ? error.message : '搜索标签时发生未知错误',
         status: 500
       },
       { status: 500 }
     )
   }
 }
-

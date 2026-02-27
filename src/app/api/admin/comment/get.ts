@@ -15,23 +15,23 @@ export const getComment = async (
 
   const where = search
     ? {
-      OR: [
-        {
-          content: {
-            contains: search,
-            mode: 'insensitive' as const
-          }
-        },
-        {
-          user: {
-            name: {
+        OR: [
+          {
+            content: {
               contains: search,
               mode: 'insensitive' as const
             }
+          },
+          {
+            user: {
+              name: {
+                contains: search,
+                mode: 'insensitive' as const
+              }
+            }
           }
-        }
-      ]
-    }
+        ]
+      }
     : {}
 
   const [data, total] = await Promise.all([

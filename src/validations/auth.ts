@@ -65,16 +65,21 @@ const baseRegisterSchema = z.object({
   confirmPassword: z.string().trim()
 })
 
-export const registerSchema = baseRegisterSchema.refine((data) => data.password === data.confirmPassword, {
-  message: '密码和确认密码不一致',
-  path: ['confirmPassword']
-})
+export const registerSchema = baseRegisterSchema.refine(
+  (data) => data.password === data.confirmPassword,
+  {
+    message: '密码和确认密码不一致',
+    path: ['confirmPassword']
+  }
+)
 
-export const backendRegisterSchema = baseRegisterSchema.extend({
-  password: z
-    .string()
-    .regex(/^[0-9a-f]{32}:[0-9a-f]{64}$/, { message: '密码哈希格式非法' })
-}).omit({ confirmPassword: true })
+export const backendRegisterSchema = baseRegisterSchema
+  .extend({
+    password: z
+      .string()
+      .regex(/^[0-9a-f]{32}:[0-9a-f]{64}$/, { message: '密码哈希格式非法' })
+  })
+  .omit({ confirmPassword: true })
 
 export const sendRegisterEmailVerificationCodeSchema = z.object({
   name: z.string().regex(UsernameRegex, {

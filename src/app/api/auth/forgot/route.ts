@@ -32,7 +32,7 @@ export const GET = async (req: NextRequest) => {
     const search = searchParams.get('search') || undefined
 
     const response = await getResetCodes({ page, limit, search })
-    
+
     if (typeof response === 'string') {
       return NextResponse.json(
         {
@@ -80,7 +80,7 @@ export const DELETE = async (req: NextRequest) => {
     }
 
     const response = await deleteResetCode(parseInt(id))
-    
+
     if (!response.success) {
       return NextResponse.json(
         {

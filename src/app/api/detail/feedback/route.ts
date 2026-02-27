@@ -36,14 +36,14 @@ export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json()
     const result = createResourceFeedbackSchema.safeParse(body)
-    
+
     // 如果验证失败，返回第一个错误的message
     if (!result.success) {
       const firstError = result.error.issues[0]
 
       return NextResponse.json(firstError.message)
     }
-    
+
     const payload = await verifyHeaderCookie(req)
     if (!payload) {
       return NextResponse.json('用户未登录')

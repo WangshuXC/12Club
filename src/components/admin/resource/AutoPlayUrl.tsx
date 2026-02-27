@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 import {
   Modal,
@@ -18,17 +18,23 @@ import {
   TableRow,
   TableCell,
   Chip
-} from "@heroui/react";
+} from '@heroui/react'
 import { Edit2, ExternalLink } from 'lucide-react'
 
-import { FetchGet } from "@/utils/fetch";
-import { getResourceTypeByDbId } from "@/utils/router"
+import { FetchGet } from '@/utils/fetch'
+import { getResourceTypeByDbId } from '@/utils/router'
 
-import type { AdminResource } from "@/types/api/admin"
+import type { AdminResource } from '@/types/api/admin'
 
-export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResource, setNeedUpdate: (needUpdate: boolean) => void }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [linkList, setLinkList] = useState<string[]>([]);
+export function AutoPlayUrl({
+  resource,
+  setNeedUpdate
+}: {
+  resource: AdminResource
+  setNeedUpdate: (needUpdate: boolean) => void
+}) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
+  const [linkList, setLinkList] = useState<string[]>([])
   const isAnime = getResourceTypeByDbId(resource.dbId) === 'anime'
 
   const removeHttpPrefix = (url: string) => {
@@ -37,26 +43,26 @@ export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResour
 
   const fetchDetailData = async () => {
     const response = await FetchGet<{
-            data: string[]
-        }>('/admin/resource/autoCreate', {
-          dbId: resource.dbId
-        })
+      data: string[]
+    }>('/admin/resource/autoCreate', {
+      dbId: resource.dbId
+    })
 
     const fileList = response.data
 
     setLinkList(fileList)
-  };
+  }
 
   useEffect(() => {
     fetchDetailData()
   }, [])
 
-  const createPlayLink = async (onClose: () => void = () => { }) => {
+  const createPlayLink = async (onClose: () => void = () => {}) => {
     try {
       const response = await fetch('/api/admin/resource/autoCreate', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           resourceId: resource.id,
@@ -95,7 +101,7 @@ export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResour
   return (
     <>
       <Button
-        color={"success"}
+        color={'success'}
         onPress={async () => {
           if (isAnime) {
             await fetchDetailData()
@@ -103,17 +109,25 @@ export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResour
           } else {
             createPlayLink()
           }
-        }}>
+        }}
+      >
         {isAnime ? '自动填写播放链接与官方资源' : '自动填写官方资源'}
       </Button>
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} scrollBehavior="inside" size="3xl">
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        scrollBehavior="inside"
+        size="3xl"
+      >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">二次确认</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                二次确认
+              </ModalHeader>
               <ModalBody>
-                                请确保数据openlist对应的文件夹下添加了资源，并且资源名称升序排列和集数对应
+                请确保数据openlist对应的文件夹下添加了资源，并且资源名称升序排列和集数对应
                 <Table aria-label="播放链接列表">
                   <TableHeader>
                     <TableColumn width={100}>集数序号</TableColumn>
@@ -149,10 +163,10 @@ export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResour
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
-                                    取消
+                  取消
                 </Button>
                 <Button color="primary" onPress={() => createPlayLink(onClose)}>
-                                    确认
+                  确认
                 </Button>
               </ModalFooter>
             </>
@@ -160,5 +174,5 @@ export function AutoPlayUrl({ resource, setNeedUpdate }: { resource: AdminResour
         </ModalContent>
       </Modal>
     </>
-  );
+  )
 }

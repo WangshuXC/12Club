@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react'
 
-import { addToast, Button, NavbarContent, NavbarItem, Skeleton } from '@heroui/react'
+import {
+  addToast,
+  Button,
+  NavbarContent,
+  NavbarItem,
+  Skeleton
+} from '@heroui/react'
 import Link from 'next/link'
 import { useRouter } from 'next-nprogress-bar'
 
@@ -44,13 +50,10 @@ export const TopBarUser = () => {
         router.push('/login')
       } else {
         setUser(user)
-        window?.umami?.identify(
-          user.uid.toString(),
-          {
-            name: user.name,
-            email: user.email,
-          }
-        )
+        window?.umami?.identify(user.uid.toString(), {
+          name: user.name,
+          email: user.email
+        })
       }
     }
 

@@ -11,13 +11,13 @@ import { useCreateResourceStore } from '@/store/editStore'
 import { FetchGet } from '@/utils/fetch'
 
 interface Props {
-    errors: string | undefined
+  errors: string | undefined
 }
 
 interface TagSuggestion {
-    id: number
-    name: string
-    count: number
+  id: number
+  name: string
+  count: number
 }
 
 export const TagInput = ({ errors }: Props) => {
@@ -43,10 +43,9 @@ export const TagInput = ({ errors }: Props) => {
       setIsSearching(true)
 
       try {
-        const response = await FetchGet<{ data: TagSuggestion[] }>(
-          '/tag',
-          { search: debouncedSearch.trim() }
-        )
+        const response = await FetchGet<{ data: TagSuggestion[] }>('/tag', {
+          search: debouncedSearch.trim()
+        })
 
         if (response.data) {
           // 过滤掉已经添加的标签
@@ -104,7 +103,7 @@ export const TagInput = ({ errors }: Props) => {
 
     return (
       <>
-        {parts.map((part, index) => (
+        {parts.map((part, index) =>
           part.toLowerCase() === keyword.toLowerCase() ? (
             <span key={index} className="text-primary font-semibold">
               {part}
@@ -112,7 +111,7 @@ export const TagInput = ({ errors }: Props) => {
           ) : (
             <span key={index}>{part}</span>
           )
-        ))}
+        )}
       </>
     )
   }
@@ -124,7 +123,11 @@ export const TagInput = ({ errors }: Props) => {
         <div className="flex gap-2">
           <Input
             labelPlacement="outside"
-            placeholder={data.tag.length > 0 ? `已添加${data.tag.length}个标签` : '输入关键词搜索或创建标签'}
+            placeholder={
+              data.tag.length > 0
+                ? `已添加${data.tag.length}个标签`
+                : '输入关键词搜索或创建标签'
+            }
             value={newTag}
             onChange={(e) => setNewTag(e.target.value)}
             className="flex-1"
@@ -136,11 +139,7 @@ export const TagInput = ({ errors }: Props) => {
                 addTag()
               }
             }}
-            endContent={
-              isSearching && (
-                <Spinner size="sm" color="primary" />
-              )
-            }
+            endContent={isSearching && <Spinner size="sm" color="primary" />}
           />
           <Button
             color="primary"
@@ -176,7 +175,8 @@ export const TagInput = ({ errors }: Props) => {
       </div>
 
       <p className="text-sm text-default-500">
-                为资源添加标签，便于分类和检索。输入关键词可搜索已有标签，或直接创建新标签。例如: 校园、恋爱、百合、治愈等。
+        为资源添加标签，便于分类和检索。输入关键词可搜索已有标签，或直接创建新标签。例如:
+        校园、恋爱、百合、治愈等。
       </p>
 
       <div className="flex flex-wrap gap-2 mt-2">
@@ -195,4 +195,3 @@ export const TagInput = ({ errors }: Props) => {
     </div>
   )
 }
-

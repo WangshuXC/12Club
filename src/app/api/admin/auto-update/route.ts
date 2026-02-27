@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
-import { ParseGetQuery, ParsePostBody, ParseDeleteQuery } from '@/utils/parseQuery'
+import {
+  ParseGetQuery,
+  ParsePostBody,
+  ParseDeleteQuery
+} from '@/utils/parseQuery'
 import { adminPaginationSchema } from '@/validations/admin'
 
 import { prisma } from '../../../../../prisma'
@@ -17,10 +21,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json(
-      { error: '本页面仅管理员可访问' },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: '本页面仅管理员可访问' }, { status: 403 })
   }
 
   const query = ParseGetQuery(req, adminPaginationSchema)
@@ -48,10 +49,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json(
-      { error: '本页面仅管理员可访问' },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: '本页面仅管理员可访问' }, { status: 403 })
   }
 
   const body = await ParsePostBody(req, addAutoUpdateSchema)
@@ -75,7 +73,10 @@ export async function POST(req: NextRequest) {
     })
 
     if (existing) {
-      return NextResponse.json({ error: '该资源已在自动更新列表中' }, { status: 400 })
+      return NextResponse.json(
+        { error: '该资源已在自动更新列表中' },
+        { status: 400 }
+      )
     }
 
     // 创建自动更新记录
@@ -113,10 +114,7 @@ export async function DELETE(req: NextRequest) {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json(
-      { error: '本页面仅管理员可访问' },
-      { status: 403 }
-    )
+    return NextResponse.json({ error: '本页面仅管理员可访问' }, { status: 403 })
   }
 
   const query = ParseDeleteQuery(req, deleteAutoUpdateSchema)
@@ -141,4 +139,3 @@ export async function DELETE(req: NextRequest) {
     )
   }
 }
-

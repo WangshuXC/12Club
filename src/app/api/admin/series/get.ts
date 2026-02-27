@@ -36,11 +36,12 @@ export const getSeries = async (
   }
 
   // 构建最终的 where 条件
-  const where = whereConditions.length > 0
-    ? whereConditions.length === 1
-      ? whereConditions[0]
-      : { AND: whereConditions }
-    : {}
+  const where =
+    whereConditions.length > 0
+      ? whereConditions.length === 1
+        ? whereConditions[0]
+        : { AND: whereConditions }
+      : {}
 
   // 构建排序条件
   let orderBy: any = {}
@@ -107,7 +108,7 @@ export const getSeries = async (
       updated: item.updated,
       user: item.user,
       resourceCount: item.resources.length,
-      resources: item.resources.map(rel => ({
+      resources: item.resources.map((rel) => ({
         id: rel.resource.id,
         dbId: rel.resource.db_id,
         name: rel.resource.name,

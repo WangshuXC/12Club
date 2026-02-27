@@ -50,8 +50,13 @@ export const ForgotForm = () => {
     setLoading(true)
 
     try {
-      const formData = hasResetCode ? resetForm.getValues() : requestForm.getValues()
-      const res = await FetchPost<UserState>(hasResetCode ? '/auth/reset' : '/auth/forgot', formData)
+      const formData = hasResetCode
+        ? resetForm.getValues()
+        : requestForm.getValues()
+      const res = await FetchPost<UserState>(
+        hasResetCode ? '/auth/reset' : '/auth/forgot',
+        formData
+      )
 
       ErrorHandler(res, (value) => {
         setUser(value)
@@ -224,25 +229,23 @@ export const ForgotForm = () => {
         {hasResetCode ? '修改密码' : '申请重置密码'}
       </Button>
 
-      {
-        !hasResetCode && (
-          <div className="flex items-center mt-4">
-            <span className="mr-2">已有重置码?</span>
-            <span
-              className="text-primary cursor-pointer"
-              onClick={() => {
-                // 获取当前表单的值并设置到重置表单中
-                const currentValues = requestForm.getValues()
-                resetForm.setValue('name', currentValues.name)
-                resetForm.setValue('email', currentValues.email)
-                setHasResetCode(true)
-              }}
-            >
-              修改密码
-            </span>
-          </div>
-        )
-      }
+      {!hasResetCode && (
+        <div className="flex items-center mt-4">
+          <span className="mr-2">已有重置码?</span>
+          <span
+            className="text-primary cursor-pointer"
+            onClick={() => {
+              // 获取当前表单的值并设置到重置表单中
+              const currentValues = requestForm.getValues()
+              resetForm.setValue('name', currentValues.name)
+              resetForm.setValue('email', currentValues.email)
+              setHasResetCode(true)
+            }}
+          >
+            修改密码
+          </span>
+        </div>
+      )}
     </form>
   )
 }

@@ -31,4 +31,4 @@ export const deleteAnnouncement = async (
     console.error('删除公告失败:', error)
     return '删除公告失败'
   }
-} 
+}

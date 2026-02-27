@@ -8,7 +8,7 @@ import {
   DrawerHeader,
   DrawerBody,
   useDisclosure
-} from "@heroui/react"
+} from '@heroui/react'
 import { ChevronRight } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { Link } from 'next-view-transitions'

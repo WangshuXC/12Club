@@ -112,11 +112,7 @@ export const Series = ({
     }
 
     params.set('page', '1')
-    window.history.replaceState(
-      {},
-      '',
-      `${window.location.pathname}?${params}`
-    )
+    window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
   }, [])
 
   // 分页处理
@@ -126,11 +122,7 @@ export const Series = ({
     // 更新URL
     const params = new URLSearchParams(window.location.search)
     params.set('page', newPage.toString())
-    window.history.replaceState(
-      {},
-      '',
-      `${window.location.pathname}?${params}`
-    )
+    window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
   }, [])
 
   // 排序处理
@@ -145,11 +137,7 @@ export const Series = ({
     params.set('sortField', sortField)
     params.set('sortOrder', sortOrder)
     params.set('page', '1')
-    window.history.replaceState(
-      {},
-      '',
-      `${window.location.pathname}?${params}`
-    )
+    window.history.replaceState({}, '', `${window.location.pathname}?${params}`)
   }, [])
 
   // 编辑系列

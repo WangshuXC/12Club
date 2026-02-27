@@ -37,7 +37,7 @@ export const getFeedback = async (
               }
             }
           }
-        },
+        }
       },
       orderBy: { created: 'desc' },
       skip: offset,

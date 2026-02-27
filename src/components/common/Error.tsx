@@ -71,4 +71,4 @@ export const ErrorComponent = ({
       </Card>
     </div>
   )
-} 
+}

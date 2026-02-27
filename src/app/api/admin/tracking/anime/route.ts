@@ -48,20 +48,17 @@ export async function GET(req: NextRequest) {
 
     // 按动漫 ID 分组统计
     const animeStatsMap = new Map<
-            string,
-            {
-                dbid: string
-                playCount: number
-                uniqueVisitors: Set<number>
-                accordionStats: Map<string, number>
-            }
-        >()
+      string,
+      {
+        dbid: string
+        playCount: number
+        uniqueVisitors: Set<number>
+        accordionStats: Map<string, number>
+      }
+    >()
 
     animeEvents.forEach((event) => {
-      const extraData = event.extra_data as Record<
-                string,
-                unknown
-            > | null
+      const extraData = event.extra_data as Record<string, unknown> | null
       if (!extraData) return
 
       const dbid = String(extraData['dbid'] || '')
@@ -90,7 +87,7 @@ export async function GET(req: NextRequest) {
 
       stats.accordionStats.set(
         accordion,
-                stats.accordionStats.get(accordion)! + 1
+        stats.accordionStats.get(accordion)! + 1
       )
     })
 
@@ -130,10 +127,7 @@ export async function GET(req: NextRequest) {
               accordion: acc,
               playCount: count
             }))
-            .sort(
-              (a, b) =>
-                parseInt(a.accordion) - parseInt(b.accordion)
-            )
+            .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
         }
       })
       .sort((a, b) => b.playCount - a.playCount)

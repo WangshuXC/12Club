@@ -19,21 +19,21 @@ export const ADMIN_WEBSITES_DATA = [
   {
     name: 'OpenList',
     url: 'http://12club.nankai.edu.cn/openlist',
-    description: '12Club 资源存放网站',
+    description: '12Club 资源存放网站'
   },
   {
     name: 'Beszel',
     url: 'http://12club.nankai.edu.cn:8090',
-    description: '12Club 服务器性能监控',
+    description: '12Club 服务器性能监控'
   },
   {
     name: 'Umami',
     url: 'http://12club.nankai.edu.cn:3000',
-    description: '12Club 网站统计',
+    description: '12Club 网站统计'
   },
   {
     name: 'Uptime-Kuma',
     url: 'http://12club.nankai.edu.cn:3001',
-    description: '12Club 服务器依赖监控',
+    description: '12Club 服务器依赖监控'
   }
 ]

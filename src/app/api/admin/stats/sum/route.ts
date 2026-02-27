@@ -7,17 +7,13 @@ import { prisma } from '../../../../../../prisma'
 import type { SumData } from '@/types/api/admin'
 
 export const getSumData = async (): Promise<SumData> => {
-  const [
-    userCount,
-    resourceCount,
-    resourcePatchCount,
-    commentCount
-  ] = await Promise.all([
-    prisma.user.count(),
-    prisma.resource.count(),
-    prisma.resourcePatch.count(),
-    prisma.resourceComment.count()
-  ])
+  const [userCount, resourceCount, resourcePatchCount, commentCount] =
+    await Promise.all([
+      prisma.user.count(),
+      prisma.resource.count(),
+      prisma.resourcePatch.count(),
+      prisma.resourceComment.count()
+    ])
 
   return {
     userCount,
@@ -40,4 +36,4 @@ export const GET = async (req: NextRequest) => {
   const data = await getSumData()
 
   return NextResponse.json(data)
-} 
+}

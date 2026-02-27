@@ -2,16 +2,22 @@
 
 import { useState } from 'react'
 
-import { Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow } from '@heroui/react'
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  ScrollShadow
+} from '@heroui/react'
 import { Smile } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { getMemeList, type MemeItem } from '@/utils/memeUtils'
 
 interface MemeSelectorProps {
-    onMemeSelect: (meme: MemeItem) => void
-    isDisabled?: boolean
-    className?: string
+  onMemeSelect: (meme: MemeItem) => void
+  isDisabled?: boolean
+  className?: string
 }
 
 export const MemeSelector = ({
@@ -44,7 +50,10 @@ export const MemeSelector = ({
       <PopoverContent className="p-2 max-w-[calc(100vw-2rem)]">
         <div className="w-full max-w-80 min-w-48">
           <div className="text-sm font-medium mb-2 px-1">选择表情</div>
-          <ScrollShadow hideScrollBar className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-60 p-1 overflow-y-auto">
+          <ScrollShadow
+            hideScrollBar
+            className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-60 p-1 overflow-y-auto"
+          >
             {memeList.map((meme) => (
               <button
                 key={meme.name}
@@ -70,4 +79,4 @@ export const MemeSelector = ({
       </PopoverContent>
     </Popover>
   )
-} 
+}

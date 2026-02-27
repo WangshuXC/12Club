@@ -37,7 +37,7 @@ export const getReport = async (
               }
             }
           }
-        },
+        }
       },
       orderBy: { created: 'desc' },
       skip: offset,

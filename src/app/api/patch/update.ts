@@ -37,7 +37,7 @@ export const updatePatchResource = async (
 
     // 更新patch
     const patchData = await prisma.resourcePatch.update({
-      where: { 
+      where: {
         id: currentPatch.id,
         user_id: resourceUserUid
       },

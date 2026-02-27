@@ -5,21 +5,21 @@ import { adminPaginationSchema } from '@/validations/admin'
 import { prisma } from '../../../../../prisma'
 
 export interface AutoUpdateResource {
+  id: number
+  resourceId: number
+  resourceName: string
+  resourceDbId: string
+  resourceBanner: string
+  status: number
+  lastUpdateTime: Date | null
+  accordionTotal: number
+  created: Date
+  updated: Date
+  user: {
     id: number
-    resourceId: number
-    resourceName: string
-    resourceDbId: string
-    resourceBanner: string
-    status: number
-    lastUpdateTime: Date | null
-    accordionTotal: number
-    created: Date
-    updated: Date
-    user: {
-        id: number
-        name: string
-        avatar: string | null
-    }
+    name: string
+    avatar: string | null
+  }
 }
 
 export const getAutoUpdateResources = async (
@@ -64,11 +64,11 @@ export const getAutoUpdateResources = async (
 
   // 构建最终的 where 条件
   const resourceWhere =
-        resourceWhereConditions.length > 0
-          ? resourceWhereConditions.length === 1
-            ? resourceWhereConditions[0]
-            : { AND: resourceWhereConditions }
-          : {}
+    resourceWhereConditions.length > 0
+      ? resourceWhereConditions.length === 1
+        ? resourceWhereConditions[0]
+        : { AND: resourceWhereConditions }
+      : {}
 
   try {
     const [data, total] = await Promise.all([
@@ -127,4 +127,3 @@ export const getAutoUpdateResources = async (
       : '获取自动更新资源列表时发生未知错误'
   }
 }
-

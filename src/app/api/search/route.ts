@@ -34,9 +34,8 @@ const searchData = async (input: z.infer<typeof searchSchema>) => {
     })
 
     // 如果没有选择任何分类，则搜索所有分类
-    const categoryCondition: Prisma.ResourceWhereInput = categoryConditions.length > 0
-      ? { OR: categoryConditions }
-      : {}
+    const categoryCondition: Prisma.ResourceWhereInput =
+      categoryConditions.length > 0 ? { OR: categoryConditions } : {}
 
     // 构建语言筛选条件
     const languageCondition: Prisma.ResourceWhereInput =
@@ -51,37 +50,42 @@ const searchData = async (input: z.infer<typeof searchSchema>) => {
         : {}
 
     // 构建内容搜索条件 - 对每个关键词构建搜索条件
-    const keywordSearchConditions: Prisma.ResourceWhereInput[] = query.map((keyword) => {
-      const fieldConditions: Prisma.ResourceWhereInput[] = [
-        { name: { contains: keyword, mode: Prisma.QueryMode.insensitive } }
-      ]
+    const keywordSearchConditions: Prisma.ResourceWhereInput[] = query.map(
+      (keyword) => {
+        const fieldConditions: Prisma.ResourceWhereInput[] = [
+          { name: { contains: keyword, mode: Prisma.QueryMode.insensitive } }
+        ]
 
-      //添加db_id搜索条件
-      fieldConditions.push({
-        db_id: { contains: keyword, mode: Prisma.QueryMode.insensitive }
-      })
-
-      // 动态添加简介搜索条件
-      if (searchOption.searchInIntroduction) {
+        //添加db_id搜索条件
         fieldConditions.push({
-          introduction: { contains: keyword, mode: Prisma.QueryMode.insensitive }
+          db_id: { contains: keyword, mode: Prisma.QueryMode.insensitive }
         })
-      }
 
-      // 动态添加别名搜索条件
-      if (searchOption.searchInAlias) {
-        fieldConditions.push({
-          aliases: {
-            some: {
-              name: { contains: keyword, mode: Prisma.QueryMode.insensitive }
+        // 动态添加简介搜索条件
+        if (searchOption.searchInIntroduction) {
+          fieldConditions.push({
+            introduction: {
+              contains: keyword,
+              mode: Prisma.QueryMode.insensitive
             }
-          }
-        })
-      }
+          })
+        }
 
-      // 对于每个关键词，使用OR连接不同字段的搜索条件
-      return { OR: fieldConditions }
-    })
+        // 动态添加别名搜索条件
+        if (searchOption.searchInAlias) {
+          fieldConditions.push({
+            aliases: {
+              some: {
+                name: { contains: keyword, mode: Prisma.QueryMode.insensitive }
+              }
+            }
+          })
+        }
+
+        // 对于每个关键词，使用OR连接不同字段的搜索条件
+        return { OR: fieldConditions }
+      }
+    )
 
     // 所有关键词必须都匹配（AND关系）
     const contentSearchCondition: Prisma.ResourceWhereInput = {

@@ -16,9 +16,14 @@ interface Props {
   handleClickDownloadNav: () => void
 }
 
-export const ButtonList = ({ name, dbId, isFavorite, handleClickDownloadNav }: Props) => {
+export const ButtonList = ({
+  name,
+  dbId,
+  isFavorite,
+  handleClickDownloadNav
+}: Props) => {
   const pathName = usePathname()
-  const user = useUserStore(state => state.user)
+  const user = useUserStore((state) => state.user)
   const router = useRouter()
 
   return (
@@ -54,8 +59,7 @@ export const ButtonList = ({ name, dbId, isFavorite, handleClickDownloadNav }: P
             <Pencil className="size-5" />
           </Button>
         </Tooltip>
-      ) : null
-      }
-    </div >
+      ) : null}
+    </div>
   )
 }

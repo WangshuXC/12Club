@@ -27,7 +27,7 @@ export const CommentLikeButton = ({ comment }: Props) => {
       addToast({
         title: '点赞失败',
         description: '请先登录后进行点赞',
-        color: 'danger',
+        color: 'danger'
       })
       return
     }
@@ -36,14 +36,14 @@ export const CommentLikeButton = ({ comment }: Props) => {
       addToast({
         title: '点赞失败',
         description: '不能给自己点赞',
-        color: 'danger',
+        color: 'danger'
       })
       return
     }
 
     setLoading(true)
     const res = await FetchPut<boolean>('/detail/comment/like', {
-      commentId: comment.id,
+      commentId: comment.id
     })
 
     setLoading(false)

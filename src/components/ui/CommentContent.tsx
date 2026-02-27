@@ -14,24 +14,24 @@ interface CommentContentProps {
 }
 
 function processHtmlContent(htmlString: string) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlString, 'text/html');
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(htmlString, 'text/html')
 
   // 遍历所有图片元素，替换为alt文本
-  const images = doc.querySelectorAll('img');
-  images.forEach(img => {
-    const alt = img.getAttribute('alt');
+  const images = doc.querySelectorAll('img')
+  images.forEach((img) => {
+    const alt = img.getAttribute('alt')
     if (alt && alt.trim() !== '') {
       // 创建文本节点替换img标签
-      const altTextNode = doc.createTextNode(`[${alt.replace(/\\"/g, '')}]`);
-      img.parentNode?.replaceChild(altTextNode, img);
+      const altTextNode = doc.createTextNode(`[${alt.replace(/\\"/g, '')}]`)
+      img.parentNode?.replaceChild(altTextNode, img)
     } else {
       // 如果没有alt文本，直接移除图片
-      img.remove();
+      img.remove()
     }
-  });
+  })
 
-  return doc.body.innerHTML;
+  return doc.body.innerHTML
 }
 
 export const CommentContent = ({

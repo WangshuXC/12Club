@@ -32,14 +32,18 @@ const columns = [
 ]
 
 interface Props {
-    initialResetCodes: ResetCode[]
-    initialTotal: number
-    initialStats: {
-        total: number
-    }
+  initialResetCodes: ResetCode[]
+  initialTotal: number
+  initialStats: {
+    total: number
+  }
 }
 
-export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props) => {
+export const Forgot = ({
+  initialResetCodes,
+  initialTotal,
+  initialStats
+}: Props) => {
   const [resetCodes, setResetCodes] = useState<ResetCode[]>(initialResetCodes)
   const [total, setTotal] = useState(initialTotal)
   const [stats, setStats] = useState(initialStats)
@@ -59,13 +63,13 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
       ...(debouncedQuery && { search: debouncedQuery })
     })
 
-    const { data }: any  = await FetchGet<{
-            resetCodes: ResetCode[]
-            total: number
-            stats: {
-                total: number
-            }
-        }>(`/auth/forgot?${params}`)
+    const { data }: any = await FetchGet<{
+      resetCodes: ResetCode[]
+      total: number
+      stats: {
+        total: number
+      }
+    }>(`/auth/forgot?${params}`)
 
     setLoading(false)
     setResetCodes(data.resetCodes)
@@ -88,9 +92,11 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
 
   // 删除重置码的回调函数
   const handleDeleteResetCode = (resetCodeId: number) => {
-    setResetCodes(prevCodes => prevCodes.filter(code => code.id !== resetCodeId))
-    setTotal(prevTotal => prevTotal - 1)
-    setStats(prevStats => ({
+    setResetCodes((prevCodes) =>
+      prevCodes.filter((code) => code.id !== resetCodeId)
+    )
+    setTotal((prevTotal) => prevTotal - 1)
+    setStats((prevStats) => ({
       ...prevStats,
       total: prevStats.total - 1
     }))
@@ -98,10 +104,16 @@ export const Forgot = ({ initialResetCodes, initialTotal, initialStats }: Props)
 
   // 更新状态的回调函数
   const handleUpdateStatus = (resetCodeId: number) => {
-    setResetCodes(prevCodes => prevCodes.map(code => code.id === resetCodeId ? {
-      ...code,
-      status: 1
-    } : code))
+    setResetCodes((prevCodes) =>
+      prevCodes.map((code) =>
+        code.id === resetCodeId
+          ? {
+              ...code,
+              status: 1
+            }
+          : code
+      )
+    )
   }
 
   return (

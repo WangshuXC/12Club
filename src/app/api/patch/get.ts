@@ -68,6 +68,8 @@ export const getPatchResource = async (
     return resources
   } catch (error) {
     console.error('获取patch列表失败:', error)
-    return error instanceof Error ? error.message : '获取patch列表时发生未知错误'
+    return error instanceof Error
+      ? error.message
+      : '获取patch列表时发生未知错误'
   }
 }

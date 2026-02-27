@@ -80,7 +80,8 @@ export const PublishButton = ({ setErrors }: Props) => {
     setCreating(true)
     addToast({
       title: '提示',
-      description: '正在发布中 ... 这可能需要 10s 左右的时间, 这取决于您的网络环境',
+      description:
+        '正在发布中 ... 这可能需要 10s 左右的时间, 这取决于您的网络环境',
       color: 'default'
     })
 

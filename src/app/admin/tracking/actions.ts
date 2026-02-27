@@ -8,7 +8,6 @@ import type {
   TrackingOverviewResult,
   TrackingPageStatsItem,
   TrackingAnimeStatsItem,
-  TrackingVisitorStatsItem,
   TrackingPaginationInfo,
   TrackingPaginationResult
 } from '@/types/api/tracking'
@@ -16,18 +15,18 @@ import type { Prisma } from '@prisma/client'
 
 // 定义带有事件计数的访客类型
 type VisitorWithEventsCount = Prisma.TrackingVisitorGetPayload<{
-    include: { _count: { select: { events: true } } }
+  include: { _count: { select: { events: true } } }
 }>
 
 // 定义动漫事件查询结果类型
 type AnimeEventSelect = Prisma.TrackingEventGetPayload<{
-    select: {
-        id: true
-        event_type: true
-        extra_data: true
-        timestamp: true
-        visitor_id: true
-    }
+  select: {
+    id: true
+    event_type: true
+    extra_data: true
+    timestamp: true
+    visitor_id: true
+  }
 }>
 
 // 重新导出类型供组件使用
@@ -37,23 +36,30 @@ export type PageStats = TrackingPageStatsItem
 
 export type AnimeStats = TrackingAnimeStatsItem
 
-export type VisitorStats = TrackingVisitorStatsItem & {
-    first_seen: string
-    last_seen: string
-    user: {
-        id: number
-        name: string
-        avatar: string
-        email: string
-    } | null
+// 重新定义完整的 VisitorStats 类型（序列化后日期为 string）
+export type VisitorStats = {
+  id: number
+  guid: string
+  user_id: number | null
+  user_agent: string
+  ip: string
+  first_seen: string // 序列化后为 ISO 字符串
+  last_seen: string // 序列化后为 ISO 字符串
+  events_count: number
+  user: {
+    id: number
+    name: string
+    avatar: string
+    email: string
+  } | null
 }
 
 export type PaginationInfo = TrackingPaginationInfo
 
 // 趋势数据类型
 export type TrendDataPoint = {
-    date: string
-    value: number
+  date: string
+  value: number
 }
 
 export type TrendType = 'visitors' | 'events' | 'pages' | 'plays'
@@ -285,14 +291,14 @@ export async function getAnimeStats(
     })
 
     const animeStatsMap = new Map<
-            string,
-            {
-                dbid: string
-                playCount: number
-                uniqueVisitors: Set<number>
-                accordionStats: Map<string, number>
-            }
-        >()
+      string,
+      {
+        dbid: string
+        playCount: number
+        uniqueVisitors: Set<number>
+        accordionStats: Map<string, number>
+      }
+    >()
 
     animeEvents.forEach((event: AnimeEventSelect) => {
       const extraData = event.extra_data as Record<string, unknown> | null
@@ -324,7 +330,7 @@ export async function getAnimeStats(
 
       stats.accordionStats.set(
         accordion,
-                stats.accordionStats.get(accordion)! + 1
+        stats.accordionStats.get(accordion)! + 1
       )
     })
 
@@ -363,10 +369,7 @@ export async function getAnimeStats(
               accordion: acc,
               playCount: count
             }))
-            .sort(
-              (a, b) =>
-                parseInt(a.accordion) - parseInt(b.accordion)
-            )
+            .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
         }
       })
       .sort((a, b) => b.playCount - a.playCount)
@@ -441,12 +444,13 @@ export async function getVisitorStats(
       .filter((id): id is number => id !== null)
 
     // 批量查询用户信息
-    const users = userIds.length > 0
-      ? await prisma.user.findMany({
-        where: { id: { in: userIds } },
-        select: { id: true, name: true, avatar: true, email: true }
-      })
-      : []
+    const users =
+      userIds.length > 0
+        ? await prisma.user.findMany({
+            where: { id: { in: userIds } },
+            select: { id: true, name: true, avatar: true, email: true }
+          })
+        : []
 
     // 创建用户ID到用户信息的映射
     const userMap = new Map(users.map((u) => [u.id, u]))
@@ -507,122 +511,122 @@ export async function getTrendData(
     let result: TrendDataPoint[] = []
 
     switch (type) {
-    case 'visitors': {
-      // 按天统计新访客数
-      const visitors = await prisma.trackingVisitor.findMany({
-        where: {
-          first_seen: {
-            gte: start,
-            lte: end
-          }
-        },
-        select: {
-          first_seen: true
-        }
-      })
-
-      const countMap = new Map<string, number>()
-      visitors.forEach((v) => {
-        const dateKey = v.first_seen.toISOString().split('T')[0]
-        countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-      })
-
-      result = dates.map((date) => ({
-        date,
-        value: countMap.get(date) || 0
-      }))
-      break
-    }
-
-    case 'events': {
-      // 按天统计事件数
-      const events = await prisma.trackingEvent.findMany({
-        where: {
-          timestamp: {
-            gte: start,
-            lte: end
-          }
-        },
-        select: {
-          timestamp: true
-        }
-      })
-
-      const countMap = new Map<string, number>()
-      events.forEach((e) => {
-        const dateKey = e.timestamp.toISOString().split('T')[0]
-        countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-      })
-
-      result = dates.map((date) => ({
-        date,
-        value: countMap.get(date) || 0
-      }))
-      break
-    }
-
-    case 'pages': {
-      // 按天统计独立页面访问数
-      const pageEvents = await prisma.trackingEvent.findMany({
-        where: {
-          timestamp: {
-            gte: start,
-            lte: end
+      case 'visitors': {
+        // 按天统计新访客数
+        const visitors = await prisma.trackingVisitor.findMany({
+          where: {
+            first_seen: {
+              gte: start,
+              lte: end
+            }
           },
-          event_type: 'expose'
-        },
-        select: {
-          timestamp: true,
-          page_url: true
-        }
-      })
+          select: {
+            first_seen: true
+          }
+        })
 
-      // 按天分组，统计每天的独立页面数
-      const dayPagesMap = new Map<string, Set<string>>()
-      pageEvents.forEach((e) => {
-        const dateKey = e.timestamp.toISOString().split('T')[0]
-        if (!dayPagesMap.has(dateKey)) {
-          dayPagesMap.set(dateKey, new Set())
-        }
+        const countMap = new Map<string, number>()
+        visitors.forEach((v) => {
+          const dateKey = v.first_seen.toISOString().split('T')[0]
+          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
+        })
 
-                    dayPagesMap.get(dateKey)!.add(e.page_url)
-      })
+        result = dates.map((date) => ({
+          date,
+          value: countMap.get(date) || 0
+        }))
+        break
+      }
 
-      result = dates.map((date) => ({
-        date,
-        value: dayPagesMap.get(date)?.size || 0
-      }))
-      break
-    }
-
-    case 'plays': {
-      // 按天统计动漫播放次数
-      const playEvents = await prisma.trackingEvent.findMany({
-        where: {
-          timestamp: {
-            gte: start,
-            lte: end
+      case 'events': {
+        // 按天统计事件数
+        const events = await prisma.trackingEvent.findMany({
+          where: {
+            timestamp: {
+              gte: start,
+              lte: end
+            }
           },
-          event_name: 'accordion-play',
-          event_type: 'click'
-        },
-        select: {
-          timestamp: true
-        }
-      })
+          select: {
+            timestamp: true
+          }
+        })
 
-      const countMap = new Map<string, number>()
-      playEvents.forEach((e) => {
-        const dateKey = e.timestamp.toISOString().split('T')[0]
-        countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-      })
+        const countMap = new Map<string, number>()
+        events.forEach((e) => {
+          const dateKey = e.timestamp.toISOString().split('T')[0]
+          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
+        })
 
-      result = dates.map((date) => ({
-        date,
-        value: countMap.get(date) || 0
-      }))
-      break
-    }
+        result = dates.map((date) => ({
+          date,
+          value: countMap.get(date) || 0
+        }))
+        break
+      }
+
+      case 'pages': {
+        // 按天统计独立页面访问数
+        const pageEvents = await prisma.trackingEvent.findMany({
+          where: {
+            timestamp: {
+              gte: start,
+              lte: end
+            },
+            event_type: 'expose'
+          },
+          select: {
+            timestamp: true,
+            page_url: true
+          }
+        })
+
+        // 按天分组，统计每天的独立页面数
+        const dayPagesMap = new Map<string, Set<string>>()
+        pageEvents.forEach((e) => {
+          const dateKey = e.timestamp.toISOString().split('T')[0]
+          if (!dayPagesMap.has(dateKey)) {
+            dayPagesMap.set(dateKey, new Set())
+          }
+
+          dayPagesMap.get(dateKey)!.add(e.page_url)
+        })
+
+        result = dates.map((date) => ({
+          date,
+          value: dayPagesMap.get(date)?.size || 0
+        }))
+        break
+      }
+
+      case 'plays': {
+        // 按天统计动漫播放次数
+        const playEvents = await prisma.trackingEvent.findMany({
+          where: {
+            timestamp: {
+              gte: start,
+              lte: end
+            },
+            event_name: 'accordion-play',
+            event_type: 'click'
+          },
+          select: {
+            timestamp: true
+          }
+        })
+
+        const countMap = new Map<string, number>()
+        playEvents.forEach((e) => {
+          const dateKey = e.timestamp.toISOString().split('T')[0]
+          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
+        })
+
+        result = dates.map((date) => ({
+          date,
+          value: countMap.get(date) || 0
+        }))
+        break
+      }
     }
 
     return result
@@ -634,20 +638,20 @@ export async function getTrendData(
 
 // 页面访客信息类型
 export type PageVisitor = {
+  id: number
+  guid: string
+  user_id: number | null
+  user_agent: string | null
+  ip: string | null
+  first_seen: string
+  last_seen: string
+  visit_count: number
+  user: {
     id: number
-    guid: string
-    user_id: number | null
-    user_agent: string | null
-    ip: string | null
-    first_seen: string
-    last_seen: string
-    visit_count: number
-    user: {
-        id: number
-        name: string
-        avatar: string
-        email: string
-    } | null
+    name: string
+    avatar: string
+    email: string
+  } | null
 }
 
 // 获取指定页面的访客列表
@@ -714,12 +718,13 @@ export async function getPageVisitors(
       .filter((id): id is number => id !== null)
 
     // 批量查询用户信息
-    const users = userIds.length > 0
-      ? await prisma.user.findMany({
-        where: { id: { in: userIds } },
-        select: { id: true, name: true, avatar: true, email: true }
-      })
-      : []
+    const users =
+      userIds.length > 0
+        ? await prisma.user.findMany({
+            where: { id: { in: userIds } },
+            select: { id: true, name: true, avatar: true, email: true }
+          })
+        : []
 
     // 创建用户ID到用户信息的映射
     const userMap = new Map(users.map((u) => [u.id, u]))
@@ -821,8 +826,9 @@ export async function getAnimeVisitors(
     })
 
     // 按观看次数排序
-    const sortedVisitors = Array.from(visitorCountMap.entries())
-      .sort((a, b) => b[1] - a[1])
+    const sortedVisitors = Array.from(visitorCountMap.entries()).sort(
+      (a, b) => b[1] - a[1]
+    )
 
     const total = sortedVisitors.length
     const paginatedVisitors = sortedVisitors.slice(skip, skip + pageSize)
@@ -844,32 +850,35 @@ export async function getAnimeVisitors(
       .filter((id): id is number => id !== null)
 
     // 批量查询用户信息
-    const users = userIds.length > 0
-      ? await prisma.user.findMany({
-        where: { id: { in: userIds } },
-        select: { id: true, name: true, avatar: true, email: true }
-      })
-      : []
+    const users =
+      userIds.length > 0
+        ? await prisma.user.findMany({
+            where: { id: { in: userIds } },
+            select: { id: true, name: true, avatar: true, email: true }
+          })
+        : []
 
     // 创建用户ID到用户信息的映射
     const userMap = new Map(users.map((u) => [u.id, u]))
 
     // 组装结果，保持按观看次数排序
-    const result: AnimeVisitor[] = paginatedVisitors.map(([visitorId, count]) => {
-      const visitor = visitorMap.get(visitorId)!
+    const result: AnimeVisitor[] = paginatedVisitors.map(
+      ([visitorId, count]) => {
+        const visitor = visitorMap.get(visitorId)!
 
-      return {
-        id: visitor.id,
-        guid: visitor.guid,
-        user_id: visitor.user_id,
-        user_agent: visitor.user_agent,
-        ip: visitor.ip,
-        first_seen: visitor.first_seen.toISOString(),
-        last_seen: visitor.last_seen.toISOString(),
-        visit_count: count,
-        user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
+        return {
+          id: visitor.id,
+          guid: visitor.guid,
+          user_id: visitor.user_id,
+          user_agent: visitor.user_agent,
+          ip: visitor.ip,
+          first_seen: visitor.first_seen.toISOString(),
+          last_seen: visitor.last_seen.toISOString(),
+          visit_count: count,
+          user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
+        }
       }
-    })
+    )
 
     return {
       list: result,

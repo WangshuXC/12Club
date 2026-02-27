@@ -72,7 +72,7 @@ export const deleteFileFromS3 = async (key: string) => {
 
 /**
  * 删除S3中指定前缀的所有文件（模拟删除文件夹）
- * @param prefix 文件夹前缀，例如 'resource/123/video/' 
+ * @param prefix 文件夹前缀，例如 'resource/123/video/'
  */
 export const deleteFolderFromS3 = async (prefix: string) => {
   const bucket = process.env.S3_STORAGE_BUCKET_NAME!
@@ -93,7 +93,7 @@ export const deleteFolderFromS3 = async (prefix: string) => {
   }
 
   // 准备批量删除的对象列表
-  const objectsToDelete = response.Contents.map(obj => ({ Key: obj.Key! }))
+  const objectsToDelete = response.Contents.map((obj) => ({ Key: obj.Key! }))
 
   // 批量删除对象
   const deleteCommand = new DeleteObjectsCommand({

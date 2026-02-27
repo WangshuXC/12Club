@@ -4,10 +4,7 @@ import { cache } from 'react'
 
 import { z } from 'zod'
 
-import {
-  Introduction,
-  Cover,
-} from '@/types/common/detail-container'
+import { Introduction, Cover } from '@/types/common/detail-container'
 import { safeParseSchema } from '@/utils/actions/safeParseSchema'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 import { FetchGet } from '@/utils/fetch'
@@ -23,7 +20,7 @@ const _getResourceActions = async (params: z.infer<typeof idSchema>) => {
   }
 
   const payload = await verifyHeaderCookie()
-  
+
   const response = await FetchGet<{
     introduce: Introduction
     coverData: Cover

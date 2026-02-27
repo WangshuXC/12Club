@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { Link } from "@heroui/react"
+import { Link } from '@heroui/react'
 import { ChevronRight, FileText, FolderOpen } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
 

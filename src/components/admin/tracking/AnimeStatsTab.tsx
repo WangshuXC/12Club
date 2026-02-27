@@ -77,18 +77,18 @@ export const AnimeStatsTable = ({
       let comparison = 0
 
       switch (sortDescriptor.column) {
-      case 'name':
-        comparison = a.name.localeCompare(b.name, 'zh-CN')
-        break
-      case 'playCount':
-        comparison = a.playCount - b.playCount
-        break
-      case 'uniqueVisitors':
-        comparison = a.uniqueVisitors - b.uniqueVisitors
-        break
-      case 'episodes':
-        comparison = a.accordionStats.length - b.accordionStats.length
-        break
+        case 'name':
+          comparison = a.name.localeCompare(b.name, 'zh-CN')
+          break
+        case 'playCount':
+          comparison = a.playCount - b.playCount
+          break
+        case 'uniqueVisitors':
+          comparison = a.uniqueVisitors - b.uniqueVisitors
+          break
+        case 'episodes':
+          comparison = a.accordionStats.length - b.accordionStats.length
+          break
       }
 
       return sortDescriptor.direction === 'ascending' ? comparison : -comparison
@@ -116,7 +116,11 @@ export const AnimeStatsTable = ({
             <TableColumn
               key={column.uid}
               allowsSorting={column.allowsSorting}
-              align={column.uid === 'playCount' || column.uid === 'uniqueVisitors' ? 'center' : 'start'}
+              align={
+                column.uid === 'playCount' || column.uid === 'uniqueVisitors'
+                  ? 'center'
+                  : 'start'
+              }
             >
               {column.name}
             </TableColumn>

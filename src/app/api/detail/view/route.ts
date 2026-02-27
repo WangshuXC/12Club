@@ -9,9 +9,7 @@ const resourceIdSchema = z.object({
   resourceDbId: z.coerce.string().min(7).max(7)
 })
 
-export const updateView = async (
-  input: z.infer<typeof resourceIdSchema>,
-) => {
+export const updateView = async (input: z.infer<typeof resourceIdSchema>) => {
   const resource = await prisma.resource.findUnique({
     where: { db_id: input.resourceDbId }
   })

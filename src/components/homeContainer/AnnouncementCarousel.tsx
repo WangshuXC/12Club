@@ -11,7 +11,11 @@ import AnnouncementCard from './AnnouncementCard'
 
 import type { Announcement } from '@/types/api/announcement'
 
-export const AnnouncementCarousel = ({ announcements }: { announcements: Announcement[] }) => {
+export const AnnouncementCarousel = ({
+  announcements
+}: {
+  announcements: Announcement[]
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const [direction, setDirection] = useState(0)
@@ -59,13 +63,14 @@ export const AnnouncementCarousel = ({ announcements }: { announcements: Announc
   const paginate = (newDirection: number) => {
     setDirection(newDirection)
     setCurrentSlide(
-      (prev) => (prev + newDirection + announcements.length) % announcements.length
+      (prev) =>
+        (prev + newDirection + announcements.length) % announcements.length
     )
   }
 
   return (
     <div
-      className="relative h-[200px] xl:h-[300px] w-full mt-10 group touch-pan-y flex items-end"
+      className="relative h-[200px] xl:h-[300px] container mt-10 group touch-pan-y flex items-end"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -96,14 +101,17 @@ export const AnnouncementCarousel = ({ announcements }: { announcements: Announc
           }}
           className="absolute w-full h-full"
         >
-          <AnnouncementCard announcements={announcements} currentSlide={currentSlide} />
+          <AnnouncementCard
+            announcements={announcements}
+            currentSlide={currentSlide}
+          />
         </motion.div>
       </AnimatePresence>
 
       <button
         className={cn(
-          "absolute left-0 top-1/2 -translate-y-1/2 bg-gray-500/20 hover:bg-gray-500/40 p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 touch:opacity-100 z-10",
-          announcements?.length > 1 ? "hidden xl:block" : "hidden",
+          'absolute left-0 top-1/2 -translate-y-1/2 bg-gray-500/20 hover:bg-gray-500/40 p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 touch:opacity-100 z-10',
+          announcements?.length > 1 ? 'hidden xl:block' : 'hidden'
         )}
         onClick={() => paginate(-1)}
       >
@@ -112,24 +120,27 @@ export const AnnouncementCarousel = ({ announcements }: { announcements: Announc
 
       <button
         className={cn(
-          "absolute right-0 top-1/2 -translate-y-1/2 bg-gray-500/20 hover:bg-gray-500/40 p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 touch:opacity-100 z-10",
-          announcements?.length > 1 ? "hidden xl:block" : "hidden",
+          'absolute right-0 top-1/2 -translate-y-1/2 bg-gray-500/20 hover:bg-gray-500/40 p-2 rounded-full backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 touch:opacity-100 z-10',
+          announcements?.length > 1 ? 'hidden xl:block' : 'hidden'
         )}
         onClick={() => paginate(1)}
       >
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      <div className={cn(
-        "absolute z-10 gap-1 -translate-x-1/2 bottom-8 left-1/2",
-        announcements?.length > 1 ? "flex" : "hidden"
-      )}>
+      <div
+        className={cn(
+          'absolute z-10 gap-1 -translate-x-1/2 bottom-8 left-1/2',
+          announcements?.length > 1 ? 'flex' : 'hidden'
+        )}
+      >
         {announcements?.map((_, index) => (
           <button
             key={index}
-            className={`w-1.5 h-1.5 rounded-full transition-all ${index === currentSlide
-              ? 'bg-primary w-4'
-              : 'bg-foreground/20 hover:bg-foreground/40'
+            className={`w-1.5 h-1.5 rounded-full transition-all ${
+              index === currentSlide
+                ? 'bg-primary w-4'
+                : 'bg-foreground/20 hover:bg-foreground/40'
             }`}
             onClick={() => {
               setDirection(index > currentSlide ? 1 : -1)

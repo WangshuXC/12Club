@@ -21,11 +21,17 @@ const createCommentWithRetry = async (createData: any, maxRetries = 3) => {
 
       return newComment
     } catch (error) {
-      if (error instanceof Error && error.message.includes('Unique constraint failed') && attempt < maxRetries) {
+      if (
+        error instanceof Error &&
+        error.message.includes('Unique constraint failed') &&
+        attempt < maxRetries
+      ) {
         console.warn(`⚠️ 约束冲突，重试第 ${attempt} 次...`)
 
         // 等待一个随机的短时间后重试
-        await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50))
+        await new Promise((resolve) =>
+          setTimeout(resolve, Math.random() * 100 + 50)
+        )
         continue
       }
 
@@ -108,7 +114,10 @@ export const createResourceComment = async (
     console.error('❌ 创建评论失败:', error)
 
     // 如果是Prisma的唯一约束错误，提供更详细的信息
-    if (error instanceof Error && error.message.includes('Unique constraint failed')) {
+    if (
+      error instanceof Error &&
+      error.message.includes('Unique constraint failed')
+    ) {
       console.error('🚨 ID约束冲突详情:', {
         resourceDbId: input.id,
         userId: uid,

@@ -61,17 +61,17 @@ export const Comment = ({ initialComments, initialTotal }: Props) => {
 
   // 删除评论的回调函数
   const handleDeleteComment = (commentId: number) => {
-    setComments(prevComments => prevComments.filter(comment => comment.id !== commentId))
-    setTotal(prevTotal => prevTotal - 1)
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    )
+    setTotal((prevTotal) => prevTotal - 1)
   }
 
   // 更新评论的回调函数
   const handleUpdateComment = (commentId: number, newContent: string) => {
-    setComments(prevComments =>
-      prevComments.map(comment =>
-        comment.id === commentId
-          ? { ...comment, content: newContent }
-          : comment
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId ? { ...comment, content: newContent } : comment
       )
     )
   }
@@ -107,12 +107,14 @@ export const Comment = ({ initialComments, initialTotal }: Props) => {
       </div>
 
       <div className="flex justify-center">
-        {Math.ceil(total / 30) > 1 && <SelfPagination
-          page={page}
-          total={Math.ceil(total / 30)}
-          onPageChange={(newPage) => setPage(newPage)}
-          isLoading={loading}
-        />}
+        {Math.ceil(total / 30) > 1 && (
+          <SelfPagination
+            page={page}
+            total={Math.ceil(total / 30)}
+            onPageChange={(newPage) => setPage(newPage)}
+            isLoading={loading}
+          />
+        )}
       </div>
     </div>
   )

@@ -10,12 +10,25 @@ export interface MemeItem {
 // 获取所有可用的 meme 列表
 export const getMemeList = (): MemeItem[] => {
   const memeNames = [
-    'meme_wy', 'meme_bsc', 'meme_yw', 'meme_dy', 'meme_bsw',
-    'meme_qd', 'meme_cdl', 'meme_xx', 'meme_yf', 'meme_bb',
-    'meme_qgg', 'meme_yl', 'meme_hy', 'meme_tx', 'meme_jy', 'meme_xb'
+    'meme_wy',
+    'meme_bsc',
+    'meme_yw',
+    'meme_dy',
+    'meme_bsw',
+    'meme_qd',
+    'meme_cdl',
+    'meme_xx',
+    'meme_yf',
+    'meme_bb',
+    'meme_qgg',
+    'meme_yl',
+    'meme_hy',
+    'meme_tx',
+    'meme_jy',
+    'meme_xb'
   ]
 
-  return memeNames.map(name => ({
+  return memeNames.map((name) => ({
     name,
     displayName: `[${name}]`,
     fileName: `[${name}].gif`,
@@ -28,18 +41,18 @@ export const extractMemesFromText = (text: string): MemeItem[] => {
   const memeRegex = /\[(meme_[^[\]]+)\]/g
   const matches: RegExpExecArray[] = []
   let match: RegExpExecArray | null
-  
+
   while ((match = memeRegex.exec(text)) !== null) {
     matches.push(match)
   }
-  
+
   const memeList = getMemeList()
-  
+
   return matches
-    .map(match => {
+    .map((match) => {
       const memeName = match[1]
 
-      return memeList.find(meme => meme.name === memeName)
+      return memeList.find((meme) => meme.name === memeName)
     })
     .filter((meme): meme is MemeItem => meme !== undefined)
 }
@@ -56,4 +69,4 @@ export const insertMemeIntoText = (
   const newCursorPosition = cursorPosition + memeDisplayName.length
 
   return { newText, newCursorPosition }
-} 
+}

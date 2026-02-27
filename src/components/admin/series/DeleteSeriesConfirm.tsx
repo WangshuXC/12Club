@@ -73,17 +73,13 @@ export const DeleteSeriesConfirm = ({
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      size="md"
-    >
+    <Modal isOpen={isOpen} onClose={handleClose} size="md">
       <ModalContent>
         <ModalHeader className="flex items-center gap-2">
           <AlertTriangle className="text-danger" size={20} />
           <span>确认删除系列</span>
         </ModalHeader>
-        
+
         <ModalBody>
           <div className="space-y-4">
             <p className="text-default-600">
@@ -95,7 +91,9 @@ export const DeleteSeriesConfirm = ({
                 <div className="space-y-2">
                   <h4 className="font-semibold text-lg">{series.name}</h4>
                   {series.description && (
-                    <p className="text-default-500 text-sm">{series.description}</p>
+                    <p className="text-default-500 text-sm">
+                      {series.description}
+                    </p>
                   )}
                   <div className="flex items-center gap-2">
                     <Chip color="primary" size="sm" variant="flat">
@@ -128,20 +126,12 @@ export const DeleteSeriesConfirm = ({
             )}
           </div>
         </ModalBody>
-        
+
         <ModalFooter>
-          <Button
-            variant="light"
-            onPress={handleClose}
-            isDisabled={loading}
-          >
+          <Button variant="light" onPress={handleClose} isDisabled={loading}>
             取消
           </Button>
-          <Button
-            color="danger"
-            onPress={handleDelete}
-            isLoading={loading}
-          >
+          <Button color="danger" onPress={handleDelete} isLoading={loading}>
             确认删除
           </Button>
         </ModalFooter>

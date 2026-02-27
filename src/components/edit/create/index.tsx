@@ -32,7 +32,6 @@ export const CreateContainer = () => {
       <form className="w-full max-w-5xl py-4 mx-auto">
         <Card className="w-full">
           <CardBody className="space-y-6">
-
             <div className="space-y-2">
               <h2 className="text-xl">资源名称 (必须)</h2>
               <Input
@@ -74,7 +73,9 @@ export const CreateContainer = () => {
                 color="primary"
                 placeholder="输入资源汉化组名称"
                 value={data.translator}
-                onChange={(e) => setData({ ...data, translator: e.target.value })}
+                onChange={(e) =>
+                  setData({ ...data, translator: e.target.value })
+                }
                 isInvalid={!!errors.translator}
                 errorMessage={errors.translator}
               />

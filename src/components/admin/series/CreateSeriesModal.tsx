@@ -32,7 +32,9 @@ export const CreateSeriesModal = ({
 }: CreateSeriesModalProps) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [selectedResources, setSelectedResources] = useState<AdminSeriesResource[]>([])
+  const [selectedResources, setSelectedResources] = useState<
+    AdminSeriesResource[]
+  >([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -100,8 +102,8 @@ export const CreateSeriesModal = ({
       size="5xl"
       scrollBehavior="inside"
       classNames={{
-        base: "max-h-[90vh]",
-        body: "py-6"
+        base: 'max-h-[90vh]',
+        body: 'py-6'
       }}
     >
       <ModalContent>
@@ -111,13 +113,13 @@ export const CreateSeriesModal = ({
             创建一个新的资源系列，至少需要选择一个资源
           </p>
         </ModalHeader>
-        
+
         <ModalBody>
           <div className="space-y-6">
             {/* 基本信息 */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">基本信息</h3>
-              
+
               <Input
                 label="系列名称"
                 placeholder="请输入系列名称"
@@ -127,7 +129,7 @@ export const CreateSeriesModal = ({
                 errorMessage={error && !name.trim() ? '请输入系列名称' : ''}
                 isInvalid={error && !name.trim() ? true : false}
               />
-              
+
               <Textarea
                 label="系列描述"
                 placeholder="请输入系列描述（可选）"
@@ -143,7 +145,7 @@ export const CreateSeriesModal = ({
               <p className="text-sm text-default-500">
                 至少需要选择一个资源加入系列
               </p>
-              
+
               <ResourceSelector
                 selectedResources={selectedResources}
                 onSelectionChange={setSelectedResources}
@@ -158,13 +160,9 @@ export const CreateSeriesModal = ({
             )}
           </div>
         </ModalBody>
-        
+
         <ModalFooter>
-          <Button
-            variant="light"
-            onPress={handleClose}
-            isDisabled={loading}
-          >
+          <Button variant="light" onPress={handleClose} isDisabled={loading}>
             取消
           </Button>
           <Button

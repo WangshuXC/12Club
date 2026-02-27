@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   if (typeof input === 'string') {
     return NextResponse.json(input)
   }
-  
+
   const payload = await verifyHeaderCookie()
   if (!payload) {
     return NextResponse.json('用户未登录')

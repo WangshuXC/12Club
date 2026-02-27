@@ -19,7 +19,7 @@ export const Copy = (originText: string) => {
       .then(() => {
         addToast({
           title: '成功',
-          description: `${text}`, 
+          description: `${text}`
         })
       })
       .catch(() =>

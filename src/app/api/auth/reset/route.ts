@@ -8,7 +8,7 @@ import { prisma } from '../../../../../prisma'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     // 验证请求数据
     const validatedData = forgotResetSchema.parse(body)
     const { name, email, resetCode, password } = validatedData
@@ -102,7 +102,7 @@ export async function POST(request: NextRequest) {
     )
   } catch (error) {
     console.error('Reset password error:', error)
-    
+
     if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
         {

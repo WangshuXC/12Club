@@ -18,10 +18,7 @@ export const login = async (input: z.infer<typeof loginSchema>) => {
     // 通过用户名或邮箱查找用户
     const user = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: name },
-          { name: name }
-        ]
+        OR: [{ email: name }, { name: name }]
       }
     })
 

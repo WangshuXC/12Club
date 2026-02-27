@@ -8,7 +8,7 @@ import { GetAutoUpdateActions } from './actions'
 export const revalidate = 3
 
 interface PageProps {
-    searchParams: Promise<{ query: string | undefined }>
+  searchParams: Promise<{ query: string | undefined }>
 }
 
 export default async function Page({ searchParams }: PageProps) {
@@ -36,4 +36,3 @@ export default async function Page({ searchParams }: PageProps) {
     </Suspense>
   )
 }
-

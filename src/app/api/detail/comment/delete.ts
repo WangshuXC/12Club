@@ -88,7 +88,7 @@ export const deleteResourceComment = async (
           select: {
             likes: true
           }
-        },
+        }
       },
       orderBy: {
         created: 'desc'

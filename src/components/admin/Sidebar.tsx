@@ -22,7 +22,11 @@ interface NotificationCardsProps {
   total: number
 }
 
-export const Sidebar = ({ notifications }: { notifications: NotificationCardsProps }) => {
+export const Sidebar = ({
+  notifications
+}: {
+  notifications: NotificationCardsProps
+}) => {
   const pathname = usePathname()
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure()
 

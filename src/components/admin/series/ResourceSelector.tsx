@@ -192,28 +192,28 @@ export const ResourceSelector = ({
   // 获取资源状态文本
   const getStatusText = (status: number) => {
     switch (status) {
-    case 0:
-      return '连载中'
-    case 1:
-      return '已完结'
-    case 2:
-      return '老站数据'
-    default:
-      return '未知'
+      case 0:
+        return '连载中'
+      case 1:
+        return '已完结'
+      case 2:
+        return '老站数据'
+      default:
+        return '未知'
     }
   }
 
   // 获取资源状态颜色
   const getStatusColor = (status: number) => {
     switch (status) {
-    case 0:
-      return 'warning'
-    case 1:
-      return 'success'
-    case 2:
-      return 'danger'
-    default:
-      return 'default'
+      case 0:
+        return 'warning'
+      case 1:
+        return 'success'
+      case 2:
+        return 'danger'
+      default:
+        return 'default'
     }
   }
 

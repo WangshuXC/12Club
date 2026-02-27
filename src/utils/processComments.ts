@@ -33,11 +33,11 @@ export const processComments = (comments: any[]) => {
       const parent = commentMap.get(comment.parentId)
       comment.parentComment = parent
         ? {
-          id: parent.id,
-          content: parent.content,
-          created: parent.created,
-          user: parent.user
-        }
+            id: parent.id,
+            content: parent.content,
+            created: parent.created,
+            user: parent.user
+          }
         : null
     }
   })

@@ -9,11 +9,11 @@ import { prisma } from '../../../../../../prisma'
 import type { ResourcePlayLink } from '@/types/api/resource-play-link'
 
 interface Resource {
-    id: number
-    accordion_total: number
-    name: string
-    language: string[]
-    db_id: string
+  id: number
+  accordion_total: number
+  name: string
+  language: string[]
+  db_id: string
 }
 
 /**
@@ -28,9 +28,9 @@ export const createOrUpdatePatchResource = async (
 ): Promise<{ success: boolean; message?: string; isNew: boolean }> => {
   try {
     /**
-         * 为什么这里的路径不带resource?
-         * 因为openlist的访客路径的根目录是/resource，所以不需要带resource
-         */
+     * 为什么这里的路径不带resource?
+     * 因为openlist的访客路径的根目录是/resource，所以不需要带resource
+     */
     const existingPatch = await prisma.resourcePatch.findFirst({
       where: {
         resource_id: resource.id,
@@ -98,11 +98,11 @@ export const createPlayLinks = async (
   linkList: string[],
   userId: number
 ): Promise<{
-    success: boolean
-    message?: string
-    playLinks: ResourcePlayLink[]
-    errors: string[]
-    newLinksCount: number
+  success: boolean
+  message?: string
+  playLinks: ResourcePlayLink[]
+  errors: string[]
+  newLinksCount: number
 }> => {
   try {
     // 检查是否已有播放链接
@@ -343,9 +343,9 @@ export const autoCreateResourcePlayLinks = async (
     return {
       success: false,
       message:
-                error instanceof Error
-                  ? error.message
-                  : '批量创建播放链接时发生未知错误'
+        error instanceof Error
+          ? error.message
+          : '批量创建播放链接时发生未知错误'
     }
   }
 }

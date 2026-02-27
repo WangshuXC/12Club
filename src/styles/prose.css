@@ -59,8 +59,8 @@
 }
 
 /* Nested lists */
-.doc-prose li>ul,
-.doc-prose li>ol {
+.doc-prose li > ul,
+.doc-prose li > ol {
   @apply my-2 space-y-2;
 }
 

@@ -1,7 +1,7 @@
 interface OpenlistTokenResult {
-    success: boolean
-    message: string
-    token?: string
+  success: boolean
+  message: string
+  token?: string
 }
 
 /**
@@ -42,8 +42,8 @@ export async function getOpenlistToken(): Promise<OpenlistTokenResult> {
   } catch (error) {
     return {
       success: false,
-      message: error instanceof Error ? error.message : '获取token时发生未知错误'
+      message:
+        error instanceof Error ? error.message : '获取token时发生未知错误'
     }
   }
 }
-

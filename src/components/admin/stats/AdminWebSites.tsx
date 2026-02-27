@@ -14,7 +14,6 @@ interface WebSiteInfo {
 }
 
 const WebSiteCard: FC<{ website: WebSiteInfo }> = ({ website }) => {
-
   return (
     <Card className="w-full">
       <CardBody className="flex flex-col justify-between space-y-3">
@@ -24,12 +23,16 @@ const WebSiteCard: FC<{ website: WebSiteInfo }> = ({ website }) => {
           </h4>
         </div>
 
-        <p className="text-sm text-default-500">
-          {website.description}
-        </p>
+        <p className="text-sm text-default-500">{website.description}</p>
       </CardBody>
       <CardFooter>
-        <Link isExternal showAnchorIcon href={website.url} target="_blank" rel="noopener noreferrer">
+        <Link
+          isExternal
+          showAnchorIcon
+          href={website.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           访问站点
         </Link>
       </CardFooter>
@@ -52,4 +55,4 @@ export const AdminWebSites: FC = () => {
       </div>
     </div>
   )
-} 
+}

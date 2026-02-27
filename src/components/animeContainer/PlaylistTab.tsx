@@ -127,7 +127,6 @@ export const PlaylistTab = ({
       <CardBody className="px-4 pt-0 pb-4">
         <ScrollShadow className="max-h-80" hideScrollBar>
           {viewMode === 'grid' ? (
-
             // 网格视图（方块）
             <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
               {sortedPlayList.map((item, index) => {
@@ -145,10 +144,10 @@ export const PlaylistTab = ({
                       flex flex-col items-center justify-center
                       text-lg
                       ${
-                  isActive
-                    ? 'bg-primary text-white'
-                    : 'bg-default-100 hover:bg-default-200 text-default-700'
-                  }
+                        isActive
+                          ? 'bg-primary text-white'
+                          : 'bg-default-100 hover:bg-default-200 text-default-700'
+                      }
                     `}
                     onPress={() => onAccordionChange(item.accordion)}
                   >
@@ -158,7 +157,6 @@ export const PlaylistTab = ({
               })}
             </div>
           ) : (
-
             // 列表视图（长条形）
             <div className="flex flex-col gap-2">
               {sortedPlayList.map((item, index) => {
@@ -176,10 +174,10 @@ export const PlaylistTab = ({
                       flex items-center justify-between
                       text-base
                       ${
-                  isActive
-                    ? 'bg-primary text-white'
-                    : 'bg-default-100 hover:bg-default-200 text-default-700'
-                  }
+                        isActive
+                          ? 'bg-primary text-white'
+                          : 'bg-default-100 hover:bg-default-200 text-default-700'
+                      }
                     `}
                     onPress={() => onAccordionChange(item.accordion)}
                   >

@@ -19,10 +19,7 @@ export const AliasList = ({ aliases, maxDisplay = 5 }: AliasListProps) => {
           </span>
         ))}
         {aliases.length > maxDisplay && (
-          <span className="text-default-400">
-            {' '}
-            等{aliases.length}个别名
-          </span>
+          <span className="text-default-400"> 等{aliases.length}个别名</span>
         )}
       </div>
     </div>

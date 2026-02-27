@@ -24,10 +24,7 @@ export const CommentCard = ({ comment, onDelete, onUpdate }: Props) => {
       <CardBody>
         <div className="flex items-start justify-between">
           <div className="flex w-full gap-4">
-            <Avatar
-              name={comment.user.name}
-              src={comment.user.avatar}
-            />
+            <Avatar name={comment.user.name} src={comment.user.avatar} />
             <div className="flex-1">
               <div className="flex items-center gap-2">
                 <h2 className="font-semibold">{comment.user.name}</h2>

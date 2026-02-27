@@ -37,27 +37,27 @@ export const OverviewCards = ({
     () =>
       data
         ? [
-          {
-            title: '总访客数',
-            value: data.totalVisitors,
-            type: 'visitors' as TrendType
-          },
-          {
-            title: '总事件数',
-            value: data.totalEvents,
-            type: 'events' as TrendType
-          },
-          {
-            title: '访问页面数',
-            value: data.uniquePages,
-            type: 'pages' as TrendType
-          },
-          {
-            title: '动漫播放次数',
-            value: data.animePlayCount,
-            type: 'plays' as TrendType
-          }
-        ]
+            {
+              title: '总访客数',
+              value: data.totalVisitors,
+              type: 'visitors' as TrendType
+            },
+            {
+              title: '总事件数',
+              value: data.totalEvents,
+              type: 'events' as TrendType
+            },
+            {
+              title: '访问页面数',
+              value: data.uniquePages,
+              type: 'pages' as TrendType
+            },
+            {
+              title: '动漫播放次数',
+              value: data.animePlayCount,
+              type: 'plays' as TrendType
+            }
+          ]
         : [],
     [data]
   )

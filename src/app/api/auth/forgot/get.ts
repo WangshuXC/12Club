@@ -19,7 +19,7 @@ export const getResetCodes = async (params: {
 
     // 构建查询条件
     const where: any = {}
-    
+
     if (search) {
       where.OR = [
         { name: { contains: search } },
@@ -52,7 +52,7 @@ export const getResetCodes = async (params: {
     ])
 
     return {
-      resetCodes: resetCodes.map(reset => ({
+      resetCodes: resetCodes.map((reset) => ({
         id: reset.id,
         resetCode: reset.reset_code,
         userName: reset.name,

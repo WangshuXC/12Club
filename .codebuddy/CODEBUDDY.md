@@ -9,6 +9,7 @@
 ## 常用开发命令
 
 ### 开发与构建
+
 - `npm run dev` - 启动开发服务器，使用 Turbopack 加速构建，运行在端口 9001
 - `npm run build` - 生产环境构建，集成 PM2 进程管理，自动停止旧进程并启动新进程
 - `npm run start` - 启动生产服务器
@@ -16,6 +17,7 @@
 - `npm run format` - 使用 Prettier 格式化所有代码文件
 
 ### 数据库管理
+
 - `npm run prisma:generate` - 生成 Prisma 客户端，在依赖变更后自动执行
 - `npm run prisma:push` - 推送数据库模式变更到数据库
 - `npm run prisma:migrate` - 创建和应用数据库迁移
@@ -39,6 +41,7 @@
 ### 核心技术栈详解
 
 **前端层**:
+
 - **Next.js 15**: App Router 架构，支持 SSR/SSG，Turbopack 开发加速
 - **React 19**: 最新特性支持，包括并发渲染和 Suspense
 - **TypeScript 5.9**: 严格类型检查，路径别名 `@/*` 指向 `src/*`
@@ -46,11 +49,13 @@
 - **HeroUI 2.8**: 现代化 UI 组件库，支持主题切换和响应式设计
 
 **样式系统**:
+
 - **Tailwind CSS 4.1**: 原子化 CSS，支持暗黑模式和自定义主题
 - **Framer Motion**: 页面转场动画和交互动效
 - **Sass 1.84**: CSS 预处理器，用于复杂样式逻辑
 
 **数据层**:
+
 - **Prisma 6.12**: 类型安全的 ORM，支持 PostgreSQL 和 Prisma Accelerate
 - **PostgreSQL**: 主数据库，存储用户、资源、评论等核心数据
 - **Redis**: 缓存层，提升热点数据访问性能
@@ -99,11 +104,13 @@ src/
 核心数据模型围绕 **用户** 和 **资源** 构建，支持完整的社区功能：
 
 **用户系统**:
+
 - `User`: 用户基础信息，支持角色权限 (role: 1=普通用户, 2+=管理员)
 - `UserFollowRelation`: 用户关注关系，构建社交网络
 - `UserMessage`: 站内消息系统，支持反馈和回复
 
 **资源系统**:
+
 - `Resource`: 核心资源模型，支持多语言和多类型标记
 - `ResourcePatch`: 资源更新补丁，版本化管理
 - `ResourceTag`: 标签系统，支持别名和分类
@@ -111,6 +118,7 @@ src/
 - `ResourcePlayLink`: 播放链接管理，支持多集内容
 
 **高级功能**:
+
 - `UserResourceFavoriteFolder`: 收藏夹系统，支持分类管理
 - `ResourceAutoUpdate`: 自动更新机制，定时同步资源
 - `Announcement`: 公告系统，管理员发布通知
@@ -118,12 +126,14 @@ src/
 ### 认证与权限架构
 
 **认证流程**:
+
 1. JWT Token 存储在 Cookie (`12club-token`)
 2. 中间件拦截保护路由 (`/admin/*`, `/user/*`, `/edit/*`)
 3. 基于角色的权限控制 (RBAC)
 4. 自动重定向未认证用户到登录页
 
 **权限层级**:
+
 - **游客**: 浏览公开内容
 - **普通用户** (role=1): 上传资源、评论、收藏
 - **管理员** (role≥2): 管理用户、审核内容、系统配置
@@ -131,12 +141,14 @@ src/
 ### API 设计模式
 
 **统一请求处理**:
+
 - 客户端必须使用 `@/utils/fetch.ts` 封装的方法 (`FetchGet`, `FetchPost`, `FetchPut`, `FetchDelete`, `FetchFormData`)
 - 服务端必须使用 `@/utils/parseQuery.ts` 配合 Zod Schema 验证请求数据
 - 自动处理开发/生产环境 API 地址切换
 - 集成错误处理和类型安全
 
 **数据流模式**:
+
 ```
 客户端组件 → Zustand Store → Fetch Utils → API Routes → Prisma ORM → PostgreSQL
                                                      ↓
@@ -146,16 +158,19 @@ src/
 ### 性能优化策略
 
 **缓存层次**:
+
 - **Redis**: 热点数据缓存 (用户会话、资源统计)
 - **Next.js**: 页面级缓存和 ISR
 - **浏览器**: 静态资源缓存和 Service Worker
 
 **代码分割**:
+
 - 路由级别的动态导入
 - 组件懒加载 (`React.lazy`)
 - 第三方库按需导入
 
 **媒体优化**:
+
 - Next.js Image 组件自动优化
 - Sharp 图片处理和压缩
 - S3 CDN 加速静态资源
@@ -163,6 +178,7 @@ src/
 ### 开发规范集成
 
 项目包含详细的开发规范文件 (`.cursorrules`)，涵盖：
+
 - **代码格式**: Prettier 配置 (单引号、无分号、2空格缩进)
 - **ESLint 规则**: 严格的代码质量检查
 - **命名约定**: PascalCase 组件、camelCase 变量、kebab-case 类型文件
@@ -172,12 +188,14 @@ src/
 ### 部署与运维
 
 **生产环境**:
+
 - PM2 进程管理，支持零停机部署
 - PostgreSQL 数据库持久化
 - Redis 缓存集群
 - AWS S3 文件存储和 CDN
 
 **监控集成**:
+
 - Umami 网站分析
 - 错误日志收集
 - 性能监控和告警

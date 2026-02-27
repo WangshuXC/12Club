@@ -95,7 +95,8 @@ export const updateResourcePlayLink = async (
     console.error('更新播放链接失败:', error)
     return {
       success: false,
-      message: error instanceof Error ? error.message : '更新播放链接时发生未知错误'
+      message:
+        error instanceof Error ? error.message : '更新播放链接时发生未知错误'
     }
   }
-} 
+}

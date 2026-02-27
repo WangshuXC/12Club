@@ -1,6 +1,13 @@
 'use client'
 
-import { Avatar, Card, CardBody, CardHeader, Chip, Divider } from '@heroui/react'
+import {
+  Avatar,
+  Card,
+  CardBody,
+  CardHeader,
+  Chip,
+  Divider
+} from '@heroui/react'
 import { Calendar, Link as LinkIcon } from 'lucide-react'
 
 import { Config } from '@/config/config'

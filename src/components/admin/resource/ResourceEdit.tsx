@@ -36,12 +36,17 @@ import type { AdminResource } from '@/types/api/admin'
 
 interface Props {
   initialResource: AdminResource
-  onUpdate?: (resourceId: number, updatedResource: Partial<AdminResource>) => void
+  onUpdate?: (
+    resourceId: number,
+    updatedResource: Partial<AdminResource>
+  ) => void
 }
 
 export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
   const [resource, setResource] = useState<AdminResource>(initialResource)
-  const [aliases, setAliases] = useState<string[]>(initialResource.aliases || [])
+  const [aliases, setAliases] = useState<string[]>(
+    initialResource.aliases || []
+  )
   const [tags, setTags] = useState<string[]>(initialResource.tags || [])
   const [needUpdate, setNeedUpdate] = useState(false)
   const currentUser = useUserStore((state) => state.user)
@@ -111,7 +116,12 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
         <Edit2 size={16} />
       </Button>
 
-      <Modal size="5xl" isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+      <Modal
+        size="5xl"
+        isOpen={isOpen}
+        onClose={onClose}
+        scrollBehavior="inside"
+      >
         <ModalContent>
           <ModalHeader>编辑资源: {resource.name}</ModalHeader>
           <ModalBody>
@@ -149,7 +159,9 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
                 <NumberInput
                   label="总集数"
                   value={resource.accordionTotal}
-                  onValueChange={(value) => handleChange('accordionTotal', value)}
+                  onValueChange={(value) =>
+                    handleChange('accordionTotal', value)
+                  }
                 />
               </div>
 
@@ -183,7 +195,9 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
               <div className="grid grid-cols-2 gap-4">
                 <Checkbox
                   isSelected={resource.status === 1}
-                  onValueChange={(value) => handleChange('status', value ? 1 : 0)}
+                  onValueChange={(value) =>
+                    handleChange('status', value ? 1 : 0)
+                  }
                 >
                   是否完结
                 </Checkbox>
@@ -201,16 +215,10 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
               </div>
 
               {/* 别名 */}
-              <AdminAliasInput
-                aliases={aliases}
-                onChange={setAliases}
-              />
+              <AdminAliasInput aliases={aliases} onChange={setAliases} />
 
               {/* 标签 */}
-              <AdminTagInput
-                tags={tags}
-                onChange={setTags}
-              />
+              <AdminTagInput tags={tags} onChange={setTags} />
 
               {/* 在线播放链接 */}
               {resource.dbId.startsWith('a') && (
@@ -223,7 +231,9 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
 
               {/* 下载资源 */}
               <div className="space-y-2 relative">
-                <label className="text-sm font-medium absolute left-0 top-2">下载资源</label>
+                <label className="text-sm font-medium absolute left-0 top-2">
+                  下载资源
+                </label>
                 <Resources id={resource.dbId} needUpdate={needUpdate} />
               </div>
             </div>
@@ -234,26 +244,41 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
               <div className="bg-default-50 rounded-xl p-4">
                 <div className="grid grid-cols-4 gap-4">
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-primary">{resource.view}</p>
+                    <p className="text-2xl font-bold text-primary">
+                      {resource.view}
+                    </p>
                     <p className="text-sm text-default-500">浏览量</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-success">{resource.download}</p>
+                    <p className="text-2xl font-bold text-success">
+                      {resource.download}
+                    </p>
                     <p className="text-sm text-default-500">下载量</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-warning">{resource.comment}</p>
+                    <p className="text-2xl font-bold text-warning">
+                      {resource.comment}
+                    </p>
                     <p className="text-sm text-default-500">评论数</p>
                   </div>
                   <div className="text-center">
-                    <p className="text-2xl font-bold text-danger">{resource.favorite_by}</p>
+                    <p className="text-2xl font-bold text-danger">
+                      {resource.favorite_by}
+                    </p>
                     <p className="text-sm text-default-500">收藏数</p>
                   </div>
                 </div>
               </div>
               <div className="flex justify-between gap-2">
-                <AutoPlayUrl resource={resource} setNeedUpdate={setNeedUpdate} />
-                <GetBangumiData name={resource.name} setData={setResource} setAliases={setAliases} />
+                <AutoPlayUrl
+                  resource={resource}
+                  setNeedUpdate={setNeedUpdate}
+                />
+                <GetBangumiData
+                  name={resource.name}
+                  setData={setResource}
+                  setAliases={setAliases}
+                />
                 <div className="flex gap-2">
                   <Button color="danger" variant="light" onPress={onClose}>
                     取消
@@ -274,4 +299,4 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
       </Modal>
     </>
   )
-} 
+}

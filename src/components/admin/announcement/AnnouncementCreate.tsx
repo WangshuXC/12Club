@@ -20,9 +20,9 @@ import { FetchPost } from '@/utils/fetch'
 import type { AdminAnnouncement } from '@/types/api/admin'
 
 interface Props {
-    isOpen: boolean
-    onClose: () => void
-    onSuccess: (announcement: AdminAnnouncement) => void
+  isOpen: boolean
+  onClose: () => void
+  onSuccess: (announcement: AdminAnnouncement) => void
 }
 
 export const AnnouncementCreate = ({ isOpen, onClose, onSuccess }: Props) => {
@@ -46,7 +46,10 @@ export const AnnouncementCreate = ({ isOpen, onClose, onSuccess }: Props) => {
     }
 
     setCreating(true)
-    const res = await FetchPost<{ data: AdminAnnouncement }>('/admin/announcement', requestData)
+    const res = await FetchPost<{ data: AdminAnnouncement }>(
+      '/admin/announcement',
+      requestData
+    )
     setCreating(false)
 
     ErrorHandler(res, (data) => {
@@ -92,17 +95,17 @@ export const AnnouncementCreate = ({ isOpen, onClose, onSuccess }: Props) => {
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={handleModalClose}>
-                        取消
+            取消
           </Button>
           <Button
             color="primary"
             onPress={handleCreateAnnouncement}
             isLoading={creating}
           >
-                        创建
+            创建
           </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
   )
-} 
+}

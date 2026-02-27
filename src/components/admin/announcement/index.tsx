@@ -33,12 +33,13 @@ const columns = [
 ]
 
 interface Props {
-    initialAnnouncements: AdminAnnouncement[]
-    initialTotal: number
+  initialAnnouncements: AdminAnnouncement[]
+  initialTotal: number
 }
 
 export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
-  const [announcements, setAnnouncements] = useState<AdminAnnouncement[]>(initialAnnouncements)
+  const [announcements, setAnnouncements] =
+    useState<AdminAnnouncement[]>(initialAnnouncements)
   const [total, setTotal] = useState(initialTotal)
   const [page, setPage] = useState(1)
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -49,12 +50,12 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
     setLoading(true)
 
     const { announcements, total } = await FetchGet<{
-            announcements: AdminAnnouncement[]
-            total: number
-        }>('/admin/announcement', {
-          page,
-          limit: 30,
-        })
+      announcements: AdminAnnouncement[]
+      total: number
+    }>('/admin/announcement', {
+      page,
+      limit: 30
+    })
 
     setLoading(false)
     setAnnouncements(announcements)
@@ -70,9 +71,12 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
   }, [page])
 
   // 更新公告的回调函数
-  const handleUpdateAnnouncement = (announcementId: number, updatedAnnouncement: Partial<AdminAnnouncement>) => {
-    setAnnouncements(prevAnnouncements =>
-      prevAnnouncements.map(announcement =>
+  const handleUpdateAnnouncement = (
+    announcementId: number,
+    updatedAnnouncement: Partial<AdminAnnouncement>
+  ) => {
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.map((announcement) =>
         announcement.id === announcementId
           ? { ...announcement, ...updatedAnnouncement }
           : announcement
@@ -82,16 +86,18 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
 
   // 删除公告的回调函数
   const handleDeleteAnnouncement = (announcementId: number) => {
-    setAnnouncements(prevAnnouncements =>
-      prevAnnouncements.filter(announcement => announcement.id !== announcementId)
+    setAnnouncements((prevAnnouncements) =>
+      prevAnnouncements.filter(
+        (announcement) => announcement.id !== announcementId
+      )
     )
-    setTotal(prev => prev - 1)
+    setTotal((prev) => prev - 1)
   }
 
   // 添加新公告的回调函数
   const handleAddAnnouncement = (newAnnouncement: AdminAnnouncement) => {
-    setAnnouncements(prev => [newAnnouncement, ...prev])
-    setTotal(prev => prev + 1)
+    setAnnouncements((prev) => [newAnnouncement, ...prev])
+    setTotal((prev) => prev + 1)
     setShowCreateModal(false)
   }
 
@@ -109,25 +115,19 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
           startContent={<Plus size={16} />}
           onPress={() => setShowCreateModal(true)}
         >
-                    创建公告
+          创建公告
         </Button>
       </div>
 
       <Table aria-label="公告管理表格">
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn
-              key={column.uid}
-              align="start"
-            >
+            <TableColumn key={column.uid} align="start">
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody
-          items={announcements}
-          emptyContent="暂无公告数据"
-        >
+        <TableBody items={announcements} emptyContent="暂无公告数据">
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
@@ -146,11 +146,13 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
       </Table>
 
       <div className="flex justify-center">
-        {Math.ceil(total / 30) > 1 && <SelfPagination
-          total={Math.ceil(total / 30)}
-          page={page}
-          onPageChange={setPage}
-        />}
+        {Math.ceil(total / 30) > 1 && (
+          <SelfPagination
+            total={Math.ceil(total / 30)}
+            page={page}
+            onPageChange={setPage}
+          />
+        )}
       </div>
 
       <AnnouncementCreate
@@ -160,4 +162,4 @@ export const Announcement = ({ initialAnnouncements, initialTotal }: Props) => {
       />
     </div>
   )
-} 
+}

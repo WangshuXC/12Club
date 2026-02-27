@@ -44,7 +44,9 @@ export const ImageCropperModal = ({
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
   const [scale, setScale] = useState(1)
   const [rotate, setRotate] = useState(0)
-  const [aspect, setAspect] = useState<{ x: number; y: number } | undefined>(initialAspect)
+  const [aspect, setAspect] = useState<{ x: number; y: number } | undefined>(
+    initialAspect
+  )
 
   const onImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     if (aspect) {

@@ -5,7 +5,7 @@ import { addToast } from '@heroui/react'
 import { Copy } from 'lucide-react'
 
 interface ResetCodeCopyProps {
-    resetCode: string
+  resetCode: string
 }
 
 export const ResetCodeCopy = ({ resetCode }: ResetCodeCopyProps) => {
@@ -19,12 +19,7 @@ export const ResetCodeCopy = ({ resetCode }: ResetCodeCopyProps) => {
   }
 
   return (
-    <Button
-      isIconOnly
-      size="sm"
-      variant="light"
-      onPress={handleCopy}
-    >
+    <Button isIconOnly size="sm" variant="light" onPress={handleCopy}>
       <Copy className="w-4 h-4" />
     </Button>
   )

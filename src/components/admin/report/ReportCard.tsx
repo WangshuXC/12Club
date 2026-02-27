@@ -69,10 +69,7 @@ export const ReportCard = ({ report }: Props) => {
       </CardBody>
       <CardFooter>
         <div className="flex items-center gap-4 mt-2">
-          <Chip
-            color={report.status ? 'success' : 'danger'}
-            variant="flat"
-          >
+          <Chip color={report.status ? 'success' : 'danger'} variant="flat">
             {report.status ? '已处理' : '未处理'}
           </Chip>
           <Button

@@ -24,8 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { coverData, introduce } = resource
   const title = coverData.title
   const description =
-    introduce.text?.slice(0, 160) ||
-    `${title} - 在 12Club 阅读和下载此漫画资源`
+    introduce.text?.slice(0, 160) || `${title} - 在 12Club 阅读和下载此漫画资源`
 
   return {
     title,

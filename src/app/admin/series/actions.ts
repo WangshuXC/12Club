@@ -10,11 +10,11 @@ export const GetSeriesActions = async (
 ): Promise<AdminSeriesListResponse | string> => {
   try {
     const result = await getSeries(input)
-    
+
     if (typeof result === 'string') {
       return result
     }
-    
+
     return result
   } catch (error) {
     console.error('获取系列列表失败:', error)

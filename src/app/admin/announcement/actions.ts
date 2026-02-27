@@ -5,13 +5,15 @@ import { z } from 'zod'
 import { FetchGet } from '@/utils/fetch'
 import { adminPaginationSchema } from '@/validations/admin'
 
-export const getActions = async (input: z.infer<typeof adminPaginationSchema>) => {
+export const getActions = async (
+  input: z.infer<typeof adminPaginationSchema>
+) => {
   try {
     const queryParams: Record<string, string | number> = {
       page: input.page,
       limit: input.limit
     }
-    
+
     if (input.search) {
       queryParams.search = input.search
     }
@@ -31,4 +33,4 @@ export const getActions = async (input: z.infer<typeof adminPaginationSchema>) =
     console.error('获取公告列表失败:', error)
     return '获取公告列表失败'
   }
-} 
+}

@@ -32,16 +32,13 @@ export const AdminResourceOption = () => {
   }
 
   return (
-    <ButtonGroup
-      variant="flat"
-      className="rounded-lg overflow-hidden"
-    >
-      <Button variant='solid' className="cursor-default">
+    <ButtonGroup variant="flat" className="rounded-lg overflow-hidden">
+      <Button variant="solid" className="cursor-default">
         <p className="text-sm w-[180px] truncate">{getSelectedText()}</p>
       </Button>
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <Button variant='solid' isIconOnly>
+          <Button variant="solid" isIconOnly>
             <ChevronDownIcon className="w-4 h-4" />
           </Button>
         </DropdownTrigger>
@@ -101,7 +98,11 @@ export const AdminResourceOption = () => {
                 包含游戏
               </Checkbox>
             </DropdownItem>
-            <DropdownItem key="novel" textValue="包含小说" closeOnSelect={false}>
+            <DropdownItem
+              key="novel"
+              textValue="包含小说"
+              closeOnSelect={false}
+            >
               <Checkbox
                 isSelected={searchData.searchInNovel}
                 onValueChange={(checked) =>

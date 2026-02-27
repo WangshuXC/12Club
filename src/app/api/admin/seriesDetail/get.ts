@@ -51,7 +51,7 @@ export const getSeriesDetail = async (
       updated: item.updated,
       user: item.user,
       resourceCount: item.resources.length,
-      resources: item.resources.map(rel => ({
+      resources: item.resources.map((rel) => ({
         id: rel.resource.id,
         dbId: rel.resource.db_id,
         name: rel.resource.name,

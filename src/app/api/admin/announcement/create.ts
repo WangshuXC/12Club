@@ -43,4 +43,4 @@ export const createAnnouncement = async (
     console.error('创建公告失败:', error)
     return '创建公告失败'
   }
-} 
+}

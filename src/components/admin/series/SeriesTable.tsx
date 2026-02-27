@@ -63,81 +63,81 @@ export const SeriesTable = ({
 
   const renderCell = (series: AdminSeries, columnKey: React.Key) => {
     switch (columnKey) {
-    case 'info':
-      return (
-        <div
-          className="flex flex-col"
-          onClick={() => {
-            setDetailSeries(series)
-            setShowDetailModal(true)
-          }}
-        >
-          <ImagesBadge
-            text={series.name}
-            images={series.resources?.map((r) => r.banner) as string[]}
-            folderSize={{ width: 48, height: 36 }}
-            teaserImageSize={{ width: 40, height: 28 }}
-            hoverImageSize={{ width: 99, height: 133 }}
-            hoverTranslateY={-150}
-            hoverSpread={50}
-          />
-        </div>
-      )
-    case 'resource_count':
-      return (
-        <Chip
-          className="capitalize"
-          color={series.resourceCount > 0 ? 'success' : 'default'}
-          size="sm"
-          variant="flat"
-        >
-          {series.resourceCount} 个资源
-        </Chip>
-      )
-    case 'created':
-      return (
-        <div className="flex flex-col">
-          <p className="text-bold text-xs capitalize text-default-400">
-            {new Date(series.created).toLocaleDateString('zh-CN')}
-          </p>
-        </div>
-      )
-    case 'updated':
-      return (
-        <div className="flex flex-col">
-          <p className="text-bold text-xs capitalize text-default-400">
-            {new Date(series.updated).toLocaleDateString('zh-CN')}
-          </p>
-        </div>
-      )
-    case 'actions':
-      return (
-        <div className="relative flex items-center justify-center gap-2">
-          <Tooltip content="编辑系列">
-            <Button
-              isIconOnly
-              size="sm"
-              variant="light"
-              onPress={() => onEdit(series)}
-            >
-              <Edit size={16} />
-            </Button>
-          </Tooltip>
-          <Tooltip color="danger" content="删除系列">
-            <Button
-              isIconOnly
-              size="sm"
-              color="danger"
-              variant="light"
-              onPress={() => onDelete(series)}
-            >
-              <Trash2 size={16} />
-            </Button>
-          </Tooltip>
-        </div>
-      )
-    default:
-      return null
+      case 'info':
+        return (
+          <div
+            className="flex flex-col"
+            onClick={() => {
+              setDetailSeries(series)
+              setShowDetailModal(true)
+            }}
+          >
+            <ImagesBadge
+              text={series.name}
+              images={series.resources?.map((r) => r.banner) as string[]}
+              folderSize={{ width: 48, height: 36 }}
+              teaserImageSize={{ width: 40, height: 28 }}
+              hoverImageSize={{ width: 99, height: 133 }}
+              hoverTranslateY={-150}
+              hoverSpread={50}
+            />
+          </div>
+        )
+      case 'resource_count':
+        return (
+          <Chip
+            className="capitalize"
+            color={series.resourceCount > 0 ? 'success' : 'default'}
+            size="sm"
+            variant="flat"
+          >
+            {series.resourceCount} 个资源
+          </Chip>
+        )
+      case 'created':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-xs capitalize text-default-400">
+              {new Date(series.created).toLocaleDateString('zh-CN')}
+            </p>
+          </div>
+        )
+      case 'updated':
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-xs capitalize text-default-400">
+              {new Date(series.updated).toLocaleDateString('zh-CN')}
+            </p>
+          </div>
+        )
+      case 'actions':
+        return (
+          <div className="relative flex items-center justify-center gap-2">
+            <Tooltip content="编辑系列">
+              <Button
+                isIconOnly
+                size="sm"
+                variant="light"
+                onPress={() => onEdit(series)}
+              >
+                <Edit size={16} />
+              </Button>
+            </Tooltip>
+            <Tooltip color="danger" content="删除系列">
+              <Button
+                isIconOnly
+                size="sm"
+                color="danger"
+                variant="light"
+                onPress={() => onDelete(series)}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </Tooltip>
+          </div>
+        )
+      default:
+        return null
     }
   }
 

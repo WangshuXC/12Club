@@ -51,49 +51,47 @@ export const TrackingStatsContainer = () => {
       setLoading(true)
 
       try {
-        const start = startDate
-          ? new Date(startDate).toISOString()
-          : undefined
+        const start = startDate ? new Date(startDate).toISOString() : undefined
         const end = endDate
           ? new Date(endDate + 'T23:59:59').toISOString()
           : undefined
 
         switch (currentTab) {
-        case 'overview': {
-          const data = await getTrackingOverview(start, end)
-          setOverview(data)
-          break
-        }
-
-        case 'pages': {
-          const data = await getPageStats(start, end, 1, 20)
-          if (data) {
-            setPageStats(data.list)
-            setPagePagination(data.pagination)
+          case 'overview': {
+            const data = await getTrackingOverview(start, end)
+            setOverview(data)
+            break
           }
 
-          break
-        }
+          case 'pages': {
+            const data = await getPageStats(start, end, 1, 20)
+            if (data) {
+              setPageStats(data.list)
+              setPagePagination(data.pagination)
+            }
 
-        case 'anime': {
-          const data = await getAnimeStats(start, end, 1, 20)
-          if (data) {
-            setAnimeStats(data.list)
-            setAnimePagination(data.pagination)
+            break
           }
 
-          break
-        }
+          case 'anime': {
+            const data = await getAnimeStats(start, end, 1, 20)
+            if (data) {
+              setAnimeStats(data.list)
+              setAnimePagination(data.pagination)
+            }
 
-        case 'visitors': {
-          const data = await getVisitorStats(start, end, 1, 20)
-          if (data) {
-            setVisitorStats(data.list)
-            setVisitorPagination(data.pagination)
+            break
           }
 
-          break
-        }
+          case 'visitors': {
+            const data = await getVisitorStats(start, end, 1, 20)
+            if (data) {
+              setVisitorStats(data.list)
+              setVisitorPagination(data.pagination)
+            }
+
+            break
+          }
         }
       } catch (error) {
         console.error('Failed to load data:', error)

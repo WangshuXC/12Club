@@ -77,7 +77,7 @@ export const ResourceLinksInput = ({
           <Chip color="primary" variant="flat">
             {
               SUPPORTED_RESOURCE_LINK_MAP[
-              storage as keyof typeof SUPPORTED_RESOURCE_LINK_MAP
+                storage as keyof typeof SUPPORTED_RESOURCE_LINK_MAP
               ]
             }
           </Chip>

@@ -1,13 +1,23 @@
 'use client'
 
-import { Button, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Chip, Code } from '@heroui/react'
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+  Chip,
+  Code
+} from '@heroui/react'
 import { addToast } from '@heroui/react'
 import { Eye, Copy } from 'lucide-react'
 
 import type { ResetCode } from '@/types/api/admin/forgot'
 
 interface ResetCodeDetailProps {
-    resetCode: ResetCode
+  resetCode: ResetCode
 }
 
 export const ResetCodeDetail = ({ resetCode }: ResetCodeDetailProps) => {
@@ -61,15 +71,21 @@ export const ResetCodeDetail = ({ resetCode }: ResetCodeDetailProps) => {
           <ModalBody>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-default-600">用户信息</label>
+                <label className="text-sm font-medium text-default-600">
+                  用户信息
+                </label>
                 <div className="mt-1">
                   <div className="font-medium">{resetCode.userName}</div>
-                  <div className="text-sm text-default-500">{resetCode.userEmail}</div>
+                  <div className="text-sm text-default-500">
+                    {resetCode.userEmail}
+                  </div>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-default-600">重置码</label>
+                <label className="text-sm font-medium text-default-600">
+                  重置码
+                </label>
                 <div className="mt-1 flex items-center gap-2">
                   <Code className="text-sm bg-default-100 px-3 py-2 rounded flex-1 font-mono">
                     {resetCode.resetCode}
@@ -80,20 +96,22 @@ export const ResetCodeDetail = ({ resetCode }: ResetCodeDetailProps) => {
                     onPress={handleCopyResetCode}
                     startContent={<Copy className="w-4 h-4" />}
                   >
-                                        复制
+                    复制
                   </Button>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-default-600">创建时间</label>
+                <label className="text-sm font-medium text-default-600">
+                  创建时间
+                </label>
                 <div className="mt-1">{formatDate(resetCode.createdAt)}</div>
               </div>
             </div>
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onPress={onClose}>
-                            关闭
+              关闭
             </Button>
           </ModalFooter>
         </ModalContent>

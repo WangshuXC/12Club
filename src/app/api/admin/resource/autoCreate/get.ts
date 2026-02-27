@@ -2,9 +2,9 @@ import { getOpenlistToken } from '@/lib/openlist'
 import { getRouteByDbId } from '@/utils/router'
 
 interface GetFileListResult {
-    success: boolean
-    message: string
-    data?: string[]
+  success: boolean
+  message: string
+  data?: string[]
 }
 
 export async function getResourceFileList(
@@ -66,4 +66,4 @@ export async function getResourceFileList(
       message: error instanceof Error ? error.message : '未知错误'
     }
   }
-} 
+}

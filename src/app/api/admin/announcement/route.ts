@@ -45,7 +45,10 @@ export const POST = async (req: NextRequest) => {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
+    return NextResponse.json({
+      message: '权限不足，仅管理员可操作',
+      status: 403
+    })
   }
 
   const response = await createAnnouncement(input, payload.uid)
@@ -68,7 +71,10 @@ export const PUT = async (req: NextRequest) => {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
+    return NextResponse.json({
+      message: '权限不足，仅管理员可操作',
+      status: 403
+    })
   }
 
   const response = await updateAnnouncement(input)
@@ -91,7 +97,10 @@ export const DELETE = async (req: NextRequest) => {
   }
 
   if (payload.role < 3) {
-    return NextResponse.json({ message: '权限不足，仅管理员可操作', status: 403 })
+    return NextResponse.json({
+      message: '权限不足，仅管理员可操作',
+      status: 403
+    })
   }
 
   const response = await deleteAnnouncement(input)
@@ -100,4 +109,4 @@ export const DELETE = async (req: NextRequest) => {
   }
 
   return NextResponse.json({ ...response, status: 200 })
-} 
+}

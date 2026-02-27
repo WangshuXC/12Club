@@ -138,12 +138,7 @@ export const VisitorsModal = ({
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="3xl"
-      scrollBehavior="inside"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} size="3xl" scrollBehavior="inside">
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <span>{getTitle()}</span>

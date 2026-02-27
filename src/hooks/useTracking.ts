@@ -13,9 +13,7 @@ const getDeviceType = (): 'desktop' | 'mobile' | 'tablet' => {
     return 'tablet'
   }
 
-  if (
-    /mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)
-  ) {
+  if (/mobile|iphone|ipod|android|blackberry|opera mini|iemobile/i.test(ua)) {
     return 'mobile'
   }
 
@@ -59,7 +57,6 @@ const reportEvents = async (guid: string, events: TrackingEvent[]) => {
 }
 
 export interface UseTrackingOptions {
-
   // 批量上报的间隔时间（毫秒）
   flushInterval?: number
 

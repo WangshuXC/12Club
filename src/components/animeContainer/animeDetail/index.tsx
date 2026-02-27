@@ -99,7 +99,10 @@ export const AnimeDetail = ({
             </h1>
 
             {/* 元数据行 */}
-            <MetaInfo primaryItems={primaryItems} secondaryItems={secondaryItems} />
+            <MetaInfo
+              primaryItems={primaryItems}
+              secondaryItems={secondaryItems}
+            />
 
             {/* 标签区域 */}
             <TagList tags={introduce.tags} />

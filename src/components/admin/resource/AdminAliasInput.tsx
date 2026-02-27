@@ -80,4 +80,4 @@ export const AdminAliasInput = ({ aliases, onChange, errors }: Props) => {
       </div>
     </div>
   )
-} 
+}

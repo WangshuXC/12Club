@@ -26,7 +26,7 @@ const getPageData = async (input: z.infer<typeof pageSchema>) => {
 
   // 构建过滤条件
   const whereConditions: any = {}
-  
+
   // 类型过滤 - 根据TYPE_MAP过滤dbId前缀
   if (TYPE_MAP[category as keyof typeof TYPE_MAP]) {
     const typePrefix = TYPE_MAP[category as keyof typeof TYPE_MAP]
@@ -34,7 +34,7 @@ const getPageData = async (input: z.infer<typeof pageSchema>) => {
       startsWith: typePrefix
     }
   }
-  
+
   // 语言过滤 - 检查language数组是否包含指定语言
   if (selectedLanguage !== 'all') {
     whereConditions.language = {
@@ -46,7 +46,7 @@ const getPageData = async (input: z.infer<typeof pageSchema>) => {
   if (selectedStatus !== 'all') {
     whereConditions.status = parseInt(selectedStatus)
   }
-  
+
   // 类型过滤 - 如果需要的话可以添加
   // if (selectedType !== 'all') {
   //   whereConditions.type = {
@@ -65,7 +65,7 @@ const getPageData = async (input: z.infer<typeof pageSchema>) => {
 
     // 构建排序条件
     let orderBy: any = {}
-    
+
     // 处理关联计数排序
     if (sortField === 'favorite_by') {
       orderBy = {

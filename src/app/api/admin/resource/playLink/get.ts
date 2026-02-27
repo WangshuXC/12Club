@@ -33,7 +33,9 @@ export const getResourcePlayLinks = async (
     const formattedPlayLinks: ResourcePlayLink[] = playLinks.map((link) => ({
       id: link.id,
       accordion: link.accordion,
-      show_accordion: link.show_accordion ? link.show_accordion : link.accordion.toString(),
+      show_accordion: link.show_accordion
+        ? link.show_accordion
+        : link.accordion.toString(),
       resource_id: link.resource_id,
       user_id: link.user_id,
       link: link.link,
@@ -50,7 +52,10 @@ export const getResourcePlayLinks = async (
     console.error('获取播放链接列表失败:', error)
     return {
       success: false,
-      message: error instanceof Error ? error.message : '获取播放链接列表时发生未知错误'
+      message:
+        error instanceof Error
+          ? error.message
+          : '获取播放链接列表时发生未知错误'
     }
   }
-} 
+}

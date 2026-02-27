@@ -28,4 +28,3 @@ export const GetAutoUpdateActions = async (
 
   return response
 }
-

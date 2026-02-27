@@ -19,16 +19,15 @@ export const SelfUser = ({ user, userProps }: SelfUserProps) => {
   const altString = alt ? alt : username
 
   return (
-
-  // <Tooltip
-  //   showArrow
-  //   delay={500}
-  //   closeDelay={200}
-  //   //   content={<UserCard uid={user.id} />}
-  //   classNames={{
-  //     content: ['bg-background/70 backdrop-blur-md']
-  //   }}
-  // >
+    // <Tooltip
+    //   showArrow
+    //   delay={500}
+    //   closeDelay={200}
+    //   //   content={<UserCard uid={user.id} />}
+    //   classNames={{
+    //     content: ['bg-background/70 backdrop-blur-md']
+    //   }}
+    // >
 
     // </Tooltip>
     <User

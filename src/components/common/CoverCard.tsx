@@ -1,7 +1,14 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-import { Badge, Card, CardBody, CardFooter, Image, Tooltip } from '@heroui/react'
+import {
+  Badge,
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Tooltip
+} from '@heroui/react'
 import { Download, Eye, Heart, MessageSquare } from 'lucide-react'
 import { useTransitionRouter } from 'next-view-transitions'
 
@@ -87,12 +94,20 @@ export const CoverCard = ({ data }: { data: PageData }) => {
     >
       <CardBody className="overflow-visible w-full relative">
         <Badge
-          color={data.status === 1 ? 'primary' : data.status === 2 ? 'warning' : 'default'}
+          color={
+            data.status === 1
+              ? 'primary'
+              : data.status === 2
+                ? 'warning'
+                : 'default'
+          }
           variant="solid"
           showOutline={false}
           isInvisible={!(data.dbId.startsWith('a') && data.status !== 0)}
           className="absolute top-4 right-8 px-2"
-          content={data.status === 1 ? '完结' : data.status === 2 ? '老站数据' : ''}
+          content={
+            data.status === 1 ? '完结' : data.status === 2 ? '老站数据' : ''
+          }
         >
           <Image
             alt="Card Cover"

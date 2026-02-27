@@ -31,21 +31,29 @@ import { ResourcePlayLinkDelete } from './ResourcePlayLinkDelete'
 import type { ResourcePlayLink } from '@/types/api/resource-play-link'
 
 interface Props {
-    resourceId: number
-    accordionTotal: number
-    needUpdate?: boolean
+  resourceId: number
+  accordionTotal: number
+  needUpdate?: boolean
 }
 
 interface PlayLinkFormData {
-    accordion: number
-    showAccordion: string
-    link: string
+  accordion: number
+  showAccordion: string
+  link: string
 }
 
-export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate = false }: Props) => {
+export const ResourcePlayLinkManager = ({
+  resourceId,
+  accordionTotal,
+  needUpdate = false
+}: Props) => {
   const [playLinks, setPlayLinks] = useState<ResourcePlayLink[]>([])
   const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState<PlayLinkFormData>({ accordion: playLinks?.length + 1, showAccordion: '', link: '' })
+  const [formData, setFormData] = useState<PlayLinkFormData>({
+    accordion: playLinks?.length + 1,
+    showAccordion: '',
+    link: ''
+  })
   const [editingId, setEditingId] = useState<number | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -72,7 +80,11 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
 
   // 重置表单
   const resetForm = () => {
-    setFormData({ accordion: playLinks?.length + 1, showAccordion: '', link: '' })
+    setFormData({
+      accordion: playLinks?.length + 1,
+      showAccordion: '',
+      link: ''
+    })
     setEditingId(null)
   }
 
@@ -122,18 +134,21 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
     try {
       if (editingId) {
         // 更新播放链接
-        const res = await FetchPut<ResourcePlayLink>('/admin/resource/playLink', {
-          id: editingId,
-          accordion: formData.accordion,
-          showAccordion: formData.showAccordion,
-          link: removeHttpPrefix(formData.link.trim())
-        })
+        const res = await FetchPut<ResourcePlayLink>(
+          '/admin/resource/playLink',
+          {
+            id: editingId,
+            accordion: formData.accordion,
+            showAccordion: formData.showAccordion,
+            link: removeHttpPrefix(formData.link.trim())
+          }
+        )
 
         ErrorHandler(res, (response: any) => {
           if (response?.success && response.data) {
-            setPlayLinks(prev => prev.map(link =>
-              link.id === editingId ? response.data : link
-            ))
+            setPlayLinks((prev) =>
+              prev.map((link) => (link.id === editingId ? response.data : link))
+            )
             addToast({
               title: '成功',
               description: '播放链接更新成功',
@@ -145,16 +160,21 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
         })
       } else {
         // 创建新播放链接
-        const res = await FetchPost<ResourcePlayLink>('/admin/resource/playLink', {
-          resourceId,
-          accordion: formData.accordion,
-          showAccordion: formData.showAccordion,
-          link: removeHttpPrefix(formData.link.trim())
-        })
+        const res = await FetchPost<ResourcePlayLink>(
+          '/admin/resource/playLink',
+          {
+            resourceId,
+            accordion: formData.accordion,
+            showAccordion: formData.showAccordion,
+            link: removeHttpPrefix(formData.link.trim())
+          }
+        )
 
         ErrorHandler(res, (response: any) => {
           if (response?.success && response.data) {
-            setPlayLinks(prev => [...prev, response.data].sort((a, b) => a.accordion - b.accordion))
+            setPlayLinks((prev) =>
+              [...prev, response.data].sort((a, b) => a.accordion - b.accordion)
+            )
             addToast({
               title: '成功',
               description: '播放链接添加成功',
@@ -177,7 +197,7 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
     setLoading(false)
 
     ErrorHandler(res, () => {
-      setPlayLinks(prev => prev.filter(link => link.id !== id))
+      setPlayLinks((prev) => prev.filter((link) => link.id !== id))
       addToast({
         title: '成功',
         description: '播放链接删除成功',
@@ -207,14 +227,12 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
           onPress={() => handleOpenModal()}
           isDisabled={loading}
         >
-                    添加播放链接
+          添加播放链接
         </Button>
       </div>
 
       {!playLinks?.length ? (
-        <div className="text-center py-8 text-default-500">
-                    暂无播放链接
-        </div>
+        <div className="text-center py-8 text-default-500">暂无播放链接</div>
       ) : (
         <Table aria-label="播放链接列表">
           <TableHeader>
@@ -235,7 +253,9 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
                 </TableCell>
                 <TableCell>
                   <Chip color="primary" variant="flat">
-                    {playLink.show_accordion ? playLink.show_accordion : playLink.accordion}
+                    {playLink.show_accordion
+                      ? playLink.show_accordion
+                      : playLink.accordion}
                   </Chip>
                 </TableCell>
                 <TableCell>
@@ -253,9 +273,7 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell>
-                  {playLink.user?.name || '未知用户'}
-                </TableCell>
+                <TableCell>{playLink.user?.name || '未知用户'}</TableCell>
                 <TableCell>
                   {new Date(playLink.created).toLocaleDateString()}
                 </TableCell>
@@ -271,7 +289,10 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
                     >
                       <Edit2 size={14} />
                     </Button>
-                    <ResourcePlayLinkDelete resource={playLink} onDelete={handleDelete} />
+                    <ResourcePlayLinkDelete
+                      resource={playLink}
+                      onDelete={handleDelete}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -291,7 +312,9 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
               <NumberInput
                 label="集数序号"
                 value={formData.accordion}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, accordion: value }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, accordion: value }))
+                }
                 min={1}
                 description="用于内部排序的集数序号"
               />
@@ -299,26 +322,29 @@ export const ResourcePlayLinkManager = ({ resourceId, accordionTotal, needUpdate
                 label="显示名称"
                 placeholder="例如：第11.5集、番外篇等（可选）"
                 value={formData.showAccordion}
-                onChange={(e) => setFormData(prev => ({ ...prev, showAccordion: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    showAccordion: e.target.value
+                  }))
+                }
                 description="不填写将显示默认的集数格式"
               />
               <Input
                 label="播放链接"
                 placeholder="请输入播放链接"
                 value={removeHttpPrefix(formData.link)}
-                onChange={(e) => setFormData(prev => ({ ...prev, link: e.target.value }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, link: e.target.value }))
+                }
               />
             </div>
           </ModalBody>
           <ModalFooter>
             <Button variant="light" onPress={onClose}>
-                            取消
+              取消
             </Button>
-            <Button
-              color="primary"
-              onPress={handleSubmit}
-              isLoading={loading}
-            >
+            <Button color="primary" onPress={handleSubmit} isLoading={loading}>
               {editingId ? '更新' : '添加'}
             </Button>
           </ModalFooter>

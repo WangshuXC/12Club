@@ -19,13 +19,15 @@ export const getFolders = async (
       is_public: pageUid !== currentUserUid ? true : undefined
     },
     include: {
-      resource: input.dbId ? {
-        where: {
-          resource: {
-            db_id: input.dbId
+      resource: input.dbId
+        ? {
+            where: {
+              resource: {
+                db_id: input.dbId
+              }
+            }
           }
-        }
-      } : false,
+        : false,
       _count: {
         select: { resource: true }
       }

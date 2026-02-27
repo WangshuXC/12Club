@@ -10,16 +10,16 @@ import { upPage } from '@/lib/routerTransition'
 import { cn } from '@/lib/utils'
 
 interface SlideData {
-    title: string
-    href: string
-    imageSrc: string
+  title: string
+  href: string
+  imageSrc: string
 }
 
 interface SlideProps {
-    slide: SlideData
-    index: number
-    current: number
-    handleSlideClick: (index: number) => void
+  slide: SlideData
+  index: number
+  current: number
+  handleSlideClick: (index: number) => void
 }
 
 const widthClassName = 'w-[60vmin] lg:w-[40vmin] 2xl:w-[30vmin]'
@@ -74,7 +74,10 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
   const { imageSrc, href, title } = slide
 
   return (
-    <div className="[perspective:1200px] [transform-style:preserve-3d]" onClick={() => handleSlideClick(index)}>
+    <div
+      className="[perspective:1200px] [transform-style:preserve-3d]"
+      onClick={() => handleSlideClick(index)}
+    >
       <li
         ref={slideRef}
         className={cn(
@@ -85,9 +88,9 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
         onMouseLeave={handleMouseLeave}
         style={{
           transform:
-                        current !== index
-                          ? 'scale(0.98) rotateX(8deg)'
-                          : 'scale(1) rotateX(0deg)',
+            current !== index
+              ? 'scale(0.98) rotateX(8deg)'
+              : 'scale(1) rotateX(0deg)',
           transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           transformOrigin: 'bottom'
         }}
@@ -96,9 +99,9 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
           className="absolute top-0 left-0 w-full h-full aspect-[3/4] bg-[#1D1F2F] rounded-xl overflow-hidden transition-all duration-150 ease-out"
           style={{
             transform:
-                            current === index
-                              ? 'translate3d(calc(var(--x) / 30), calc(var(--y) / 30), 0)'
-                              : 'none'
+              current === index
+                ? 'translate3d(calc(var(--x) / 30), calc(var(--y) / 30), 0)'
+                : 'none'
           }}
         >
           <Image
@@ -122,7 +125,8 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
         </div>
 
         <article
-          className={`relative p-[4vmin] transition-opacity duration-1000 ease-in-out ${current === index ? 'opacity-100 visible' : 'opacity-0 invisible'
+          className={`relative p-[4vmin] transition-opacity duration-1000 ease-in-out ${
+            current === index ? 'opacity-100 visible' : 'opacity-0 invisible'
           }`}
         >
           <h2 className="text-lg md:text-2xl lg:text-4xl font-semibold  relative">
@@ -150,9 +154,9 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
 }
 
 interface CarouselControlProps {
-    type: string
-    title: string
-    handleClick: () => void
+  type: string
+  title: string
+  handleClick: () => void
 }
 
 const CarouselControl = ({
@@ -162,7 +166,8 @@ const CarouselControl = ({
 }: CarouselControlProps) => {
   return (
     <button
-      className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200 dark:bg-neutral-800 border-3 border-transparent rounded-full  focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${type === 'previous' ? 'rotate-180' : ''
+      className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200 dark:bg-neutral-800 border-3 border-transparent rounded-full  focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${
+        type === 'previous' ? 'rotate-180' : ''
       }`}
       title={title}
       onClick={handleClick}
@@ -173,7 +178,7 @@ const CarouselControl = ({
 }
 
 interface CarouselProps {
-    slides: SlideData[]
+  slides: SlideData[]
 }
 
 export default function AnimeCarousel({ slides }: CarouselProps) {

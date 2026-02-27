@@ -30,13 +30,9 @@ const NotificationItemCard: FC<{ item: NotificationItem }> = ({ item }) => {
           </h4>
         </div>
 
-        <p className="text-3xl font-bold text-primary-600">
-          {item.count}
-        </p>
+        <p className="text-3xl font-bold text-primary-600">{item.count}</p>
 
-        <p className="text-sm text-default-500">
-          {item.description}
-        </p>
+        <p className="text-sm text-default-500">{item.description}</p>
       </CardBody>
       <CardFooter>
         <Link href={item.href} showAnchorIcon>
@@ -47,29 +43,31 @@ const NotificationItemCard: FC<{ item: NotificationItem }> = ({ item }) => {
   )
 }
 
-export const AdminNotification: FC<{ notifications: NotificationCardsProps }> = ({ notifications }) => {
+export const AdminNotification: FC<{
+  notifications: NotificationCardsProps
+}> = ({ notifications }) => {
   const notificationItems: NotificationItem[] = [
     {
       key: 'feedbacks',
       title: '用户反馈',
       description: '待处理的资源反馈',
       count: notifications.feedbacks,
-      href: '/admin/feedback',
+      href: '/admin/feedback'
     },
     {
       key: 'reports',
       title: '举报内容',
       description: '待审核的用户举报内容',
       count: notifications.reports,
-      href: '/admin/report',
+      href: '/admin/report'
     },
     {
       key: 'passwordResets',
       title: '密码重置',
       description: '待处理的密码重置请求',
       count: notifications.passwordResets,
-      href: '/admin/forgot',
-    },
+      href: '/admin/forgot'
+    }
   ]
 
   return (

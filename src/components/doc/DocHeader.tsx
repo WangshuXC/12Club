@@ -1,6 +1,6 @@
 'use client'
 
-import { Divider } from "@heroui/react"
+import { Divider } from '@heroui/react'
 
 interface Props {
   name: string

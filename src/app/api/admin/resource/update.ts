@@ -6,10 +6,7 @@ import { adminUpdateResourceSchema } from '@/validations/admin'
 
 import { prisma } from '../../../../../prisma'
 
-export const renameResource = async (
-  dbId: string,
-  newName: string
-) => {
+export const renameResource = async (dbId: string, newName: string) => {
   const tokenResult = await getOpenlistToken()
 
   if (!tokenResult.success || !tokenResult.token) {
@@ -50,7 +47,11 @@ export const renameResource = async (
 }
 
 // 处理单个标签的创建或获取
-const processTag = async (tagName: string, userId: number, resourceId: number) => {
+const processTag = async (
+  tagName: string,
+  userId: number,
+  resourceId: number
+) => {
   const trimmedTagName = tagName.trim()
 
   if (!trimmedTagName) return
@@ -170,7 +171,7 @@ export const updateResource = async (
       // 添加新别名
       if (input.aliases.length > 0) {
         await prisma.resourceAlias.createMany({
-          data: input.aliases.map(name => ({
+          data: input.aliases.map((name) => ({
             name: name.trim(),
             resource_id: input.id
           }))
@@ -195,4 +196,4 @@ export const updateResource = async (
     console.error('更新资源失败:', error)
     return error instanceof Error ? error.message : '更新资源时发生未知错误'
   }
-} 
+}

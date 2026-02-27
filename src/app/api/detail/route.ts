@@ -58,7 +58,7 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
           select: {
             accordion: true,
             show_accordion: true,
-            link: true,
+            link: true
           },
           orderBy: {
             accordion: 'asc'
@@ -112,15 +112,20 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
 
     // 转换数据结构并按 showAccordion 排序
     const playList: PlayListItem[] = detail.play_links
-      .map(item => ({
+      .map((item) => ({
         accordion: item.accordion,
         showAccordion: item.show_accordion,
         link: item.link
       }))
       .sort((a, b) => {
         // 获取排序值：如果 showAccordion 为空，使用 accordion
-        const getSortValue = (item: { showAccordion: string; accordion: number }) => {
-          return item.showAccordion ? item.showAccordion : item.accordion.toString()
+        const getSortValue = (item: {
+          showAccordion: string
+          accordion: number
+        }) => {
+          return item.showAccordion
+            ? item.showAccordion
+            : item.accordion.toString()
         }
 
         const sortValueA = getSortValue(a)
@@ -169,19 +174,20 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
     }
 
     // 处理系列信息
-    const series = detail.series_relations.length > 0
-      ? detail.series_relations.map((rel) => ({
-        id: rel.series.id,
-        name: rel.series.name,
-        description: rel.series.description,
-        resources: rel.series.resources.map((r) => ({
-          dbId: r.resource.db_id,
-          name: r.resource.name,
-          image: r.resource.image_url,
-          released: r.resource.released
-        }))
-      }))
-      : null
+    const series =
+      detail.series_relations.length > 0
+        ? detail.series_relations.map((rel) => ({
+            id: rel.series.id,
+            name: rel.series.name,
+            description: rel.series.description,
+            resources: rel.series.resources.map((r) => ({
+              dbId: r.resource.db_id,
+              name: r.resource.name,
+              image: r.resource.image_url,
+              released: r.resource.released
+            }))
+          }))
+        : null
 
     await setKv(
       `${CACHE_KEY}:${input.id}`,

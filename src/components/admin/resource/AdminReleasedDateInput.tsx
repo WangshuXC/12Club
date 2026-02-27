@@ -79,4 +79,4 @@ export const AdminReleasedDateInput = ({ date, onChange, errors }: Props) => {
       />
     </div>
   )
-} 
+}

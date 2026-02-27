@@ -3,11 +3,24 @@ import { z } from 'zod'
 export const adminPaginationSchema = z.object({
   page: z.coerce.number().min(1).max(9999999),
   limit: z.coerce.number().min(1).max(100),
-  search: z.string().max(300, { message: '搜索内容最多 300 个字符' }).optional(),
-  types: z.string().optional().transform((val) => {
-    if (!val) return undefined
-    return val.split(',').filter(type => ['a', 'c', 'g', 'n'].includes(type)) as ('a' | 'c' | 'g' | 'n')[]
-  }),
+  search: z
+    .string()
+    .max(300, { message: '搜索内容最多 300 个字符' })
+    .optional(),
+  types: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return undefined
+      return val
+        .split(',')
+        .filter((type) => ['a', 'c', 'g', 'n'].includes(type)) as (
+        | 'a'
+        | 'c'
+        | 'g'
+        | 'n'
+      )[]
+    }),
   sortField: z.enum(['resource', 'resource_patch', 'created']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional()
 })
@@ -27,12 +40,35 @@ export const adminUpdateUserSchema = z.object({
 export const adminGetResourceSchema = z.object({
   page: z.coerce.number().min(1).max(9999999),
   limit: z.coerce.number().min(1).max(100),
-  search: z.string().max(300, { message: '搜索内容最多 300 个字符' }).optional(),
-  types: z.string().optional().transform((val) => {
-    if (!val) return undefined
-    return val.split(',').filter(type => ['a', 'c', 'g', 'n'].includes(type)) as ('a' | 'c' | 'g' | 'n')[]
-  }),
-  sortField: z.enum(['created', 'view', 'download', 'favorite_by', 'comment', 'updated', 'released']).default('updated'),
+  search: z
+    .string()
+    .max(300, { message: '搜索内容最多 300 个字符' })
+    .optional(),
+  types: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return undefined
+      return val
+        .split(',')
+        .filter((type) => ['a', 'c', 'g', 'n'].includes(type)) as (
+        | 'a'
+        | 'c'
+        | 'g'
+        | 'n'
+      )[]
+    }),
+  sortField: z
+    .enum([
+      'created',
+      'view',
+      'download',
+      'favorite_by',
+      'comment',
+      'updated',
+      'released'
+    ])
+    .default('updated'),
   sortOrder: z.enum(['asc', 'desc']).default('desc')
 })
 
@@ -46,7 +82,11 @@ export const adminUpdateResourceSchema = z.object({
   language: z.string(),
   status: z.coerce.number().min(0).max(2),
   aliases: z.array(z.string()).optional(),
-  tags: z.array(z.string().trim().max(107, { message: '标签长度不能超过 107 个字符' })).optional(),
+  tags: z
+    .array(
+      z.string().trim().max(107, { message: '标签长度不能超过 107 个字符' })
+    )
+    .optional(),
   author: z.string().trim().min(1, { message: '资源作者不能为空' }),
   translator: z.string().trim().optional()
 })
@@ -57,14 +97,30 @@ export const adminDeleteResourceSchema = z.object({
 
 // 公告相关验证模式
 export const adminCreateAnnouncementSchema = z.object({
-  title: z.string().trim().min(1, { message: '公告标题不能为空' }).max(255, { message: '公告标题不能超过 255 个字符' }),
-  content: z.string().trim().min(1, { message: '公告内容不能为空' }).max(10000, { message: '公告内容不能超过 10000 个字符' })
+  title: z
+    .string()
+    .trim()
+    .min(1, { message: '公告标题不能为空' })
+    .max(255, { message: '公告标题不能超过 255 个字符' }),
+  content: z
+    .string()
+    .trim()
+    .min(1, { message: '公告内容不能为空' })
+    .max(10000, { message: '公告内容不能超过 10000 个字符' })
 })
 
 export const adminUpdateAnnouncementSchema = z.object({
   id: z.coerce.number().min(1).max(9999999),
-  title: z.string().trim().min(1, { message: '公告标题不能为空' }).max(255, { message: '公告标题不能超过 255 个字符' }),
-  content: z.string().trim().min(1, { message: '公告内容不能为空' }).max(10000, { message: '公告内容不能超过 10000 个字符' })
+  title: z
+    .string()
+    .trim()
+    .min(1, { message: '公告标题不能为空' })
+    .max(255, { message: '公告标题不能超过 255 个字符' }),
+  content: z
+    .string()
+    .trim()
+    .min(1, { message: '公告内容不能为空' })
+    .max(10000, { message: '公告内容不能超过 10000 个字符' })
 })
 
 export const adminDeleteAnnouncementSchema = z.object({
@@ -74,16 +130,38 @@ export const adminDeleteAnnouncementSchema = z.object({
 // 资源播放链接相关验证模式
 export const adminCreateResourcePlayLinkSchema = z.object({
   resourceId: z.coerce.number().min(1).max(9999999),
-  accordion: z.coerce.number().min(1).max(9999, { message: '集数不能超过 9999' }),
-  showAccordion: z.string().trim().max(50, { message: '显示名称长度不能超过 50 个字符' }).optional(),
-  link: z.string().trim().min(1, { message: '播放链接不能为空' }).max(2000, { message: '播放链接长度不能超过 2000 个字符' })
+  accordion: z.coerce
+    .number()
+    .min(1)
+    .max(9999, { message: '集数不能超过 9999' }),
+  showAccordion: z
+    .string()
+    .trim()
+    .max(50, { message: '显示名称长度不能超过 50 个字符' })
+    .optional(),
+  link: z
+    .string()
+    .trim()
+    .min(1, { message: '播放链接不能为空' })
+    .max(2000, { message: '播放链接长度不能超过 2000 个字符' })
 })
 
 export const adminUpdateResourcePlayLinkSchema = z.object({
   id: z.coerce.number().min(1).max(9999999),
-  accordion: z.coerce.number().min(1).max(9999, { message: '集数不能超过 9999' }),
-  showAccordion: z.string().trim().max(50, { message: '显示名称长度不能超过 50 个字符' }).optional(),
-  link: z.string().trim().min(1, { message: '播放链接不能为空' }).max(2000, { message: '播放链接长度不能超过 2000 个字符' })
+  accordion: z.coerce
+    .number()
+    .min(1)
+    .max(9999, { message: '集数不能超过 9999' }),
+  showAccordion: z
+    .string()
+    .trim()
+    .max(50, { message: '显示名称长度不能超过 50 个字符' })
+    .optional(),
+  link: z
+    .string()
+    .trim()
+    .min(1, { message: '播放链接不能为空' })
+    .max(2000, { message: '播放链接长度不能超过 2000 个字符' })
 })
 
 export const adminDeleteResourcePlayLinkSchema = z.object({
@@ -91,31 +169,40 @@ export const adminDeleteResourcePlayLinkSchema = z.object({
 })
 
 // 批量创建播放链接验证模式
-export const adminAutoCreateResourcePlayLinkSchema = z.object({
-  resourceId: z.coerce.number().min(1).max(9999999),
-  linkList: z.array(
-    z.string().trim().min(1, { message: '播放链接不能为空' }).max(2000, { message: '播放链接长度不能超过 2000 个字符' })
-  ).max(999, { message: '播放链接数量不能超过 999 个' }).optional(),
-  onlyUpdatePatch: z.boolean().optional()
-}).refine(
-  (data) => {
-    // 如果只更新 Patch，不检测 linkList
-    if (data.onlyUpdatePatch) {
+export const adminAutoCreateResourcePlayLinkSchema = z
+  .object({
+    resourceId: z.coerce.number().min(1).max(9999999),
+    linkList: z
+      .array(
+        z
+          .string()
+          .trim()
+          .min(1, { message: '播放链接不能为空' })
+          .max(2000, { message: '播放链接长度不能超过 2000 个字符' })
+      )
+      .max(999, { message: '播放链接数量不能超过 999 个' })
+      .optional(),
+    onlyUpdatePatch: z.boolean().optional()
+  })
+  .refine(
+    (data) => {
+      // 如果只更新 Patch，不检测 linkList
+      if (data.onlyUpdatePatch) {
+        return true
+      }
+
+      // 如果不是只更新 Patch，则 linkList 必须存在且不能为空
+      if (!data.linkList || data.linkList.length === 0) {
+        return false
+      }
+
       return true
+    },
+    {
+      message: '播放链接列表不能为空',
+      path: ['linkList']
     }
-
-    // 如果不是只更新 Patch，则 linkList 必须存在且不能为空
-    if (!data.linkList || data.linkList.length === 0) {
-      return false
-    }
-
-    return true
-  },
-  {
-    message: '播放链接列表不能为空',
-    path: ['linkList']
-  }
-)
+  )
 
 export const adminAutoCreateResourcePlayLinkQuerySchema = z.object({
   dbId: z.string().trim().min(1, { message: '资源DBID不能为空' })
@@ -148,15 +235,24 @@ export const adminHandleReportSchema = z.object({
 
 // 标签搜索验证模式
 export const adminSearchTagSchema = z.object({
-  search: z.string().trim().min(1, { message: '搜索关键词不能为空' }).max(107, { message: '搜索关键词长度不能超过 107 个字符' })
+  search: z
+    .string()
+    .trim()
+    .min(1, { message: '搜索关键词不能为空' })
+    .max(107, { message: '搜索关键词长度不能超过 107 个字符' })
 })
 
 // 系列管理相关验证模式
 export const adminGetSeriesSchema = z.object({
   page: z.coerce.number().min(1).max(9999999),
   limit: z.coerce.number().min(1).max(100),
-  search: z.string().max(300, { message: '搜索内容最多 300 个字符' }).optional(),
-  sortField: z.enum(['created', 'updated', 'name', 'resource_count']).default('updated'),
+  search: z
+    .string()
+    .max(300, { message: '搜索内容最多 300 个字符' })
+    .optional(),
+  sortField: z
+    .enum(['created', 'updated', 'name', 'resource_count'])
+    .default('updated'),
   sortOrder: z.enum(['asc', 'desc']).default('desc')
 })
 
@@ -165,15 +261,33 @@ export const adminGetSeriesDetailSchema = z.object({
 })
 
 export const adminCreateSeriesSchema = z.object({
-  name: z.string().trim().min(1, { message: '系列名称不能为空' }).max(255, { message: '系列名称不能超过 255 个字符' }),
-  description: z.string().trim().max(1000, { message: '系列描述不能超过 1000 个字符' }).optional(),
-  dbIds: z.array(z.string().trim().min(2).max(10)).min(1, { message: '至少需要选择一个资源' })
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: '系列名称不能为空' })
+    .max(255, { message: '系列名称不能超过 255 个字符' }),
+  description: z
+    .string()
+    .trim()
+    .max(1000, { message: '系列描述不能超过 1000 个字符' })
+    .optional(),
+  dbIds: z
+    .array(z.string().trim().min(2).max(10))
+    .min(1, { message: '至少需要选择一个资源' })
 })
 
 export const adminUpdateSeriesSchema = z.object({
   id: z.coerce.number().min(1).max(9999999),
-  name: z.string().trim().min(1, { message: '系列名称不能为空' }).max(255, { message: '系列名称不能超过 255 个字符' }),
-  description: z.string().trim().max(1000, { message: '系列描述不能超过 1000 个字符' }).optional()
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: '系列名称不能为空' })
+    .max(255, { message: '系列名称不能超过 255 个字符' }),
+  description: z
+    .string()
+    .trim()
+    .max(1000, { message: '系列描述不能超过 1000 个字符' })
+    .optional()
 })
 
 export const adminDeleteSeriesSchema = z.object({
@@ -182,11 +296,12 @@ export const adminDeleteSeriesSchema = z.object({
 
 export const adminAddSeriesToResourceSchema = z.object({
   seriesId: z.coerce.number().min(1).max(9999999),
-  dbIds: z.array(z.string().trim().min(2).max(10)).min(1, { message: '至少需要选择一个资源' })
+  dbIds: z
+    .array(z.string().trim().min(2).max(10))
+    .min(1, { message: '至少需要选择一个资源' })
 })
 
 export const adminRemoveSeriesFromResourceSchema = z.object({
   seriesId: z.coerce.number().min(1).max(9999999),
   dbId: z.string().trim().min(2).max(10)
 })
-

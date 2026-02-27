@@ -8,7 +8,7 @@ import { getUserInfoSchema } from '@/validations/user'
 import { prisma } from '../../../../../../prisma'
 
 export const getUserFavorite = async (
-  input: z.infer<typeof getUserInfoSchema>,
+  input: z.infer<typeof getUserInfoSchema>
 ) => {
   const { uid, page, limit } = input
   const offset = (page - 1) * limit
