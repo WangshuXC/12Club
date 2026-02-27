@@ -20,10 +20,10 @@ import {
 
 import {
   getPageVisitors,
-  getAnimeVisitors,
   type PageVisitor,
   type PaginationInfo
-} from '@/app/admin/tracking/actions'
+} from '@/app/admin/tracking/pages/actions'
+import { getAnimeVisitors } from '@/app/admin/tracking/anime/actions'
 import { SelfPagination } from '@/components/common/Pagination'
 import { parseUserAgentLabel } from '@/utils/device'
 

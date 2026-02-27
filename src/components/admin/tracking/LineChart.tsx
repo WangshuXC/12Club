@@ -1,6 +1,15 @@
 'use client'
 
 import { Spinner } from '@heroui/react'
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip
+} from 'recharts'
 
 import type { TrendDataPoint } from '@/app/admin/tracking/actions'
 
@@ -9,7 +18,6 @@ interface LineChartProps {
   loading: boolean
 }
 
-// 简单折线图组件
 export const LineChart = ({ data, loading }: LineChartProps) => {
   if (loading) {
     return (
@@ -27,133 +35,77 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
     )
   }
 
-  const maxValue = Math.max(...data.map((d) => d.value), 1)
-  const padding = 40
-  const chartWidth = 800
-  const chartHeight = 200
+  const isHourly = data.length > 0 && data[0].date.includes('T')
 
-  // 计算数据范围
-  // Y 轴从 0 开始，到最大值（至少为 1）
-  const chartMin = 0
-  const chartMax = Math.max(maxValue, 1)
-  const effectiveRange = chartMax - chartMin
-
-  // 计算点的位置
-  const points = data.map((d, i) => ({
-    x: padding + (i / (data.length - 1 || 1)) * (chartWidth - padding * 2),
-    y:
-      chartHeight -
-      padding -
-      ((d.value - chartMin) / effectiveRange) * (chartHeight - padding * 2),
-    value: d.value,
-    date: d.date
+  const chartData = data.map((d) => ({
+    ...d,
+    label: isHourly ? d.date.split('T')[1] : d.date.slice(5)
   }))
 
-  // 生成折线路径
-  const linePath = points
-    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`)
-    .join(' ')
-
-  // 生成面积路径
-  const areaPath = `${linePath} L ${points[points.length - 1]?.x || padding} ${chartHeight - padding} L ${padding} ${chartHeight - padding} Z`
-
-  // Y轴刻度 - 从 0 到最大值，均匀分布 5 个刻度
-  const yTicks = Array.from({ length: 5 }, (_, i) => {
-    const value = chartMin + (effectiveRange * (4 - i)) / 4
-
-    return {
-      value: Math.round(value),
-      y: padding + (i / 4) * (chartHeight - padding * 2)
-    }
-  })
-
-  // X轴标签（显示部分日期）
-  const xLabels = data.filter(
-    (_, i) =>
-      i === 0 || i === data.length - 1 || i % Math.ceil(data.length / 5) === 0
-  )
-
   return (
-    <div className="w-full overflow-x-auto">
-      <svg
-        viewBox={`0 0 ${chartWidth} ${chartHeight + 30}`}
-        className="w-full min-w-[600px]"
-        preserveAspectRatio="xMidYMid meet"
-      >
-        {/* 网格线 */}
-        {yTicks.map((tick, i) => (
-          <line
-            key={i}
-            x1={padding}
-            y1={tick.y}
-            x2={chartWidth - padding}
-            y2={tick.y}
+    <div className="w-full h-64 [&_.recharts-wrapper]:focus:outline-none [&_.recharts-surface]:focus:outline-none">
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
+          data={chartData}
+          margin={{ top: 8, right: 16, left: 0, bottom: 0 }}
+        >
+          <defs>
+            <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+              <stop
+                offset="5%"
+                stopColor="hsl(var(--heroui-primary))"
+                stopOpacity={0.3}
+              />
+              <stop
+                offset="95%"
+                stopColor="hsl(var(--heroui-primary))"
+                stopOpacity={0}
+              />
+            </linearGradient>
+          </defs>
+          <CartesianGrid
+            strokeDasharray="3 3"
             stroke="currentColor"
             strokeOpacity={0.1}
+            vertical={false}
           />
-        ))}
-
-        {/* Y轴刻度标签 */}
-        {yTicks.map((tick, i) => (
-          <text
-            key={i}
-            x={padding - 8}
-            y={tick.y + 4}
-            textAnchor="end"
-            className="text-xs fill-default-400"
-          >
-            {tick.value}
-          </text>
-        ))}
-
-        {/* 面积填充 */}
-        <path
-          d={areaPath}
-          fill="hsl(var(--heroui-primary))"
-          fillOpacity={0.1}
-        />
-
-        {/* 折线 */}
-        <path
-          d={linePath}
-          fill="none"
-          stroke="hsl(var(--heroui-primary))"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* 数据点 */}
-        {points.map((p, i) => (
-          <g key={i}>
-            <circle
-              cx={p.x}
-              cy={p.y}
-              r={4}
-              fill="hsl(var(--heroui-primary))"
-              className="hover:r-6 transition-all"
-            />
-            <title>{`${p.date}: ${p.value}`}</title>
-          </g>
-        ))}
-
-        {/* X轴标签 */}
-        {xLabels.map((d, i) => {
-          const point = points.find((p) => p.date === d.date)
-          if (!point) return null
-          return (
-            <text
-              key={i}
-              x={point.x}
-              y={chartHeight - padding + 20}
-              textAnchor="middle"
-              className="text-xs fill-default-400"
-            >
-              {d.date.slice(5)} {/* 只显示月-日 */}
-            </text>
-          )
-        })}
-      </svg>
+          <XAxis
+            dataKey="label"
+            tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={false}
+            className="fill-default-400"
+          />
+          <YAxis
+            tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={false}
+            allowDecimals={false}
+            className="fill-default-400"
+            width={40}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: 'hsl(var(--heroui-content1))',
+              borderColor: 'hsl(var(--heroui-default-200))',
+              borderRadius: '8px',
+              fontSize: '13px'
+            }}
+            labelFormatter={(label) => isHourly ? `时间: ${label}` : `日期: ${label}`}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            formatter={(value: any) => [`${Number(value).toLocaleString()}`, '数量']}
+          />
+          <Area
+            type="monotone"
+            dataKey="value"
+            stroke="hsl(var(--heroui-primary))"
+            strokeWidth={2}
+            fill="url(#colorValue)"
+            dot={{ r: 3, fill: 'hsl(var(--heroui-primary))' }}
+            activeDot={{ r: 5 }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   )
 }

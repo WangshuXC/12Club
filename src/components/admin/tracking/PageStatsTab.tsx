@@ -20,7 +20,7 @@ import { SelfPagination } from '@/components/common/Pagination'
 
 import { VisitorsModal } from './VisitorsModal'
 
-import type { PageStats, PaginationInfo } from '@/app/admin/tracking/actions'
+import type { PageStats, PaginationInfo } from '@/app/admin/tracking/pages/actions'
 
 interface PageStatsTableProps {
   data: PageStats[]

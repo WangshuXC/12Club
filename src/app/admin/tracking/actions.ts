@@ -1,60 +1,22 @@
 'use server'
 
-import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import {
+  verifyAdminAccess,
+  buildEventDateFilter,
+  buildVisitorDateFilter,
+  generateDateRange,
+  generateHourRange,
+  aggregateByDate,
+  aggregateByHour,
+  mapToTrendPoints
+} from '@/utils/trackingUtils'
 
 import { prisma } from '../../../../prisma'
 
-import type {
-  TrackingOverviewResult,
-  TrackingPageStatsItem,
-  TrackingAnimeStatsItem,
-  TrackingPaginationInfo,
-  TrackingPaginationResult
-} from '@/types/api/tracking'
-import type { Prisma } from '@prisma/client'
-
-// 定义带有事件计数的访客类型
-type VisitorWithEventsCount = Prisma.TrackingVisitorGetPayload<{
-  include: { _count: { select: { events: true } } }
-}>
-
-// 定义动漫事件查询结果类型
-type AnimeEventSelect = Prisma.TrackingEventGetPayload<{
-  select: {
-    id: true
-    event_type: true
-    extra_data: true
-    timestamp: true
-    visitor_id: true
-  }
-}>
+import type { TrackingOverviewResult } from '@/types/api/tracking'
 
 // 重新导出类型供组件使用
 export type TrackingOverview = TrackingOverviewResult
-
-export type PageStats = TrackingPageStatsItem
-
-export type AnimeStats = TrackingAnimeStatsItem
-
-// 重新定义完整的 VisitorStats 类型（序列化后日期为 string）
-export type VisitorStats = {
-  id: number
-  guid: string
-  user_id: number | null
-  user_agent: string
-  ip: string
-  first_seen: string // 序列化后为 ISO 字符串
-  last_seen: string // 序列化后为 ISO 字符串
-  events_count: number
-  user: {
-    id: number
-    name: string
-    avatar: string
-    email: string
-  } | null
-}
-
-export type PaginationInfo = TrackingPaginationInfo
 
 // 趋势数据类型
 export type TrendDataPoint = {
@@ -64,50 +26,18 @@ export type TrendDataPoint = {
 
 export type TrendType = 'visitors' | 'events' | 'pages' | 'plays'
 
+export type TrendGranularity = 'hour' | 'day'
+
 // 获取概览统计
 export async function getTrackingOverview(
   startDate?: string,
   endDate?: string
 ): Promise<TrackingOverview | null> {
   try {
-    const payload = await verifyHeaderCookie()
-    if (!payload) {
-      console.log('[Tracking] 用户未登录')
-      return null
-    }
+    if (!(await verifyAdminAccess())) return null
 
-    if (payload.role < 2) {
-      console.log('[Tracking] 用户权限不足, role:', payload.role)
-      return null
-    }
-
-    // 构建时间范围条件
-    const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      dateFilter.timestamp = {}
-
-      if (startDate) {
-        dateFilter.timestamp.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        dateFilter.timestamp.lte = new Date(endDate)
-      }
-    }
-
-    // 访客时间范围条件
-    const visitorDateFilter: { first_seen?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      visitorDateFilter.first_seen = {}
-
-      if (startDate) {
-        visitorDateFilter.first_seen.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        visitorDateFilter.first_seen.lte = new Date(endDate)
-      }
-    }
+    const dateFilter = buildEventDateFilter(startDate, endDate)
+    const visitorDateFilter = buildVisitorDateFilter(startDate, endDate)
 
     const [
       totalVisitors,
@@ -143,11 +73,10 @@ export async function getTrackingOverview(
       where: {
         ...dateFilter,
         event_name: 'accordion-play',
-        event_type: 'click'
+        event_type: 'custom'
       }
     })
 
-    // 即使没有数据，也返回一个有效的对象（全为0），而不是null
     return {
       totalVisitors,
       totalEvents,
@@ -168,729 +97,101 @@ export async function getTrackingOverview(
   }
 }
 
-// 获取页面访问统计
-export async function getPageStats(
-  startDate?: string,
-  endDate?: string,
-  page = 1,
-  pageSize = 20
-): Promise<TrackingPaginationResult<PageStats> | null> {
-  try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
-
-    const skip = (page - 1) * pageSize
-
-    // 构建时间范围条件
-    const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      dateFilter.timestamp = {}
-
-      if (startDate) {
-        dateFilter.timestamp.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        dateFilter.timestamp.lte = new Date(endDate)
-      }
-    }
-
-    const pageStatsResult = await prisma.trackingEvent.groupBy({
-      by: ['page_url', 'page_title'],
-      where: {
-        ...dateFilter,
-        event_type: 'expose'
-      },
-      _count: { id: true },
-      orderBy: {
-        _count: { id: 'desc' }
-      }
-    })
-
-    const total = pageStatsResult.length
-    const paginatedStats = pageStatsResult.slice(skip, skip + pageSize)
-
-    const pageVisitorStats = await Promise.all(
-      paginatedStats.map(async (stat) => {
-        const uniqueVisitors = await prisma.trackingEvent.groupBy({
-          by: ['visitor_id'],
-          where: {
-            ...dateFilter,
-            page_url: stat.page_url,
-            event_type: 'expose'
-          }
-        })
-
-        return {
-          page_url: stat.page_url,
-          page_title: stat.page_title || '未知页面',
-          total_views: stat._count.id,
-          unique_visitors: uniqueVisitors.length
-        }
-      })
-    )
-
-    return {
-      list: pageVisitorStats,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch page stats:', error)
-    return null
-  }
-}
-
-// 获取动漫播放统计
-export async function getAnimeStats(
-  startDate?: string,
-  endDate?: string,
-  page = 1,
-  pageSize = 20
-): Promise<TrackingPaginationResult<AnimeStats> | null> {
-  try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
-
-    const skip = (page - 1) * pageSize
-
-    // 构建时间范围条件
-    const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      dateFilter.timestamp = {}
-
-      if (startDate) {
-        dateFilter.timestamp.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        dateFilter.timestamp.lte = new Date(endDate)
-      }
-    }
-
-    const animeEvents = await prisma.trackingEvent.findMany({
-      where: {
-        ...dateFilter,
-        event_name: 'accordion-play'
-      },
-      select: {
-        id: true,
-        event_type: true,
-        extra_data: true,
-        timestamp: true,
-        visitor_id: true
-      }
-    })
-
-    const animeStatsMap = new Map<
-      string,
-      {
-        dbid: string
-        playCount: number
-        uniqueVisitors: Set<number>
-        accordionStats: Map<string, number>
-      }
-    >()
-
-    animeEvents.forEach((event: AnimeEventSelect) => {
-      const extraData = event.extra_data as Record<string, unknown> | null
-      if (!extraData) return
-
-      const dbid = String(extraData['dbid'] || '')
-      const accordion = String(extraData['accordion'] || '1')
-
-      if (!dbid) return
-
-      if (!animeStatsMap.has(dbid)) {
-        animeStatsMap.set(dbid, {
-          dbid,
-          playCount: 0,
-          uniqueVisitors: new Set(),
-          accordionStats: new Map()
-        })
-      }
-
-      const stats = animeStatsMap.get(dbid)!
-      stats.uniqueVisitors.add(event.visitor_id)
-
-      // 曝光和点击都算作一次播放
-      stats.playCount++
-
-      if (!stats.accordionStats.has(accordion)) {
-        stats.accordionStats.set(accordion, 0)
-      }
-
-      stats.accordionStats.set(
-        accordion,
-        stats.accordionStats.get(accordion)! + 1
-      )
-    })
-
-    // 获取所有涉及的 dbid
-    const dbids = Array.from(animeStatsMap.keys())
-
-    // 批量查询资源详情
-    const resources = await prisma.resource.findMany({
-      where: {
-        db_id: { in: dbids }
-      },
-      select: {
-        db_id: true,
-        name: true,
-        image_url: true,
-        status: true
-      }
-    })
-
-    // 创建 dbid 到资源的映射
-    const resourceMap = new Map(resources.map((r) => [r.db_id, r]))
-
-    const animeStatsList = Array.from(animeStatsMap.values())
-      .map((stat) => {
-        const resource = resourceMap.get(stat.dbid)
-
-        return {
-          dbid: stat.dbid,
-          name: resource?.name || '未知动漫',
-          banner: resource?.image_url || '',
-          status: resource?.status || 0,
-          playCount: stat.playCount,
-          uniqueVisitors: stat.uniqueVisitors.size,
-          accordionStats: Array.from(stat.accordionStats.entries())
-            .map(([acc, count]) => ({
-              accordion: acc,
-              playCount: count
-            }))
-            .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
-        }
-      })
-      .sort((a, b) => b.playCount - a.playCount)
-
-    const total = animeStatsList.length
-    const paginatedList = animeStatsList.slice(skip, skip + pageSize)
-
-    return {
-      list: paginatedList,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch anime stats:', error)
-    return null
-  }
-}
-
-// 获取访客统计
-export async function getVisitorStats(
-  startDate?: string,
-  endDate?: string,
-  page = 1,
-  pageSize = 20
-): Promise<TrackingPaginationResult<VisitorStats> | null> {
-  try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
-
-    const skip = (page - 1) * pageSize
-
-    // 访客时间范围条件
-    const visitorDateFilter: { first_seen?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      visitorDateFilter.first_seen = {}
-
-      if (startDate) {
-        visitorDateFilter.first_seen.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        visitorDateFilter.first_seen.lte = new Date(endDate)
-      }
-    }
-
-    const [visitors, total] = await Promise.all([
-      prisma.trackingVisitor.findMany({
-        where: visitorDateFilter,
-        orderBy: { last_seen: 'desc' },
-        skip,
-        take: pageSize,
-        include: {
-          _count: {
-            select: { events: true }
-          }
-        }
-      }),
-      prisma.trackingVisitor.count({
-        where: visitorDateFilter
-      })
-    ])
-
-    // 获取所有关联的用户ID
-    const userIds = visitors
-      .map((v) => v.user_id)
-      .filter((id): id is number => id !== null)
-
-    // 批量查询用户信息
-    const users =
-      userIds.length > 0
-        ? await prisma.user.findMany({
-            where: { id: { in: userIds } },
-            select: { id: true, name: true, avatar: true, email: true }
-          })
-        : []
-
-    // 创建用户ID到用户信息的映射
-    const userMap = new Map(users.map((u) => [u.id, u]))
-
-    return {
-      list: visitors.map((v: VisitorWithEventsCount) => ({
-        id: v.id,
-        guid: v.guid,
-        user_id: v.user_id,
-        user_agent: v.user_agent,
-        ip: v.ip,
-        first_seen: v.first_seen.toISOString(),
-        last_seen: v.last_seen.toISOString(),
-        events_count: v._count.events,
-        user: v.user_id ? userMap.get(v.user_id) || null : null
-      })),
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch visitor stats:', error)
-    return null
-  }
-}
-
 // 获取趋势数据
 export async function getTrendData(
   type: TrendType,
   startDate?: string,
-  endDate?: string
+  endDate?: string,
+  granularity: TrendGranularity = 'day'
 ): Promise<TrendDataPoint[] | null> {
   try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
+    if (!(await verifyAdminAccess())) return null
 
     // 默认获取最近30天的数据
-    const end = endDate ? new Date(endDate + 'T23:59:59') : new Date()
+    const end = endDate ? new Date(endDate) : new Date()
     const start = startDate
       ? new Date(startDate)
       : new Date(end.getTime() - 30 * 24 * 60 * 60 * 1000)
 
-    // 生成日期范围
-    const dates: string[] = []
-    const current = new Date(start)
-    const endDateOnly = new Date(end.toISOString().split('T')[0])
-
-    while (current <= endDateOnly) {
-      dates.push(current.toISOString().split('T')[0])
-      current.setDate(current.getDate() + 1)
-    }
-
-    let result: TrendDataPoint[] = []
+    const isHourly = granularity === 'hour'
+    const slots = isHourly
+      ? generateHourRange(start, end)
+      : generateDateRange(start, end)
+    const aggregate = isHourly ? aggregateByHour : aggregateByDate
 
     switch (type) {
       case 'visitors': {
-        // 按天统计新访客数
         const visitors = await prisma.trackingVisitor.findMany({
-          where: {
-            first_seen: {
-              gte: start,
-              lte: end
-            }
-          },
-          select: {
-            first_seen: true
-          }
+          where: { first_seen: { gte: start, lte: end } },
+          select: { first_seen: true }
         })
 
-        const countMap = new Map<string, number>()
-        visitors.forEach((v) => {
-          const dateKey = v.first_seen.toISOString().split('T')[0]
-          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-        })
+        const countMap = aggregate(visitors, (v) => v.first_seen)
 
-        result = dates.map((date) => ({
-          date,
-          value: countMap.get(date) || 0
-        }))
-        break
+        return mapToTrendPoints(slots, countMap)
       }
 
       case 'events': {
-        // 按天统计事件数
         const events = await prisma.trackingEvent.findMany({
-          where: {
-            timestamp: {
-              gte: start,
-              lte: end
-            }
-          },
-          select: {
-            timestamp: true
-          }
+          where: { timestamp: { gte: start, lte: end } },
+          select: { timestamp: true }
         })
 
-        const countMap = new Map<string, number>()
-        events.forEach((e) => {
-          const dateKey = e.timestamp.toISOString().split('T')[0]
-          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-        })
+        const countMap = aggregate(events, (e) => e.timestamp)
 
-        result = dates.map((date) => ({
-          date,
-          value: countMap.get(date) || 0
-        }))
-        break
+        return mapToTrendPoints(slots, countMap)
       }
 
       case 'pages': {
-        // 按天统计独立页面访问数
         const pageEvents = await prisma.trackingEvent.findMany({
           where: {
-            timestamp: {
-              gte: start,
-              lte: end
-            },
-            event_type: 'expose'
+            timestamp: { gte: start, lte: end }
           },
-          select: {
-            timestamp: true,
-            page_url: true
-          }
+          select: { timestamp: true, page_url: true }
         })
 
-        // 按天分组，统计每天的独立页面数
-        const dayPagesMap = new Map<string, Set<string>>()
+        const slotPagesMap = new Map<string, Set<string>>()
+
         pageEvents.forEach((e) => {
-          const dateKey = e.timestamp.toISOString().split('T')[0]
-          if (!dayPagesMap.has(dateKey)) {
-            dayPagesMap.set(dateKey, new Set())
+          let slotKey: string
+          const d = e.timestamp
+
+          if (isHourly) {
+            slotKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:00`
+          } else {
+            slotKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
           }
 
-          dayPagesMap.get(dateKey)!.add(e.page_url)
+          if (!slotPagesMap.has(slotKey)) {
+            slotPagesMap.set(slotKey, new Set())
+          }
+
+          slotPagesMap.get(slotKey)!.add(e.page_url)
         })
 
-        result = dates.map((date) => ({
-          date,
-          value: dayPagesMap.get(date)?.size || 0
+        return slots.map((slot) => ({
+          date: slot,
+          value: slotPagesMap.get(slot)?.size || 0
         }))
-        break
       }
 
       case 'plays': {
-        // 按天统计动漫播放次数
         const playEvents = await prisma.trackingEvent.findMany({
           where: {
-            timestamp: {
-              gte: start,
-              lte: end
-            },
+            timestamp: { gte: start, lte: end },
             event_name: 'accordion-play',
-            event_type: 'click'
+            event_type: 'custom'
           },
-          select: {
-            timestamp: true
-          }
+          select: { timestamp: true }
         })
 
-        const countMap = new Map<string, number>()
-        playEvents.forEach((e) => {
-          const dateKey = e.timestamp.toISOString().split('T')[0]
-          countMap.set(dateKey, (countMap.get(dateKey) || 0) + 1)
-        })
+        const countMap = aggregate(playEvents, (e) => e.timestamp)
 
-        result = dates.map((date) => ({
-          date,
-          value: countMap.get(date) || 0
-        }))
-        break
+        return mapToTrendPoints(slots, countMap)
       }
     }
-
-    return result
   } catch (error) {
     console.error('Failed to fetch trend data:', error)
-    return null
-  }
-}
-
-// 页面访客信息类型
-export type PageVisitor = {
-  id: number
-  guid: string
-  user_id: number | null
-  user_agent: string | null
-  ip: string | null
-  first_seen: string
-  last_seen: string
-  visit_count: number
-  user: {
-    id: number
-    name: string
-    avatar: string
-    email: string
-  } | null
-}
-
-// 获取指定页面的访客列表
-export async function getPageVisitors(
-  pageUrl: string,
-  startDate?: string,
-  endDate?: string,
-  page = 1,
-  pageSize = 20
-): Promise<TrackingPaginationResult<PageVisitor> | null> {
-  try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
-
-    const skip = (page - 1) * pageSize
-
-    // 构建时间范围条件
-    const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      dateFilter.timestamp = {}
-
-      if (startDate) {
-        dateFilter.timestamp.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        dateFilter.timestamp.lte = new Date(endDate)
-      }
-    }
-
-    // 获取访问过该页面的所有访客ID及其访问次数
-    const visitorEvents = await prisma.trackingEvent.groupBy({
-      by: ['visitor_id'],
-      where: {
-        ...dateFilter,
-        page_url: pageUrl,
-        event_type: 'expose'
-      },
-      _count: { id: true },
-      orderBy: {
-        _count: { id: 'desc' }
-      }
-    })
-
-    const total = visitorEvents.length
-    const paginatedVisitorEvents = visitorEvents.slice(skip, skip + pageSize)
-    const visitorIds = paginatedVisitorEvents.map((v) => v.visitor_id)
-
-    // 获取访客详细信息
-    const visitors = await prisma.trackingVisitor.findMany({
-      where: {
-        id: { in: visitorIds }
-      }
-    })
-
-    // 创建访客ID到访客信息的映射
-    const visitorMap = new Map(visitors.map((v) => [v.id, v]))
-
-    // 获取所有关联的用户ID
-    const userIds = visitors
-      .map((v) => v.user_id)
-      .filter((id): id is number => id !== null)
-
-    // 批量查询用户信息
-    const users =
-      userIds.length > 0
-        ? await prisma.user.findMany({
-            where: { id: { in: userIds } },
-            select: { id: true, name: true, avatar: true, email: true }
-          })
-        : []
-
-    // 创建用户ID到用户信息的映射
-    const userMap = new Map(users.map((u) => [u.id, u]))
-
-    // 创建访客ID到访问次数的映射
-    const visitCountMap = new Map(
-      paginatedVisitorEvents.map((v) => [v.visitor_id, v._count.id])
-    )
-
-    // 组装结果，保持按访问次数排序
-    const result: PageVisitor[] = paginatedVisitorEvents.map((ve) => {
-      const visitor = visitorMap.get(ve.visitor_id)!
-
-      return {
-        id: visitor.id,
-        guid: visitor.guid,
-        user_id: visitor.user_id,
-        user_agent: visitor.user_agent,
-        ip: visitor.ip,
-        first_seen: visitor.first_seen.toISOString(),
-        last_seen: visitor.last_seen.toISOString(),
-        visit_count: visitCountMap.get(ve.visitor_id) || 0,
-        user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
-      }
-    })
-
-    return {
-      list: result,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch page visitors:', error)
-    return null
-  }
-}
-
-// 动漫访客信息类型（复用 PageVisitor）
-export type AnimeVisitor = PageVisitor
-
-// 获取指定动漫的访客列表
-export async function getAnimeVisitors(
-  dbid: string,
-  startDate?: string,
-  endDate?: string,
-  page = 1,
-  pageSize = 20
-): Promise<TrackingPaginationResult<AnimeVisitor> | null> {
-  try {
-    const payload = await verifyHeaderCookie()
-    if (!payload || payload.role < 2) {
-      return null
-    }
-
-    const skip = (page - 1) * pageSize
-
-    // 构建时间范围条件
-    const dateFilter: { timestamp?: { gte?: Date; lte?: Date } } = {}
-    if (startDate || endDate) {
-      dateFilter.timestamp = {}
-
-      if (startDate) {
-        dateFilter.timestamp.gte = new Date(startDate)
-      }
-
-      if (endDate) {
-        dateFilter.timestamp.lte = new Date(endDate)
-      }
-    }
-
-    // 获取观看过该动漫的所有访客ID及其观看次数
-    const animeEvents = await prisma.trackingEvent.findMany({
-      where: {
-        ...dateFilter,
-        event_name: 'accordion-play'
-      },
-      select: {
-        visitor_id: true,
-        extra_data: true
-      }
-    })
-
-    // 过滤出匹配 dbid 的事件并统计
-    const visitorCountMap = new Map<number, number>()
-    animeEvents.forEach((event) => {
-      const extraData = event.extra_data as Record<string, unknown> | null
-      if (!extraData) return
-      const eventDbid = String(extraData['dbid'] || '')
-      if (eventDbid !== dbid) return
-
-      visitorCountMap.set(
-        event.visitor_id,
-        (visitorCountMap.get(event.visitor_id) || 0) + 1
-      )
-    })
-
-    // 按观看次数排序
-    const sortedVisitors = Array.from(visitorCountMap.entries()).sort(
-      (a, b) => b[1] - a[1]
-    )
-
-    const total = sortedVisitors.length
-    const paginatedVisitors = sortedVisitors.slice(skip, skip + pageSize)
-    const visitorIds = paginatedVisitors.map(([id]) => id)
-
-    // 获取访客详细信息
-    const visitors = await prisma.trackingVisitor.findMany({
-      where: {
-        id: { in: visitorIds }
-      }
-    })
-
-    // 创建访客ID到访客信息的映射
-    const visitorMap = new Map(visitors.map((v) => [v.id, v]))
-
-    // 获取所有关联的用户ID
-    const userIds = visitors
-      .map((v) => v.user_id)
-      .filter((id): id is number => id !== null)
-
-    // 批量查询用户信息
-    const users =
-      userIds.length > 0
-        ? await prisma.user.findMany({
-            where: { id: { in: userIds } },
-            select: { id: true, name: true, avatar: true, email: true }
-          })
-        : []
-
-    // 创建用户ID到用户信息的映射
-    const userMap = new Map(users.map((u) => [u.id, u]))
-
-    // 组装结果，保持按观看次数排序
-    const result: AnimeVisitor[] = paginatedVisitors.map(
-      ([visitorId, count]) => {
-        const visitor = visitorMap.get(visitorId)!
-
-        return {
-          id: visitor.id,
-          guid: visitor.guid,
-          user_id: visitor.user_id,
-          user_agent: visitor.user_agent,
-          ip: visitor.ip,
-          first_seen: visitor.first_seen.toISOString(),
-          last_seen: visitor.last_seen.toISOString(),
-          visit_count: count,
-          user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
-        }
-      }
-    )
-
-    return {
-      list: result,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize)
-      }
-    }
-  } catch (error) {
-    console.error('Failed to fetch anime visitors:', error)
     return null
   }
 }

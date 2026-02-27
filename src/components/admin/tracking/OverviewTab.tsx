@@ -4,16 +4,17 @@ import { useState, useEffect, useMemo } from 'react'
 
 import { Card, CardBody, Spinner } from '@heroui/react'
 
-import { getTrendData } from '@/app/admin/tracking/actions'
+import {
+  getTrendData,
+  type TrackingOverview,
+  type TrendType,
+  type TrendDataPoint,
+  type TrendGranularity
+} from '@/app/admin/tracking/actions'
 import { cn } from '@/lib/utils'
+import { useTrackingDateStore } from '@/store/adminTrackingStore'
 
 import { LineChart } from './LineChart'
-
-import type {
-  TrackingOverview,
-  TrendType,
-  TrendDataPoint
-} from '@/app/admin/tracking/actions'
 
 interface OverviewCardsProps {
   data: TrackingOverview | null
@@ -29,9 +30,13 @@ export const OverviewCards = ({
   startDate,
   endDate
 }: OverviewCardsProps) => {
-  const [selectedCard, setSelectedCard] = useState<TrendType | null>('visitors') // 默认选择第一个
+  const activeRange = useTrackingDateStore((s) => s.activeRange)
+  const [selectedCard, setSelectedCard] = useState<TrendType | null>('visitors')
   const [trendData, setTrendData] = useState<TrendDataPoint[]>([])
   const [trendLoading, setTrendLoading] = useState(false)
+
+  const granularity: TrendGranularity =
+    activeRange === '24h' || activeRange === 'today' ? 'hour' : 'day'
 
   const cards = useMemo(
     () =>
@@ -71,13 +76,20 @@ export const OverviewCards = ({
 
     const fetchTrend = async () => {
       setTrendLoading(true)
-      const result = await getTrendData(selectedCard, startDate, endDate)
+      const { startISO, endISO } =
+        useTrackingDateStore.getState().getQueryRange()
+      const result = await getTrendData(
+        selectedCard,
+        startISO || undefined,
+        endISO || undefined,
+        granularity
+      )
       setTrendData(result || [])
       setTrendLoading(false)
     }
 
     fetchTrend()
-  }, [selectedCard, startDate, endDate])
+  }, [selectedCard, startDate, endDate, granularity])
 
   // 日期范围变化时，保持选中第一个卡片
   useEffect(() => {

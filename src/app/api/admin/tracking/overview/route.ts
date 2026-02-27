@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
       where: {
         ...dateFilter,
         event_name: 'accordion-play',
-        event_type: 'click'
+        event_type: 'custom'
       }
     })
 

@@ -1,5 +1,5 @@
-import { TrackingStatsContainer } from '@/components/admin/tracking'
+import { OverviewContainer } from '@/components/admin/tracking/OverviewContainer'
 
-export default function TrackingStatsPage() {
-  return <TrackingStatsContainer />
+export default function TrackingOverviewPage() {
+  return <OverviewContainer />
 }

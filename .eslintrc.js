@@ -12,19 +12,23 @@ const commonCoreRules = {
   'max-nested-callbacks': ['error', 4], // 限制回调函数嵌套的最大深度为3
 
   // 注释的换行规则 （以下规则只适用于独立的注释，如果注释位于代码行的末尾，则不会生效）
+  // 注意：beforeLineComment 关闭，因为在 TS interface/type 体内首行注释前
+  // Prettier 不会保留空行，与 ESLint 规则冲突（@typescript-eslint v8 已移除此规则的 TS 版本）
   'lines-around-comment': [
     'error',
     {
       beforeBlockComment: false, // 在块注释（/* ... */）之前可以不用换行
       afterBlockComment: false, // 在块注释（/* ... */）之后可以不用换行
-      beforeLineComment: true, // 在行注释（// ...）之前需要一个空行
+      beforeLineComment: false, // 关闭：与 Prettier 在 TS interface 中冲突
       afterLineComment: false, // 在行注释（// ...）之后不需要空行
       allowBlockStart: true, // 在块的开始处允许没有空行
       allowBlockEnd: false, // 在块的结束处不允许没有空行
       allowObjectStart: true, // 在对象的开始处允许没有空行
       allowObjectEnd: false, // 在对象的结束处不允许没有空行
       allowArrayStart: true, // 在数组的开始处允许没有空行
-      allowArrayEnd: false // 在数组的结束处不允许没有空行
+      allowArrayEnd: false, // 在数组的结束处不允许没有空行
+      allowClassStart: true, // 在 class/interface 开始处允许没有空行
+      allowClassEnd: false // 在 class/interface 结束处不允许没有空行
     }
   ],
 
