@@ -32,14 +32,14 @@ export const Footer = () => {
               十周年电子书
             </Link>
 
-            <Link
+            {/* <Link
               href="https://github.com/WangshuXC"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center"
             >
               GitHub
-            </Link>
+            </Link> */}
           </div>
 
           <div className="flex space-x-8">
