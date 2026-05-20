@@ -3,8 +3,23 @@
 # SSH 端口转发脚本
 # 转发 12club 服务器的 PostgreSQL(5432), Redis(6379), Openlist(5244), Openlist S3(5246) 端口
 # 支持守护模式：自动检测断开并重连
+#
+# 端口映射说明（本地端口 -> 远程端口）:
+#   15432 -> 5432  (PostgreSQL, 使用 15432 避免与本地 PostgreSQL 冲突)
+#   6379  -> 6379  (Redis)
+#   5244  -> 5244  (Openlist)
+#   5246  -> 5246  (Openlist S3)
 
-PORTS="5432 6379 5244 5246"
+# 本地端口列表（用于检测、清理等）
+PORTS="15432 6379 5244 5246"
+
+# 端口映射：本地端口 -> 远程端口
+declare -A PORT_MAP=(
+    [15432]=5432
+    [6379]=6379
+    [5244]=5244
+    [5246]=5246
+)
 
 # SSH_HOST: SSH 连接别名，需要在 ~/.ssh/config 中配置
 # 
@@ -120,7 +135,7 @@ check_status() {
         if check_port $PORT; then
             local SERVICE_NAME=""
             case $PORT in
-                5432) SERVICE_NAME="PostgreSQL" ;;
+                15432) SERVICE_NAME="PostgreSQL" ;;
                 6379) SERVICE_NAME="Redis" ;;
                 5244) SERVICE_NAME="Openlist" ;;
                 5246) SERVICE_NAME="Openlist S3" ;;
@@ -150,28 +165,34 @@ check_status() {
     fi
 }
 
-# 检查并关闭已存在的端口转发
+# 检查并关闭已存在的端口转发（仅关闭 SSH 进程，不误杀本地服务）
 cleanup_existing_tunnels() {
     for PORT in $PORTS; do
-        # 查找占用本地端口的 SSH 进程
-        PID=$(lsof -ti :$PORT 2>/dev/null | head -1)
-        if [ -n "$PID" ]; then
-            echo -e "${YELLOW}端口 $PORT 已被占用 (PID: $PID)，正在关闭...${NC}"
-            kill $PID 2>/dev/null
-            sleep 0.5
-        fi
+        # 仅查找占用本地端口的 SSH 进程，避免误杀本地 PostgreSQL 等服务
+        PIDS=$(lsof -ti :$PORT 2>/dev/null)
+        for PID in $PIDS; do
+            PROC_NAME=$(ps -p $PID -o comm= 2>/dev/null)
+            if [ "$PROC_NAME" = "ssh" ]; then
+                echo -e "${YELLOW}端口 $PORT 的 SSH 转发已存在 (PID: $PID)，正在关闭...${NC}"
+                kill $PID 2>/dev/null
+                sleep 0.5
+            fi
+        done
     done
 }
 
-# 停止所有端口转发
+# 停止所有端口转发（仅停止 SSH 进程）
 stop_all_tunnels() {
     echo -e "${YELLOW}正在停止所有端口转发...${NC}"
     for PORT in $PORTS; do
-        PID=$(lsof -ti :$PORT 2>/dev/null | head -1)
-        if [ -n "$PID" ]; then
-            kill $PID 2>/dev/null
-            echo -e "  ${GREEN}✓${NC} 已关闭端口 $PORT (PID: $PID)"
-        fi
+        PIDS=$(lsof -ti :$PORT 2>/dev/null)
+        for PID in $PIDS; do
+            PROC_NAME=$(ps -p $PID -o comm= 2>/dev/null)
+            if [ "$PROC_NAME" = "ssh" ]; then
+                kill $PID 2>/dev/null
+                echo -e "  ${GREEN}✓${NC} 已关闭端口 $PORT 的 SSH 转发 (PID: $PID)"
+            fi
+        done
     done
     echo -e "${GREEN}所有端口转发已停止${NC}"
 }
@@ -180,10 +201,11 @@ stop_all_tunnels() {
 start_tunnels() {
     echo -e "${GREEN}正在建立 SSH 端口转发到 $SSH_HOST...${NC}"
     
-    # 构建端口转发参数
+    # 构建端口转发参数（本地端口 -> 远程端口）
     FORWARD_ARGS=""
-    for PORT in $PORTS; do
-        FORWARD_ARGS="$FORWARD_ARGS -L $PORT:localhost:$PORT"
+    for LOCAL_PORT in $PORTS; do
+        REMOTE_PORT=${PORT_MAP[$LOCAL_PORT]}
+        FORWARD_ARGS="$FORWARD_ARGS -L 0.0.0.0:$LOCAL_PORT:localhost:$REMOTE_PORT"
     done
     
     # 后台启动 SSH 端口转发
@@ -196,10 +218,10 @@ start_tunnels() {
     
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✓ 端口转发已建立:${NC}"
-        echo -e "  - PostgreSQL: localhost:5432"
-        echo -e "  - Redis:      localhost:6379"
-        echo -e "  - Openlist:   localhost:5244"
-        echo -e "  - Openlist S3: localhost:5246"
+        echo -e "  - PostgreSQL: localhost:15432 -> remote:5432"
+        echo -e "  - Redis:      localhost:6379  -> remote:6379"
+        echo -e "  - Openlist:   localhost:5244  -> remote:5244"
+        echo -e "  - Openlist S3: localhost:5246 -> remote:5246"
         return 0
     else
         echo -e "${RED}✗ 端口转发建立失败${NC}"
