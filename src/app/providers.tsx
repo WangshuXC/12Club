@@ -8,7 +8,7 @@ import { useRouter } from 'next-nprogress-bar'
 import { ThemeProvider } from 'next-themes'
 
 import { DeviceInitializer } from '@/components/common/DeviceInitializer'
-import { TrackingProvider } from '@/components/tracking'
+import { TrackingProvider, useTrackingContext } from '@/components/tracking'
 import { useUserStore } from '@/store/userStore'
 
 import type { GlobalDeviceInfo } from '@/utils/device'
@@ -20,14 +20,20 @@ interface ProvidersProps {
   initialDeviceInfo: GlobalDeviceInfo
 }
 
-export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
-  const router = useRouter()
+// Aegis 初始化组件，需要在 TrackingProvider 内部使用
+const AegisInitializer = () => {
+  const { getGUID } = useTrackingContext()
   const { user } = useUserStore((state) => state)
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' || aegis) return
 
     let canceled = false
+
+    const uin = user.uid !== 0
+      ? `${user.name} | ${user.uid}`
+      : `游客 | ${getGUID()}`
 
     void import('aegis-web-sdk')
       .then(({ default: Aegis }) => {
@@ -35,7 +41,7 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
 
         aegis = new Aegis({
           id: 'qVzOWuLoljDKmaX6Zq',
-          uin: user.name + ' | ' + user.uid,
+          uin,
           reportApiSpeed: true,
           reportAssetSpeed: true,
           spa: true,
@@ -48,6 +54,13 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
       canceled = true
     }
   }, [])
+  /* eslint-enable react-hooks/exhaustive-deps */
+
+  return null
+}
+
+export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
+  const router = useRouter()
 
   return (
     <HeroUIProvider navigate={router.push}>
@@ -59,6 +72,7 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
             debug: process.env.NODE_ENV === 'development' // 开发环境开启调试
           }}
         >
+          <AegisInitializer />
           <DeviceInitializer initialDeviceInfo={initialDeviceInfo} />
           {children}
         </TrackingProvider>
