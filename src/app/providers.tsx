@@ -3,7 +3,6 @@
 import { useEffect } from 'react'
 
 import { HeroUIProvider, ToastProvider } from '@heroui/react'
-import Aegis from 'aegis-web-sdk'
 import { AppProgressBar } from 'next-nprogress-bar'
 import { useRouter } from 'next-nprogress-bar'
 import { ThemeProvider } from 'next-themes'
@@ -13,7 +12,7 @@ import { TrackingProvider } from '@/components/tracking'
 
 import type { GlobalDeviceInfo } from '@/utils/device'
 
-let aegis: Aegis | null = null
+let aegis: unknown = null
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -24,15 +23,27 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (aegis) return
+    if (process.env.NODE_ENV === 'development' || aegis) return
 
-    aegis = new Aegis({
-      id: 'kwEOrCK47396deVdD3',
-      reportApiSpeed: true,
-      reportAssetSpeed: true,
-      spa: true,
-      hostUrl: 'https://rumt-zh.com'
-    })
+    let canceled = false
+
+    void import('aegis-web-sdk')
+      .then(({ default: Aegis }) => {
+        if (aegis || canceled) return
+
+        aegis = new Aegis({
+          id: 'qVzOWuLoljDKmaX6Zq',
+          reportApiSpeed: true,
+          reportAssetSpeed: true,
+          spa: true,
+          hostUrl: 'https://rumt-zh.com'
+        })
+      })
+      .catch(() => undefined)
+
+    return () => {
+      canceled = true
+    }
   }, [])
 
   return (
