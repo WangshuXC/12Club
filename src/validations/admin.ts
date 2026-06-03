@@ -1,5 +1,19 @@
 import { z } from 'zod'
 
+const adminResourceTypes = ['a', 'c', 'g', 'n'] as const
+const adminResourceTypesSchema = z
+  .union([z.string(), z.array(z.enum(adminResourceTypes))])
+  .optional()
+  .transform((val) => {
+    if (!val) return undefined
+
+    const types = Array.isArray(val) ? val : val.split(',')
+
+    return types.filter((type): type is (typeof adminResourceTypes)[number] =>
+      adminResourceTypes.includes(type as (typeof adminResourceTypes)[number])
+    )
+  })
+
 export const adminPaginationSchema = z.object({
   page: z.coerce.number().min(1).max(9999999),
   limit: z.coerce.number().min(1).max(100),
@@ -7,20 +21,7 @@ export const adminPaginationSchema = z.object({
     .string()
     .max(300, { message: '搜索内容最多 300 个字符' })
     .optional(),
-  types: z
-    .string()
-    .optional()
-    .transform((val) => {
-      if (!val) return undefined
-      return val
-        .split(',')
-        .filter((type) => ['a', 'c', 'g', 'n'].includes(type)) as (
-        | 'a'
-        | 'c'
-        | 'g'
-        | 'n'
-      )[]
-    }),
+  types: adminResourceTypesSchema,
   sortField: z.enum(['resource', 'resource_patch', 'created']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional()
 })
@@ -44,20 +45,7 @@ export const adminGetResourceSchema = z.object({
     .string()
     .max(300, { message: '搜索内容最多 300 个字符' })
     .optional(),
-  types: z
-    .string()
-    .optional()
-    .transform((val) => {
-      if (!val) return undefined
-      return val
-        .split(',')
-        .filter((type) => ['a', 'c', 'g', 'n'].includes(type)) as (
-        | 'a'
-        | 'c'
-        | 'g'
-        | 'n'
-      )[]
-    }),
+  types: adminResourceTypesSchema,
   sortField: z
     .enum([
       'created',

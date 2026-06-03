@@ -14,9 +14,18 @@ import { ChevronDownIcon } from 'lucide-react'
 
 import { useAdminResourceStore } from '@/store/adminResourceStore'
 
-export const AdminResourceOption = () => {
+interface Props {
+  onChange?: () => void
+}
+
+export const AdminResourceOption = ({ onChange }: Props) => {
   const searchData = useAdminResourceStore((state) => state.data)
   const setSearchData = useAdminResourceStore((state) => state.setData)
+
+  const updateSearchData = (data: typeof searchData) => {
+    setSearchData(data)
+    onChange?.()
+  }
 
   // 生成选中项的显示文本
   const getSelectedText = () => {
@@ -56,7 +65,7 @@ export const AdminResourceOption = () => {
               <Checkbox
                 isSelected={searchData.searchInAnime}
                 onValueChange={(checked) =>
-                  setSearchData({ ...searchData, searchInAnime: checked })
+                  updateSearchData({ ...searchData, searchInAnime: checked })
                 }
                 classNames={{
                   base: 'w-full max-w-full',
@@ -74,7 +83,7 @@ export const AdminResourceOption = () => {
               <Checkbox
                 isSelected={searchData.searchInComic}
                 onValueChange={(checked) =>
-                  setSearchData({ ...searchData, searchInComic: checked })
+                  updateSearchData({ ...searchData, searchInComic: checked })
                 }
                 classNames={{
                   base: 'w-full max-w-full',
@@ -88,7 +97,7 @@ export const AdminResourceOption = () => {
               <Checkbox
                 isSelected={searchData.searchInGame}
                 onValueChange={(checked) =>
-                  setSearchData({ ...searchData, searchInGame: checked })
+                  updateSearchData({ ...searchData, searchInGame: checked })
                 }
                 classNames={{
                   base: 'w-full max-w-full',
@@ -106,7 +115,7 @@ export const AdminResourceOption = () => {
               <Checkbox
                 isSelected={searchData.searchInNovel}
                 onValueChange={(checked) =>
-                  setSearchData({ ...searchData, searchInNovel: checked })
+                  updateSearchData({ ...searchData, searchInNovel: checked })
                 }
                 classNames={{
                   base: 'w-full max-w-full',

@@ -1,4 +1,4 @@
-'use cilent'
+'use client'
 
 import {
   Button,
@@ -15,7 +15,11 @@ import { useAdminResourceStore } from '@/store/adminResourceStore'
 
 import type { SortField } from '@/components/pageContainer/sort'
 
-export const AdminResourceSort = () => {
+interface Props {
+  onChange?: () => void
+}
+
+export const AdminResourceSort = ({ onChange }: Props) => {
   const searchData = useAdminResourceStore((state) => state.data)
   const setSearchData = useAdminResourceStore((state) => state.setData)
 
@@ -35,6 +39,7 @@ export const AdminResourceSort = () => {
           selectedKeys={new Set([searchData.sortField])}
           onAction={(key) => {
             setSearchData({ ...searchData, sortField: key as SortField })
+            onChange?.()
           }}
           selectionMode="single"
           className="cursor-default"
@@ -70,6 +75,7 @@ export const AdminResourceSort = () => {
             ...searchData,
             sortOrder: searchData.sortOrder === 'asc' ? 'desc' : 'asc'
           })
+          onChange?.()
         }}
       >
         {searchData.sortOrder === 'asc' ? (

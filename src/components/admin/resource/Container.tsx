@@ -9,6 +9,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Pagination,
   Input
 } from '@heroui/react'
 import { Search } from 'lucide-react'
@@ -16,14 +17,18 @@ import { useDebounce } from 'use-debounce'
 
 import { GetActions } from '@/app/admin/resource/actions'
 import { Loading } from '@/components/common/Loading'
-import { SelfPagination } from '@/components/common/Pagination'
 import { useAdminResourceStore } from '@/store/adminResourceStore'
 
 import { AdminResourceOption } from './AdminResourceOption'
 import { AdminResourceSort } from './AdminResourceSort'
 import { RenderCell } from './RenderCell'
 
+import type { SortField, SortOrder } from '@/components/pageContainer/sort'
 import type { AdminResource } from '@/types/api/admin'
+
+const RESOURCE_TYPES = ['a', 'c', 'g', 'n'] as const
+
+type ResourceType = (typeof RESOURCE_TYPES)[number]
 
 const columns = [
   { name: '封面', uid: 'banner' },
@@ -40,31 +45,95 @@ interface Props {
   initialResources: AdminResource[]
   initialTotal: number
   initialQuery?: string
+  initialPage?: number
+  initialTypes?: ResourceType[]
+  initialSortField?: SortField
+  initialSortOrder?: SortOrder
 }
 
 export const Resource = ({
   initialResources,
   initialTotal,
-  initialQuery = ''
+  initialQuery = '',
+  initialPage = 1,
+  initialTypes = [...RESOURCE_TYPES],
+  initialSortField = 'updated',
+  initialSortOrder = 'desc'
 }: Props) => {
   const [resources, setResources] = useState<AdminResource[]>(initialResources)
   const [total, setTotal] = useState(initialTotal)
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(initialPage)
   const [searchQuery, setSearchQuery] = useState(initialQuery)
   const [debouncedQuery] = useDebounce(searchQuery, 500)
   const [isPending, startTransition] = useTransition()
   const adminResourceData = useAdminResourceStore((state) => state.data)
+  const setAdminResourceData = useAdminResourceStore((state) => state.setData)
   const isInitialMount = useRef(true)
 
   // 根据store状态构建类型过滤数组
   const getFilterTypes = () => {
-    const types: ('a' | 'c' | 'g' | 'n')[] = []
+    const types: ResourceType[] = []
     if (adminResourceData.searchInAnime) types.push('a')
     if (adminResourceData.searchInComic) types.push('c')
     if (adminResourceData.searchInGame) types.push('g')
     if (adminResourceData.searchInNovel) types.push('n')
-    return types.length > 0 ? types : undefined
+
+    return types.length > 0 && types.length < RESOURCE_TYPES.length
+      ? types
+      : undefined
   }
+
+  const updateUrl = (filterTypes: ResourceType[] | undefined) => {
+    const params = new URLSearchParams(window.location.search)
+
+    if (debouncedQuery) {
+      params.set('query', debouncedQuery)
+    } else {
+      params.delete('query')
+    }
+
+    params.set('page', page.toString())
+    params.set('sortField', adminResourceData.sortField)
+    params.set('sortOrder', adminResourceData.sortOrder)
+
+    if (filterTypes?.length) {
+      params.set('types', filterTypes.join(','))
+    } else {
+      params.delete('types')
+    }
+
+    const queryString = params.toString()
+    window.history.replaceState(
+      {},
+      '',
+      queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname
+    )
+  }
+
+  useEffect(() => {
+    const nextData = {
+      ...adminResourceData,
+      searchInAnime: initialTypes.includes('a'),
+      searchInComic: initialTypes.includes('c'),
+      searchInGame: initialTypes.includes('g'),
+      searchInNovel: initialTypes.includes('n'),
+      sortField: initialSortField,
+      sortOrder: initialSortOrder
+    }
+
+    const isSameData =
+      adminResourceData.searchInAnime === nextData.searchInAnime &&
+      adminResourceData.searchInComic === nextData.searchInComic &&
+      adminResourceData.searchInGame === nextData.searchInGame &&
+      adminResourceData.searchInNovel === nextData.searchInNovel &&
+      adminResourceData.sortField === nextData.sortField &&
+      adminResourceData.sortOrder === nextData.sortOrder
+
+    if (!isSameData) {
+      setAdminResourceData(nextData)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -73,6 +142,8 @@ export const Resource = ({
     }
 
     const filterTypes = getFilterTypes()
+    updateUrl(filterTypes)
+
     startTransition(async () => {
       const response = await GetActions({
         page,
@@ -82,10 +153,14 @@ export const Resource = ({
         sortOrder: adminResourceData.sortOrder,
         ...(filterTypes && { types: filterTypes })
       })
-      if (typeof response !== 'string') {
-        setResources(response.resources)
-        setTotal(response.total)
+
+      if (typeof response === 'string') {
+        console.error('获取资源列表失败:', response)
+        return
       }
+
+      setResources(response.resources)
+      setTotal(response.total)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, debouncedQuery, adminResourceData])
@@ -133,8 +208,8 @@ export const Resource = ({
           value={searchQuery}
           onValueChange={handleSearch}
         />
-        <AdminResourceSort />
-        <AdminResourceOption />
+        <AdminResourceSort onChange={() => setPage(1)} />
+        <AdminResourceOption onChange={() => setPage(1)} />
       </div>
 
       <Table
@@ -144,17 +219,20 @@ export const Resource = ({
           base: 'max-h-[calc(100vh-365px)]'
         }}
         bottomContent={
-          <div className="flex justify-center w-full">
-            {Math.ceil(total / PAGE_SIZE) > 1 && (
-              <SelfPagination
-                page={page}
-                total={Math.ceil(total / PAGE_SIZE)}
-                onPageChange={(newPage) => setPage(newPage)}
-                isLoading={isPending}
-              />
-            )}
-          </div>
-        }
+        <div className="flex justify-center w-full">
+          {Math.ceil(total / PAGE_SIZE) > 1 && (
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="primary"
+              page={page}
+              total={Math.ceil(total / PAGE_SIZE)}
+              onChange={(page) => setPage(page)}
+            />
+          )}
+        </div>
+      }
         bottomContentPlacement="outside"
       >
         <TableHeader columns={columns}>
