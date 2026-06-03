@@ -9,6 +9,7 @@ import { ThemeProvider } from 'next-themes'
 
 import { DeviceInitializer } from '@/components/common/DeviceInitializer'
 import { TrackingProvider } from '@/components/tracking'
+import { useUserStore } from '@/store/userStore'
 
 import type { GlobalDeviceInfo } from '@/utils/device'
 
@@ -21,6 +22,7 @@ interface ProvidersProps {
 
 export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
   const router = useRouter()
+  const { user } = useUserStore((state) => state)
 
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' || aegis) return
@@ -33,6 +35,7 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
 
         aegis = new Aegis({
           id: 'qVzOWuLoljDKmaX6Zq',
+          uin: user.name + ' | ' + user.uid,
           reportApiSpeed: true,
           reportAssetSpeed: true,
           spa: true,
