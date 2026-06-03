@@ -8,8 +8,7 @@ import { useRouter } from 'next-nprogress-bar'
 import { ThemeProvider } from 'next-themes'
 
 import { DeviceInitializer } from '@/components/common/DeviceInitializer'
-import { TrackingProvider, useTrackingContext } from '@/components/tracking'
-import { useUserStore } from '@/store/userStore'
+import { TrackingProvider } from '@/components/tracking'
 
 import type { GlobalDeviceInfo } from '@/utils/device'
 
@@ -20,20 +19,13 @@ interface ProvidersProps {
   initialDeviceInfo: GlobalDeviceInfo
 }
 
-// Aegis 初始化组件，需要在 TrackingProvider 内部使用
-const AegisInitializer = () => {
-  const { getGUID } = useTrackingContext()
-  const { user } = useUserStore((state) => state)
+export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
+  const router = useRouter()
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     if (process.env.NODE_ENV === 'development' || aegis) return
 
     let canceled = false
-
-    const uin = user.uid !== 0
-      ? `${user.name} | ${user.uid}`
-      : `游客 | ${getGUID()}`
 
     void import('aegis-web-sdk')
       .then(({ default: Aegis }) => {
@@ -41,7 +33,6 @@ const AegisInitializer = () => {
 
         aegis = new Aegis({
           id: 'qVzOWuLoljDKmaX6Zq',
-          uin,
           reportApiSpeed: true,
           reportAssetSpeed: true,
           spa: true,
@@ -54,13 +45,6 @@ const AegisInitializer = () => {
       canceled = true
     }
   }, [])
-  /* eslint-enable react-hooks/exhaustive-deps */
-
-  return null
-}
-
-export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
-  const router = useRouter()
 
   return (
     <HeroUIProvider navigate={router.push}>
@@ -72,7 +56,6 @@ export const Providers = ({ children, initialDeviceInfo }: ProvidersProps) => {
             debug: process.env.NODE_ENV === 'development' // 开发环境开启调试
           }}
         >
-          <AegisInitializer />
           <DeviceInitializer initialDeviceInfo={initialDeviceInfo} />
           {children}
         </TrackingProvider>
