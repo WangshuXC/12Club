@@ -52,9 +52,26 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
     scrollIntoComment(newCommentId)
   }
 
+  const getDisplayName = (comment: ResourceComment) => {
+    if (comment.user?.name !== '前人评论') return comment.user?.name
+    const lastDashIndex = comment.content.lastIndexOf('——')
+    if (lastDashIndex === -1) return comment.user?.name
+    return comment.content.slice(lastDashIndex + 2).trim()
+  }
+
+  const getDisplayContent = (comment: ResourceComment) => {
+    if (comment.user?.name !== '前人评论') return comment.content
+    const lastDashIndex = comment.content.lastIndexOf('——')
+    if (lastDashIndex === -1) return comment.content
+    return comment.content.slice(0, lastDashIndex).trim().replace(/[\r\n]+$/, '')
+  }
+
   const renderComments = (comments: ResourceComment[], depth = 0) =>
     comments?.map((comment: ResourceComment) => {
       if (comment.parentId && depth === 0) return null
+
+      const displayName = getDisplayName(comment)
+      const displayContent = getDisplayContent(comment)
 
       return (
         <div
@@ -71,7 +88,7 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
                   <User
                     avatarProps={{ src: comment.user?.avatar }}
                     description={formatDistanceToNow(comment.created)}
-                    name={comment.user?.name}
+                    name={displayName}
                   />
                   <CommentDropdown
                     comment={comment}
@@ -99,7 +116,7 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
                 )}
 
                 <div className="text-md py-3">
-                  <CommentContent content={comment.content} />
+                  <CommentContent content={displayContent} />
                 </div>
 
                 <div className="flex gap-2">

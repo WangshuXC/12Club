@@ -56,6 +56,7 @@ export const CommentContent = ({
       .replace(/\\r\\n/g, '\n')
       .replace(/\\n/g, '\n')
       .replace(/\r\n/g, '\n')
+      .replace('<p>&nbsp;</p>', '')
 
     // 首先处理meme标记，将其转换为img标签
     processedContent = processedContent.replace(
@@ -112,7 +113,6 @@ export const CommentContent = ({
 
     return (
       <div
-        className="whitespace-pre-wrap"
         dangerouslySetInnerHTML={{ __html: processHtmlContent(cleanHtml) }}
       />
     )
