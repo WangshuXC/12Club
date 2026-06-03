@@ -47,25 +47,6 @@ export default async function RootLayout({
             src={`${process.env.NEXT_PUBLIC_UMAMI_URL}/script.js`}
             data-website-id={process.env.NEXT_PUBLICUMAMI_WEBSITE_ID}
           />
-
-          <script
-            defer
-            src="https://tam.cdn-go.cn/aegis-sdk/latest/aegis.min.js"
-          />
-          <script
-            defer
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.aegis && (window.aegis = new Aegis({
-                  id: 'kwEOrCK47396deVdD3',
-                  reportApiSpeed: true,
-                  reportAssetSpeed: true,
-                  spa: true,
-                  hostUrl: 'https://rumt-zh.com'
-                }))
-              `
-            }}
-          />
         </body>
       </html>
     </ViewTransitions>
