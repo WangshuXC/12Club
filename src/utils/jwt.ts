@@ -50,3 +50,14 @@ export const verifyToken = async (refreshToken: string) => {
 export const deleteToken = async (uid: number) => {
   await delKv(`access:token:${uid}`)
 }
+
+// 仅用于前端埋点 uin 透传，不参与鉴权，故只 decode 不 verify
+export const decodeTokenUid = (token: string): number | null => {
+  try {
+    const payload = jwt.decode(token) as Payload | null
+
+    return payload && typeof payload.uid === 'number' ? payload.uid : null
+  } catch {
+    return null
+  }
+}

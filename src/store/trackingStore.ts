@@ -11,6 +11,32 @@ const generateGUID = (): string => {
   })
 }
 
+// 持久化 key，需与下方 persist 配置保持一致
+const TRACKING_STORE_KEY = 'tracking-store'
+
+// 同步读取或生成 GUID（用于 SDK 初始化等需要立刻拿到 GUID 的场景）
+// 与 zustand persist 共用 localStorage 同一份数据，保证全局一致
+export const readOrCreateGUIDSync = (): string => {
+  if (typeof window === 'undefined') return ''
+
+  try {
+    const raw = window.localStorage.getItem(TRACKING_STORE_KEY)
+    const prev = raw ? (JSON.parse(raw) as Record<string, unknown>) : {}
+    const prevState = (prev.state ?? {}) as { guid?: string }
+    if (prevState.guid) return prevState.guid
+
+    const newGUID = generateGUID()
+    const next = {
+      ...prev,
+      state: { ...prevState, guid: newGUID }
+    }
+    window.localStorage.setItem(TRACKING_STORE_KEY, JSON.stringify(next))
+    return newGUID
+  } catch {
+    return generateGUID()
+  }
+}
+
 // 生成会话 ID
 const generateSessionId = (): string => {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`
@@ -52,7 +78,8 @@ export interface TrackingStore extends TrackingState {
 export const useTrackingStore = create<TrackingStore>()(
   persist(
     (set, get) => ({
-      guid: '',
+      // 客户端首屏即同步读出已有 GUID，保证与 Aegis 初始化使用的值一致
+      guid: typeof window !== 'undefined' ? readOrCreateGUIDSync() : '',
       sessionId: '',
       eventQueue: [],
       isInitialized: false,
@@ -120,7 +147,7 @@ export const useTrackingStore = create<TrackingStore>()(
       }
     }),
     {
-      name: 'tracking-store',
+      name: TRACKING_STORE_KEY,
       storage: createJSONStorage(() => localStorage),
 
       // 只持久化 guid，不持久化事件队列和会话 ID

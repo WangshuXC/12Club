@@ -1,4 +1,4 @@
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { ViewTransitions } from 'next-view-transitions'
 import { Toaster } from 'react-hot-toast'
 
@@ -7,6 +7,7 @@ import { Footer } from '@/components/common/Footer'
 import { TopBar } from '@/components/topBar'
 import '@/styles/index.css'
 import { getServerDeviceInfo } from '@/utils/device'
+import { decodeTokenUid } from '@/utils/jwt'
 
 import { clubViewport, clubMetadata } from './metadata'
 import { Providers } from './providers'
@@ -27,11 +28,16 @@ export default async function RootLayout({
   const userAgent = headersList.get('user-agent') || ''
   const deviceInfo = getServerDeviceInfo(userAgent)
 
+  // 服务端解析 JWT 拿到 uid，供埋点 SDK 首屏即用
+  const cookieStore = await cookies()
+  const token = cookieStore.get('12club-token')?.value
+  const initialUid = token ? decodeTokenUid(token) : null
+
   return (
     <ViewTransitions>
       <html lang="zh-Hans" suppressHydrationWarning>
         <body>
-          <Providers initialDeviceInfo={deviceInfo}>
+          <Providers initialDeviceInfo={deviceInfo} initialUid={initialUid}>
             <div className="relative flex flex-col items-center justify-center min-h-screen bg-radial">
               <TopBar />
               <div className="flex min-h-[calc(100dvh-256px)] w-full grow">
