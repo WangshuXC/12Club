@@ -1,0 +1,19 @@
+#!/bin/sh
+# 推送前运行 TypeScript 类型检查，类型错误时阻止推送
+# 跳过本次检查：git push --no-verify
+
+echo "[pre-push] Running tsc --noEmit ..."
+
+npx --no-install tsc --noEmit
+STATUS=$?
+
+if [ $STATUS -ne 0 ]; then
+  echo ""
+  echo "[pre-push] TypeScript 类型检查失败，已阻止推送。"
+  echo "  - 修复上述错误后重试"
+  echo "  - 或使用 'git push --no-verify' 跳过检查（不推荐）"
+  exit 1
+fi
+
+echo "[pre-push] 类型检查通过。"
+exit 0
