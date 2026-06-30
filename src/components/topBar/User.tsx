@@ -60,8 +60,6 @@ export const TopBarUser = () => {
 
     getUserStatus()
     fetchUnread()
-    const timer = setInterval(fetchUnread, 30_000)
-    return () => clearInterval(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMounted, user.uid])
 
