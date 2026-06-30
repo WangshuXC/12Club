@@ -52,6 +52,7 @@ const DetailContainerComponent = ({
           download={introduce?._count.download ?? 0}
           comment={introduce?._count.comment ?? 0}
           favorited={introduce?._count.favorited ?? 0}
+          playList={introduce?.playList}
         />
       )}
       <div className="sm:hidden flex items-end">
@@ -59,6 +60,7 @@ const DetailContainerComponent = ({
           name={coverData?.title || ''}
           dbId={id.toString()}
           isFavorite={introduce?.isFavorite ?? false}
+          playList={introduce?.playList}
           handleClickDownloadNav={() => setSelected('resources')}
         />
       </div>

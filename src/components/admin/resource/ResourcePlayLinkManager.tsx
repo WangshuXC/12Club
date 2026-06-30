@@ -257,7 +257,7 @@ export const ResourcePlayLinkManager = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-medium">在线播放链接</h3>
+          <h3 className="text-sm font-medium">在线资源</h3>
         </div>
         <Button
           color="primary"

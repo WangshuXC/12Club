@@ -7,7 +7,7 @@ import { Eye, Download, MessageSquare, Heart } from 'lucide-react'
 import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
-import { Cover } from '@/types/common/detail-container'
+import { Cover, PlayListItem } from '@/types/common/detail-container'
 import { formatNumber } from '@/utils/formatNumber'
 
 import { ButtonList } from './ButtonList'
@@ -21,6 +21,7 @@ interface DetailCoverProps {
   download: number
   comment: number
   favorited: number
+  playList?: PlayListItem[]
 }
 
 interface DetailStatusProps {
@@ -85,7 +86,8 @@ export const DetailCover = ({
   view,
   download,
   comment,
-  favorited
+  favorited,
+  playList
 }: DetailCoverProps) => {
   const { title, author, image, translator } = coverData
   const [imageError, setImageError] = useState(false)
@@ -130,6 +132,7 @@ export const DetailCover = ({
               name={title}
               dbId={dbId}
               isFavorite={isFavorite}
+              playList={playList}
               handleClickDownloadNav={() => {
                 setSelected('resources')
                 window.scrollTo(0, document.body.scrollHeight)

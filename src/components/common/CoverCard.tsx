@@ -112,11 +112,13 @@ export const CoverCard = ({ data }: { data: PageData }) => {
           <Image
             alt="Card Cover"
             radius="sm"
-            className="object-cover"
+            classNames={{
+              wrapper: '!max-w-full w-full',
+              img: 'w-full object-cover'
+            }}
             src={imageSrc}
             style={{ aspectRatio: '3/4' }}
             isZoomed
-            width={400}
             onError={handleImageError}
           />
         </Badge>

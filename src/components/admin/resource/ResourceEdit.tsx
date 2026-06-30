@@ -221,7 +221,8 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
               <AdminTagInput tags={tags} onChange={setTags} />
 
               {/* 在线播放链接 */}
-              {resource.dbId.startsWith('a') && (
+              {(resource.dbId.startsWith('a') ||
+                resource.dbId.startsWith('n')) && (
                 <ResourcePlayLinkManager
                   resourceId={resource.id}
                   accordionTotal={resource.accordionTotal}
