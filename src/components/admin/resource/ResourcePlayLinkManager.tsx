@@ -59,14 +59,18 @@ export const ResourcePlayLinkManager = ({
   // 获取播放链接列表
   const fetchPlayLinks = useCallback(async () => {
     setLoading(true)
-    const res = await FetchGet<ResourcePlayLink[]>('/admin/resource/playLink', {
+    const res = await FetchGet<{
+      success: boolean
+      data?: ResourcePlayLink[]
+      message?: string
+    }>('/admin/resource/playLink', {
       resourceId: resourceId.toString()
     })
     setLoading(false)
 
-    ErrorHandler(res, (response: ResourcePlayLink[]) => {
-      if (Array.isArray(response)) {
-        setPlayLinks(response)
+    ErrorHandler(res, (response) => {
+      if (response?.success && Array.isArray(response.data)) {
+        setPlayLinks(response.data)
       } else {
         setPlayLinks([])
       }
@@ -133,54 +137,70 @@ export const ResourcePlayLinkManager = ({
     try {
       if (editingId) {
         // 更新播放链接
-        const res = await FetchPut<ResourcePlayLink>(
-          '/admin/resource/playLink',
-          {
-            id: editingId,
-            accordion: formData.accordion,
-            showAccordion: formData.showAccordion,
-            link: removeHttpPrefix(formData.link.trim())
-          }
-        )
+        const res = await FetchPut<{
+          success: boolean
+          data?: ResourcePlayLink
+          message?: string
+        }>('/admin/resource/playLink', {
+          id: editingId,
+          accordion: formData.accordion,
+          showAccordion: formData.showAccordion,
+          link: removeHttpPrefix(formData.link.trim())
+        })
 
-        ErrorHandler(res, (response: ResourcePlayLink) => {
-          if (response?.id) {
+        ErrorHandler(res, (response) => {
+          if (response?.success && response.data) {
+            const updated = response.data
             setPlayLinks((prev) =>
-              prev.map((link) => (link.id === editingId ? response : link))
+              prev.map((link) => (link.id === editingId ? updated : link))
             )
             addToast({
               title: '成功',
-              description: '播放链接更新成功',
+              description: response.message || '播放链接更新成功',
               color: 'success'
             })
             onClose()
             resetForm()
+          } else {
+            addToast({
+              title: '错误',
+              description: response?.message || '播放链接更新失败',
+              color: 'danger'
+            })
           }
         })
       } else {
         // 创建新播放链接
-        const res = await FetchPost<ResourcePlayLink>(
-          '/admin/resource/playLink',
-          {
-            resourceId,
-            accordion: formData.accordion,
-            showAccordion: formData.showAccordion,
-            link: removeHttpPrefix(formData.link.trim())
-          }
-        )
+        const res = await FetchPost<{
+          success: boolean
+          data?: ResourcePlayLink
+          message?: string
+        }>('/admin/resource/playLink', {
+          resourceId,
+          accordion: formData.accordion,
+          showAccordion: formData.showAccordion,
+          link: removeHttpPrefix(formData.link.trim())
+        })
 
-        ErrorHandler(res, (response: ResourcePlayLink) => {
-          if (response?.id) {
+        ErrorHandler(res, (response) => {
+          if (response?.success && response.data) {
+            const created = response.data
             setPlayLinks((prev) =>
-              [...prev, response].sort((a, b) => a.accordion - b.accordion)
+              [...prev, created].sort((a, b) => a.accordion - b.accordion)
             )
             addToast({
               title: '成功',
-              description: '播放链接添加成功',
+              description: response.message || '播放链接添加成功',
               color: 'success'
             })
             onClose()
             resetForm()
+          } else {
+            addToast({
+              title: '错误',
+              description: response?.message || '播放链接添加失败',
+              color: 'danger'
+            })
           }
         })
       }
@@ -192,16 +212,27 @@ export const ResourcePlayLinkManager = ({
   // 删除播放链接
   const handleDelete = async (id: number) => {
     setLoading(true)
-    const res = await FetchDelete('/admin/resource/playLink', { id })
+    const res = await FetchDelete<{ success: boolean; message?: string }>(
+      '/admin/resource/playLink',
+      { id }
+    )
     setLoading(false)
 
-    ErrorHandler(res, () => {
-      setPlayLinks((prev) => prev.filter((link) => link.id !== id))
-      addToast({
-        title: '成功',
-        description: '播放链接删除成功',
-        color: 'success'
-      })
+    ErrorHandler(res, (response) => {
+      if (response?.success) {
+        setPlayLinks((prev) => prev.filter((link) => link.id !== id))
+        addToast({
+          title: '成功',
+          description: response.message || '播放链接删除成功',
+          color: 'success'
+        })
+      } else {
+        addToast({
+          title: '错误',
+          description: response?.message || '播放链接删除失败',
+          color: 'danger'
+        })
+      }
     })
   }
 
@@ -212,6 +243,14 @@ export const ResourcePlayLinkManager = ({
 
   const removeHttpPrefix = (url: string) => {
     return url.replace(/^https?:/, '')
+  }
+
+  const safeDecodeURI = (url: string) => {
+    try {
+      return decodeURI(url)
+    } catch {
+      return url
+    }
   }
 
   return (
@@ -258,9 +297,9 @@ export const ResourcePlayLinkManager = ({
                   </Chip>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <span className="truncate max-w-xs" title={playLink.link}>
-                      {playLink.link}
+                  <div className="flex items-start gap-2">
+                    <span className="break-all">
+                      {safeDecodeURI(playLink.link)}
                     </span>
                     <Button
                       isIconOnly
