@@ -55,7 +55,7 @@ export const UserMessageBell = ({
           }}
         >
           {hasUnreadMessages ? (
-            <BellRing className="size-6 text-primary" />
+            <BellRing className="size-6 text-default-500" />
           ) : (
             <Bell className="size-6 text-default-500" />
           )}

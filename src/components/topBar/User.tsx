@@ -13,18 +13,22 @@ import Link from 'next/link'
 import { useRouter } from 'next-nprogress-bar'
 
 import { useMounted } from '@/hooks/useMounted'
+import { useMessageStore } from '@/store/messageStore'
 import { useUserStore } from '@/store/userStore'
 import { FetchGet } from '@/utils/fetch'
 
 import { SearchButton } from './Search'
 import { ThemeSwitcher } from './ThemeSwitcher'
 import { UserDropdown } from './UserDropdown'
+import { UserMessageBell } from './UserMessageBell'
 
 import type { UserState } from '@/store/userStore'
 
 export const TopBarUser = () => {
   const router = useRouter()
   const { user, setUser } = useUserStore((state) => state)
+  const unread = useMessageStore((s) => s.unread)
+  const fetchUnread = useMessageStore((s) => s.fetchUnread)
   const isMounted = useMounted()
 
   useEffect(() => {
@@ -55,10 +59,11 @@ export const TopBarUser = () => {
     }
 
     getUserStatus()
-
-    // getUserUnreadMessage()
+    fetchUnread()
+    const timer = setInterval(fetchUnread, 30_000)
+    return () => clearInterval(timer)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMounted])
+  }, [isMounted, user.uid])
 
   return (
     <NavbarContent as="div" className="items-center" justify="end">
@@ -94,10 +99,10 @@ export const TopBarUser = () => {
 
           {user.name && (
             <>
-              {/* <UserMessageBell
-                hasUnreadMessages={hasUnread}
-                setReadMessage={() => setHasUnread(false)}
-              /> */}
+              <UserMessageBell
+                hasUnreadMessages={unread.total > 0}
+                setReadMessage={fetchUnread}
+              />
 
               <UserDropdown />
             </>

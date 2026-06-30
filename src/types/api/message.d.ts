@@ -1,5 +1,9 @@
 import { MESSAGE_TYPE } from '@/constants/message'
 
+import type { _User } from '@/types/user'
+
+export type MessageCategory = 'notice' | 'update' | 'comment'
+
 export interface Message {
   id: number
   type: (typeof MESSAGE_TYPE)[number]
@@ -7,7 +11,7 @@ export interface Message {
   status: number
   link: string
   created: string | Date
-  sender: User | null
+  sender: _User | null
 }
 
 export interface CreateMessageType {
@@ -17,4 +21,16 @@ export interface CreateMessageType {
   sender_id?: number
   recipient_id?: number
   basic_id?: number
+}
+
+export interface UnreadCountData {
+  notice: number
+  update: number
+  comment: number
+  total: number
+}
+
+export interface MessageListResponse {
+  messages: Message[]
+  total: number
 }
