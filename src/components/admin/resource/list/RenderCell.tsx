@@ -12,9 +12,9 @@ import { formatNumber } from '@/utils/formatNumber'
 import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
 import { formatDistanceToNow } from '@/utils/time'
 
-import { ResourceDelete } from './ResourceDelete'
-import { ResourceEdit } from './ResourceEdit'
-import { RewriteResourceBanner } from './RewriteResourceBanner'
+import { ResourceDelete } from '../edit/ResourceDelete'
+import { ResourceEdit } from '../edit/ResourceEdit'
+import { RewriteResourceBanner } from '../edit/RewriteResourceBanner'
 
 import type { AdminResource } from '@/types/api/admin'
 

@@ -1,19 +1,16 @@
 import { z } from 'zod'
 
+import { getOpenlistPathSize } from '@/lib/openlist'
 import { prisma } from '@/lib/prisma'
+import { getRouteByDbId } from '@/utils/router'
 
 import type { PatchResource } from '@/types/api/patch'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const dbIdSchema = z.object({
   dbId: z.coerce.string().min(1).max(9999999)
 })
 
-export const getPatchResource = async (
-  input: z.infer<typeof dbIdSchema>,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _uid: number
-) => {
+export const getPatchResource = async (input: z.infer<typeof dbIdSchema>) => {
   const { dbId } = input
 
   try {
@@ -41,13 +38,28 @@ export const getPatchResource = async (
       }
     })
 
+    // 对 storage === 'alist' 的 patch，优先读 DB size，缺失则调 openlist API 并回写
+    const alistPath = `/resource${getRouteByDbId(currentResource.db_id)}`
+    const alistSizeMap = new Map<number, string>()
+    await Promise.all(
+      patchDataList
+        .filter((p) => p.storage === 'alist')
+        .map(async (p) => {
+          const size = await getOpenlistPathSize(p.id, alistPath)
+          alistSizeMap.set(p.id, size)
+        })
+    )
+
     const resources: PatchResource[] = patchDataList?.map((patchData) => ({
       id: patchData.id,
       name: patchData.name,
       section: patchData.section,
       dbId: currentResource?.db_id ?? '',
       storage: patchData.storage,
-      size: patchData.size,
+      size:
+        patchData.storage === 'alist'
+          ? (alistSizeMap.get(patchData.id) ?? patchData.size)
+          : patchData.size,
       language: patchData.language,
       note: patchData.note,
       hash: patchData.hash,

@@ -22,6 +22,7 @@ import {
 import { ExternalLink } from 'lucide-react'
 
 import { FetchGet } from '@/utils/fetch'
+import { removeHttpPrefix } from '@/utils/link'
 import { getResourceTypeByDbId } from '@/utils/router'
 
 import type { AdminResource } from '@/types/api/admin'
@@ -36,10 +37,6 @@ export function AutoPlayUrl({
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
   const [linkList, setLinkList] = useState<string[]>([])
   const isAnime = getResourceTypeByDbId(resource.dbId) === 'anime'
-
-  const removeHttpPrefix = (url: string) => {
-    return url.replace(/^https?:/, '')
-  }
 
   const fetchDetailData = useCallback(async () => {
     const response = await FetchGet<{

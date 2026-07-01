@@ -19,9 +19,9 @@ import { GetActions } from '@/app/admin/resource/actions'
 import { Loading } from '@/components/common/Loading'
 import { useAdminResourceStore } from '@/store/adminResourceStore'
 
-import { AdminResourceOption } from './AdminResourceOption'
-import { AdminResourceSort } from './AdminResourceSort'
-import { RenderCell } from './RenderCell'
+import { AdminResourceOption } from './list/AdminResourceOption'
+import { AdminResourceSort } from './list/AdminResourceSort'
+import { RenderCell } from './list/RenderCell'
 
 import type { SortField, SortOrder } from '@/components/pageContainer/sort'
 import type { AdminResource } from '@/types/api/admin'
@@ -242,8 +242,8 @@ export const Resource = ({
         </TableHeader>
         <TableBody
           items={resources}
-          emptyContent="暂无资源数据"
-          isLoading={isPending}
+          emptyContent={isPending ? ' ' : '暂无资源数据'}
+          isLoading={isPending && resources.length === 0}
           loadingContent={<Loading hint="正在获取资源数据..." />}
         >
           {(item) => (

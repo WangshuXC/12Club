@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 import { createPatchResource } from '@/app/api/patch/create'
 import { prisma } from '@/lib/prisma'
+import { removeHttpPrefix } from '@/utils/link'
 import { getRouteByDbId } from '@/utils/router'
 import { adminAutoCreateResourcePlayLinkSchema } from '@/validations/admin'
 
@@ -113,61 +114,48 @@ export const createPlayLinks = async (
     })
 
     const errors: string[] = []
-    const removeHttpPrefix = (url: string) => {
-      return url.replace(/^https?:/, '')
-    }
+    const existingLinkSet = new Set(currentLinks.map((l) => l.link))
 
-    let newLinksCount = 0
+    // 并行创建播放链接
+    const results = await Promise.all(
+      linkList.map(async (link, i) => {
+        const accordion = i + 1
+        const normalizedLink = removeHttpPrefix(link)
 
-    // 批量创建播放链接
-    for (let i = 0; i < linkList.length; i++) {
-      const link = linkList[i]
-      const accordion = i + 1
-
-      try {
-        // 检查链接是否已存在
-        if (
-          currentLinks.some(
-            (currentLink) => currentLink.link === removeHttpPrefix(link)
-          )
-        ) {
-          continue
+        if (existingLinkSet.has(normalizedLink)) {
+          return { created: false }
         }
 
-        await prisma.resourcePlayLink.create({
-          data: {
-            resource_id: resourceId,
-            user_id: userId,
-            accordion,
-            show_accordion: accordion.toString(),
-            link: removeHttpPrefix(link)
-          },
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                avatar: true
-              }
+        try {
+          await prisma.resourcePlayLink.create({
+            data: {
+              resource_id: resourceId,
+              user_id: userId,
+              accordion,
+              show_accordion: accordion.toString(),
+              link: normalizedLink
             }
-          }
-        })
+          })
+          return { created: true }
+        } catch (error) {
+          console.error(`创建第 ${accordion} 集播放链接失败:`, error)
+          errors.push(
+            `第 ${accordion} 集: ${error instanceof Error ? error.message : '创建失败'}`
+          )
+          return { created: false }
+        }
+      })
+    )
 
-        newLinksCount++
-      } catch (error) {
-        console.error(`创建第 ${accordion} 集播放链接失败:`, error)
-        errors.push(
-          `第 ${accordion} 集: ${error instanceof Error ? error.message : '创建失败'}`
-        )
-      }
-    }
+    const newLinksCount = results.filter((r) => r.created).length
 
-    // 如果有新增链接，更新资源的集数总数
-    if (linkList.length > currentLinks.length) {
+    // 更新资源的集数总数为已有集数与新链接集数的最大值
+    const nextAccordionTotal = Math.max(currentLinks.length, linkList.length)
+    if (nextAccordionTotal !== currentLinks.length) {
       await prisma.resource.update({
         where: { id: resourceId },
         data: {
-          accordion_total: linkList.length
+          accordion_total: nextAccordionTotal
         }
       })
     }
@@ -308,9 +296,15 @@ export const autoCreateResourcePlayLinks = async (
       }
     }
 
+    const actionType = patchResult.isNew ? '创建' : '更新'
+    const count = patchResult.isNew
+      ? playLinkResult.playLinks.length
+      : playLinkResult.newLinksCount
+    const suffix = patchResult.isNew ? ' 和 下载资源' : ''
+
     return {
       success: true,
-      message: `成功${patchResult.isNew ? '创建' + playLinkResult.playLinks.length : '更新' + playLinkResult.newLinksCount} 个播放链接${patchResult.isNew ? ' 和 下载资源' : ''}`,
+      message: `成功${actionType} ${count} 个播放链接${suffix}`,
       data: {
         created: playLinkResult.playLinks.length,
         failed: 0,

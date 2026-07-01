@@ -24,13 +24,14 @@ import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPut } from '@/utils/fetch'
 
-import { AdminAliasInput } from './AdminAliasInput'
-import { AdminLanguageSelect } from './AdminLanguageSelect'
-import { AdminReleasedDateInput } from './AdminReleasedDateInput'
-import { AdminTagInput } from './AdminTagInput'
+import { AdminAliasInput } from '../fields/AdminAliasInput'
+import { AdminLanguageSelect } from '../fields/AdminLanguageSelect'
+import { AdminReleasedDateInput } from '../fields/AdminReleasedDateInput'
+import { AdminTagInput } from '../fields/AdminTagInput'
+import { ResourcePlayLinkManager } from '../playLink/ResourcePlayLinkManager'
+
 import { AutoPlayUrl } from './AutoPlayUrl'
 import { GetBangumiData } from './GetBangumiData'
-import { ResourcePlayLinkManager } from './ResourcePlayLinkManager'
 
 import type { AdminResource } from '@/types/api/admin'
 
@@ -225,6 +226,7 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
                 resource.dbId.startsWith('n')) && (
                 <ResourcePlayLinkManager
                   resourceId={resource.id}
+                  dbId={resource.dbId}
                   accordionTotal={resource.accordionTotal}
                   needUpdate={needUpdate}
                 />

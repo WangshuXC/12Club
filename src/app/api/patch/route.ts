@@ -32,9 +32,7 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json(input)
   }
 
-  const payload = await verifyHeaderCookie(req)
-
-  const response = await getPatchResource(input, payload?.uid ?? 0)
+  const response = await getPatchResource(input)
 
   return NextResponse.json(response)
 }
