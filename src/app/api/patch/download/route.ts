@@ -9,43 +9,30 @@ const downloadStats = async (
   input: z.infer<typeof updatePatchResourceStatsSchema>
 ) => {
   try {
-    // 使用事务确保数据一致性
-    await prisma.$transaction(async (tx) => {
-      // 获取当前资源的下载数
-      const currentResource = await tx.resource.findUnique({
+    // 使用原子 increment 避免并发丢失更新，并用批量事务保证原子性
+    // 相比交互式事务（$transaction(async tx => ...)）不会因超时抛出 P2028
+    await prisma.$transaction([
+      prisma.resource.update({
         where: { id: input.resourceId },
-        select: { download: true, updated: true }
-      })
-
-      // 获取当前patch的下载数
-      const currentPatch = await tx.resourcePatch.findUnique({
+        data: { download: { increment: 1 } }
+      }),
+      prisma.resourcePatch.update({
         where: { id: input.patchId },
-        select: { download: true }
+        data: { download: { increment: 1 } }
       })
-
-      if (!currentResource || !currentPatch) {
-        throw new Error('资源或补丁不存在')
-      }
-
-      // 更新资源下载数
-      await tx.resource.update({
-        where: { id: input.resourceId },
-        data: {
-          download: currentResource.download + 1,
-          updated: currentResource.updated
-        }
-      })
-
-      // 更新patch下载数
-      await tx.resourcePatch.update({
-        where: { id: input.patchId },
-        data: { download: currentPatch.download + 1 }
-      })
-    })
+    ])
 
     return {}
   } catch (error) {
     console.error('更新下载统计失败:', error)
+    // P2025：目标记录不存在
+    if (
+      error instanceof Error &&
+      'code' in error &&
+      (error as { code?: string }).code === 'P2025'
+    ) {
+      return '资源或补丁不存在'
+    }
     return error instanceof Error ? error.message : '更新下载统计时发生未知错误'
   }
 }

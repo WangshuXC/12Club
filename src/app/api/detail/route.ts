@@ -3,7 +3,8 @@ import { z } from 'zod'
 
 import { RESOURCE_CACHE_DURATION } from '@/config/cache'
 import { prisma } from '@/lib/prisma'
-import { getKv, setKv } from '@/lib/redis'
+import { getJsonKv, setKv } from '@/lib/redis'
+import { incrementView } from '@/lib/viewCounter'
 import {
   Introduction,
   Cover,
@@ -18,10 +19,38 @@ const detailIdSchema = z.object({
 
 const CACHE_KEY = 'resource'
 
+type DetailPayload = {
+  introduce: Introduction
+  coverData: Cover
+  series: unknown
+}
+
+/** 将 pending 增量合并到 payload.view 上，返回给前端 */
+const withLiveView = (payload: DetailPayload, pending: number): DetailPayload => {
+  if (pending <= 0) return payload
+
+  return {
+    ...payload,
+    introduce: {
+      ...payload.introduce,
+      _count: {
+        ...payload.introduce._count,
+        view: payload.introduce._count.view + pending
+      }
+    }
+  }
+}
+
 const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
-  const cachedResource = await getKv(`${CACHE_KEY}:${input.id}`)
-  if (cachedResource) {
-    return JSON.parse(cachedResource)
+  // 缓存命中：读缓存 + 一次 INCR（其返回值即最新 pending，无需额外 GET）
+  const cached = await getJsonKv<DetailPayload & { resourceId: number }>(
+    `${CACHE_KEY}:${input.id}`
+  )
+  if (cached) {
+    const { resourceId, ...rest } = cached
+    const pending = await incrementView(resourceId)
+
+    return withLiveView(rest, pending)
   }
 
   try {
@@ -188,21 +217,18 @@ const getDetailData = async (input: z.infer<typeof detailIdSchema>) => {
           }))
         : null
 
+    // 缓存中额外存 resourceId，便于命中缓存时读取 pending 增量
     await setKv(
       `${CACHE_KEY}:${input.id}`,
-      JSON.stringify({ introduce, coverData, series }),
+      { introduce, coverData, series, resourceId: detail.id },
       RESOURCE_CACHE_DURATION
     )
 
-    await prisma.resource.update({
-      where: { id: detail.id },
-      data: {
-        view: detail.view + 1,
-        updated: detail.updated
-      }
-    })
+    // 攒批计数：仅写 Redis，由后台调度器定时 flush 到 DB
+    // INCR 返回值即最新 pending，直接用于合并展示值
+    const pending = await incrementView(detail.id)
 
-    return { introduce, coverData, series }
+    return withLiveView({ introduce, coverData, series }, pending)
   } catch (error) {
     console.error('获取资源详情失败:', error)
     return error instanceof Error ? error.message : '获取资源详情时发生未知错误'
