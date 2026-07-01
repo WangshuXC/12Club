@@ -64,7 +64,7 @@
       width: 100%;
       height: 100%;
       backdrop-filter: var(--hcm-highlight-filter);
-      content: "";
+      content: '';
       pointer-events: none;
     }
 
@@ -79,13 +79,13 @@
   pointer-events: none;
   transform-origin: 0 0;
 
-  &[data-main-rotation="90"] .norotate {
+  &[data-main-rotation='90'] .norotate {
     transform: rotate(270deg) translateX(-100%);
   }
-  &[data-main-rotation="180"] .norotate {
+  &[data-main-rotation='180'] .norotate {
     transform: rotate(180deg) translate(-100%, -100%);
   }
-  &[data-main-rotation="270"] .norotate {
+  &[data-main-rotation='270'] .norotate {
     transform: rotate(90deg) translateY(-100%);
   }
 
@@ -252,7 +252,7 @@
   .buttonWidgetAnnotation.checkBox input:checked::after,
   .buttonWidgetAnnotation.radioButton input:checked::before {
     background-color: CanvasText;
-    content: "";
+    content: '';
     display: block;
     position: absolute;
   }

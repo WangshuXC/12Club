@@ -79,8 +79,9 @@ export const OverviewCards = ({
 
     const fetchTrend = async () => {
       setTrendLoading(true)
-      const { startISO, endISO } =
-        useTrackingDateStore.getState().getQueryRange()
+      const { startISO, endISO } = useTrackingDateStore
+        .getState()
+        .getQueryRange()
       const result = await getTrendData(
         selectedCard,
         startISO || undefined,
@@ -99,7 +100,7 @@ export const OverviewCards = ({
     setSelectedCard('visitors')
   }, [startDate, endDate])
 
-  if (loading) return <Spinner className='w-full mt-10' />
+  if (loading) return <Spinner className="w-full mt-10" />
 
   if (!data) {
     return (

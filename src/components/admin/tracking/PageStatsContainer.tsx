@@ -18,31 +18,30 @@ export const PageStatsContainer = () => {
   const [pagination, setPagination] = useState<PaginationInfo | null>(null)
   const initialLoaded = useRef(false)
 
-  const loadData = useCallback(
-    async (page = 1) => {
-      setLoading(true)
+  const loadData = useCallback(async (page = 1) => {
+    setLoading(true)
 
-      try {
-        const { startISO, endISO } = useTrackingDateStore.getState().getQueryRange()
-        const data = await getPageStats(
-          startISO || undefined,
-          endISO || undefined,
-          page,
-          20
-        )
+    try {
+      const { startISO, endISO } = useTrackingDateStore
+        .getState()
+        .getQueryRange()
+      const data = await getPageStats(
+        startISO || undefined,
+        endISO || undefined,
+        page,
+        20
+      )
 
-        if (data) {
-          setPageStats(data.list)
-          setPagination(data.pagination)
-        }
-      } catch (error) {
-        console.error('Failed to load page stats:', error)
-      } finally {
-        setLoading(false)
+      if (data) {
+        setPageStats(data.list)
+        setPagination(data.pagination)
       }
-    },
-    []
-  )
+    } catch (error) {
+      console.error('Failed to load page stats:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   // 初始加载
   useEffect(() => {

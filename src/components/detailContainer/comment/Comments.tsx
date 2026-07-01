@@ -63,7 +63,10 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
     if (comment.user?.name !== '前人评论') return comment.content
     const lastDashIndex = comment.content.lastIndexOf('——')
     if (lastDashIndex === -1) return comment.content
-    return comment.content.slice(0, lastDashIndex).trim().replace(/[\r\n]+$/, '')
+    return comment.content
+      .slice(0, lastDashIndex)
+      .trim()
+      .replace(/[\r\n]+$/, '')
   }
 
   const renderComments = (comments: ResourceComment[], depth = 0) =>

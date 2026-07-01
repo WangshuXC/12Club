@@ -172,7 +172,9 @@ export const ReaderModal = ({
                 {/* 阅读方向切换 */}
                 {supportFoliateControls && (
                   <Tooltip
-                    content={flow === 'paginated' ? '切换为上下滚动' : '切换为左右翻页'}
+                    content={
+                      flow === 'paginated' ? '切换为上下滚动' : '切换为左右翻页'
+                    }
                   >
                     <Button
                       isIconOnly

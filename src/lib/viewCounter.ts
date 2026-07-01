@@ -124,10 +124,7 @@ export const flushViews = async (): Promise<{
             .sadd(DIRTY_SET, idStr)
             .exec()
         } catch (rollbackErr) {
-          console.error(
-            `[viewCounter] 回滚失败 id=${resourceId}:`,
-            rollbackErr
-          )
+          console.error(`[viewCounter] 回滚失败 id=${resourceId}:`, rollbackErr)
         }
       }
     }

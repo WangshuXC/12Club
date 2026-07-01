@@ -38,10 +38,7 @@ interface Props {
   }
 }
 
-export const Forgot = ({
-  initialResetCodes,
-  initialTotal
-}: Props) => {
+export const Forgot = ({ initialResetCodes, initialTotal }: Props) => {
   const [resetCodes, setResetCodes] = useState<ResetCode[]>(initialResetCodes)
   const [total, setTotal] = useState(initialTotal)
   const [page, setPage] = useState(1)

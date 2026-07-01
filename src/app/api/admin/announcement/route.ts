@@ -27,7 +27,10 @@ export const GET = async (req: NextRequest) => {
 
   const response = await getAnnouncementInfo(input)
   if (typeof response === 'string') {
-    return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+    return NextResponse.json(
+      { message: response, status: 500 },
+      { status: 500 }
+    )
   }
 
   return NextResponse.json({ ...response, status: 200 })
@@ -42,7 +45,10 @@ export const POST = async (req: NextRequest) => {
   return withAdminAuth(req, async (payload) => {
     const response = await createAnnouncement(input, payload.uid)
     if (typeof response === 'string') {
-      return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+      return NextResponse.json(
+        { message: response, status: 500 },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ...response, status: 201 })
@@ -59,7 +65,10 @@ export const PUT = async (req: NextRequest) => {
   return withAdminAuth(req, async (_payload) => {
     const response = await updateAnnouncement(input)
     if (typeof response === 'string') {
-      return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+      return NextResponse.json(
+        { message: response, status: 500 },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ...response, status: 200 })
@@ -76,7 +85,10 @@ export const DELETE = async (req: NextRequest) => {
   return withAdminAuth(req, async (_payload) => {
     const response = await deleteAnnouncement(input)
     if (typeof response === 'string') {
-      return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+      return NextResponse.json(
+        { message: response, status: 500 },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ...response, status: 200 })

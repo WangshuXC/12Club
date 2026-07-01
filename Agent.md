@@ -7,6 +7,7 @@
 12Club 是南开大学 ACG 社区资源分享平台。基于 Next.js 15 App Router 全栈架构，提供动漫在线观看、资源下载、用户社区等功能。
 
 **核心技术栈**：
+
 - **框架**: Next.js 15.5.5 (App Router + Turbopack) + React 19.2.0 + TypeScript 5.9.3
 - **UI**: HeroUI 2.8.5 (`@heroui/react`) — 项目唯一组件库
 - **图标**: Lucide React + Tabler Icons + React Icons
@@ -71,6 +72,7 @@ import { Button } from '@heroui/react'
 ```
 
 **Button 关键 API**:
+
 - `onPress` 代替 `onClick`
 - `isDisabled` 代替 `disabled`
 - `isLoading` 显示加载状态
@@ -95,35 +97,75 @@ import toast from 'react-hot-toast'
 
 ```tsx
 import {
-  Button, Input, Select, SelectItem, Checkbox,
-  Card, CardHeader, CardBody, CardFooter,
-  Modal, ModalContent, ModalHeader, ModalBody, ModalFooter,
-  Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,
-  Dropdown, DropdownTrigger, DropdownMenu, DropdownItem,
-  Navbar, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle,
-  Avatar, User, Image, Link, Chip, Tooltip, Divider,
-  Pagination, Skeleton, Spinner, Drawer, DrawerContent,
-  Slider, Popover, PopoverTrigger, PopoverContent,
-  Tabs, Tab, useDisclosure, addToast
+  Button,
+  Input,
+  Select,
+  SelectItem,
+  Checkbox,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Navbar,
+  NavbarContent,
+  NavbarItem,
+  NavbarMenu,
+  NavbarMenuItem,
+  NavbarMenuToggle,
+  Avatar,
+  User,
+  Image,
+  Link,
+  Chip,
+  Tooltip,
+  Divider,
+  Pagination,
+  Skeleton,
+  Spinner,
+  Drawer,
+  DrawerContent,
+  Slider,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  Tabs,
+  Tab,
+  useDisclosure,
+  addToast
 } from '@heroui/react'
 ```
 
 ## 五、命名规范
 
-| 类型 | 规范 | 示例 |
-|------|------|------|
-| 组件名/文件 | PascalCase.tsx | `CoverCard.tsx`, `FilterBar.tsx` |
-| 容器组件目录 | camelCase + Container | `homeContainer/`, `pageContainer/` |
-| Hook 文件 | camelCase.ts | `useMounted.ts`, `useTracking.ts` |
-| 工具函数文件 | camelCase.ts | `formatNumber.ts`, `errorHandler.ts` |
-| 类型文件 | kebab-case.d.ts | `detail-container.d.ts` |
-| Store 文件 | camelCase + Store.ts | `userStore.ts`, `searchStore.ts` |
-| 常量文件 | kebab-case.ts | `top-bar.ts`, `resource.ts` |
-| 验证文件 | camelCase.ts | `admin.ts`, `auth.ts` |
-| 变量名 | camelCase | `userData`, `isLoading` |
-| 函数名 | camelCase | `getUserInfo`, `handleSubmit` |
-| 常量 | UPPER_SNAKE_CASE | `MAX_FILE_SIZE` |
-| 接口/类型 | PascalCase | `UserState`, `AdminResource` |
+| 类型         | 规范                  | 示例                                 |
+| ------------ | --------------------- | ------------------------------------ |
+| 组件名/文件  | PascalCase.tsx        | `CoverCard.tsx`, `FilterBar.tsx`     |
+| 容器组件目录 | camelCase + Container | `homeContainer/`, `pageContainer/`   |
+| Hook 文件    | camelCase.ts          | `useMounted.ts`, `useTracking.ts`    |
+| 工具函数文件 | camelCase.ts          | `formatNumber.ts`, `errorHandler.ts` |
+| 类型文件     | kebab-case.d.ts       | `detail-container.d.ts`              |
+| Store 文件   | camelCase + Store.ts  | `userStore.ts`, `searchStore.ts`     |
+| 常量文件     | kebab-case.ts         | `top-bar.ts`, `resource.ts`          |
+| 验证文件     | camelCase.ts          | `admin.ts`, `auth.ts`                |
+| 变量名       | camelCase             | `userData`, `isLoading`              |
+| 函数名       | camelCase             | `getUserInfo`, `handleSubmit`        |
+| 常量         | UPPER_SNAKE_CASE      | `MAX_FILE_SIZE`                      |
+| 接口/类型    | PascalCase            | `UserState`, `AdminResource`         |
 
 ## 六、导入顺序规范
 
@@ -285,16 +327,28 @@ src/
 ### 8.1 客户端请求 — 必须使用 `@/utils/fetch.ts`
 
 ```tsx
-import { FetchGet, FetchPost, FetchPut, FetchDelete, FetchFormData } from '@/utils/fetch'
+import {
+  FetchGet,
+  FetchPost,
+  FetchPut,
+  FetchDelete,
+  FetchFormData
+} from '@/utils/fetch'
 
 // GET
-const data = await FetchGet<ResponseType>('/admin/resource', { page: 1, limit: 10 })
+const data = await FetchGet<ResponseType>('/admin/resource', {
+  page: 1,
+  limit: 10
+})
 
 // POST
 const result = await FetchPost<ResponseType>('/admin/resource', { name: 'xxx' })
 
 // PUT
-const updated = await FetchPut<ResponseType>('/admin/resource', { id: 1, name: 'new' })
+const updated = await FetchPut<ResponseType>('/admin/resource', {
+  id: 1,
+  name: 'new'
+})
 
 // DELETE
 const deleted = await FetchDelete<ResponseType>('/admin/resource', { id: 1 })
@@ -323,7 +377,13 @@ ErrorHandler(res, (value) => {
 ### 9.1 请求解析 — 必须使用 `@/utils/parseQuery.ts` + Zod
 
 ```tsx
-import { ParseGetQuery, ParsePostBody, ParsePutBody, ParseDeleteQuery, ParseFormData } from '@/utils/parseQuery'
+import {
+  ParseGetQuery,
+  ParsePostBody,
+  ParsePutBody,
+  ParseDeleteQuery,
+  ParseFormData
+} from '@/utils/parseQuery'
 ```
 
 ### 9.2 API 文件结构
@@ -388,7 +448,9 @@ import { getResourceSchema } from '@/validations/xxx'
 
 export const getResource = async (input: z.infer<typeof getResourceSchema>) => {
   try {
-    const data = await prisma.resource.findMany({ /* ... */ })
+    const data = await prisma.resource.findMany({
+      /* ... */
+    })
     return { success: true, data }
   } catch (error) {
     console.error('获取资源失败:', error)
@@ -429,11 +491,11 @@ export const adminDeleteResourceSchema = z.object({
 
 ## 十一、类型定义规范
 
-| 用途 | 位置 | 格式 |
-|------|------|------|
-| API 响应类型 | `src/types/api/*.d.ts` | 声明文件 |
+| 用途           | 位置                      | 格式     |
+| -------------- | ------------------------- | -------- |
+| API 响应类型   | `src/types/api/*.d.ts`    | 声明文件 |
 | 客户端组件类型 | `src/types/common/*.d.ts` | 声明文件 |
-| 全局类型 | `src/types/*.d.ts` | 声明文件 |
+| 全局类型       | `src/types/*.d.ts`        | 声明文件 |
 
 ```tsx
 // ✅ 正确：从 types 目录导入
@@ -450,8 +512,12 @@ import type { HomeCarousel } from '@/types/common/home'
 ```tsx
 import { create } from 'zustand'
 
-export interface XXXState { /* ... */ }
-export interface XXXStore extends XXXState { /* actions */ }
+export interface XXXState {
+  /* ... */
+}
+export interface XXXStore extends XXXState {
+  /* actions */
+}
 
 export const useXXXStore = create<XXXStore>()((set) => ({
   // state + actions
@@ -466,7 +532,9 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 
 export const useUserStore = create<UserStore>()(
   persist(
-    (set) => ({ /* ... */ }),
+    (set) => ({
+      /* ... */
+    }),
     { name: 'user-store', storage: createJSONStorage(() => localStorage) }
   )
 )
@@ -474,15 +542,15 @@ export const useUserStore = create<UserStore>()(
 
 ### 12.3 已有 Store
 
-| Store | 用途 |
-|-------|------|
-| `globalStore` | 设备信息、Hydration 状态 |
-| `userStore` | 用户认证信息 (persist) |
-| `searchStore` | 搜索历史、筛选条件 |
-| `editStore` | 编辑表单数据 |
-| `adminResourceStore` | 管理端资源状态 |
-| `trackingStore` | 埋点事件队列 |
-| `adminTrackingStore` | 管理端埋点数据 |
+| Store                | 用途                     |
+| -------------------- | ------------------------ |
+| `globalStore`        | 设备信息、Hydration 状态 |
+| `userStore`          | 用户认证信息 (persist)   |
+| `searchStore`        | 搜索历史、筛选条件       |
+| `editStore`          | 编辑表单数据             |
+| `adminResourceStore` | 管理端资源状态           |
+| `trackingStore`      | 埋点事件队列             |
+| `adminTrackingStore` | 管理端埋点数据           |
 
 ## 十三、组件编写规范
 
@@ -605,12 +673,12 @@ matcher: ['/admin/:path*', '/user/:path*', '/edit/:path*']
 
 ### 15.3 角色权限
 
-| role | 角色 | 权限 |
-|------|------|------|
-| 1 | 用户 | 基础功能 |
-| 2 | 创作者 | 上传/编辑资源 |
-| 3 | 管理员 | 管理面板 |
-| 4 | 超级管理员 | 全部权限 |
+| role | 角色       | 权限          |
+| ---- | ---------- | ------------- |
+| 1    | 用户       | 基础功能      |
+| 2    | 创作者     | 上传/编辑资源 |
+| 3    | 管理员     | 管理面板      |
+| 4    | 超级管理员 | 全部权限      |
 
 ### 15.4 API 端验证
 
@@ -628,25 +696,25 @@ if (!payload) {
 
 ### 核心模型
 
-| 模型 | 说明 |
-|------|------|
-| `User` | 用户 (name, email, password, role, avatar, bio) |
-| `Resource` | 资源 (name, db_id, type[], language[], view, download) |
-| `ResourceAlias` | 资源别名 |
-| `ResourceTag` / `ResourceTagRelation` | 标签系统 |
-| `ResourcePatch` | 下载资源补丁 |
-| `ResourceComment` | 评论 (支持嵌套回复) |
-| `ResourcePlayLink` | 播放链接 |
-| `ResourceAutoUpdate` | 自动更新配置 |
-| `ResourceSeries` / `ResourceSeriesRelation` | 系列管理 |
-| `UserFollowRelation` | 关注关系 |
-| `UserMessage` | 站内消息 |
-| `UserResourceFavoriteRelation` | 收藏关系 |
-| `UserResourceFavoriteFolder` | 收藏夹 |
-| `UserResourceCommentLikeRelation` | 评论点赞 |
-| `Announcement` | 公告 |
-| `PasswordReset` | 密码重置 |
-| `TrackingVisitor` / `TrackingEvent` | 埋点系统 |
+| 模型                                        | 说明                                                   |
+| ------------------------------------------- | ------------------------------------------------------ |
+| `User`                                      | 用户 (name, email, password, role, avatar, bio)        |
+| `Resource`                                  | 资源 (name, db_id, type[], language[], view, download) |
+| `ResourceAlias`                             | 资源别名                                               |
+| `ResourceTag` / `ResourceTagRelation`       | 标签系统                                               |
+| `ResourcePatch`                             | 下载资源补丁                                           |
+| `ResourceComment`                           | 评论 (支持嵌套回复)                                    |
+| `ResourcePlayLink`                          | 播放链接                                               |
+| `ResourceAutoUpdate`                        | 自动更新配置                                           |
+| `ResourceSeries` / `ResourceSeriesRelation` | 系列管理                                               |
+| `UserFollowRelation`                        | 关注关系                                               |
+| `UserMessage`                               | 站内消息                                               |
+| `UserResourceFavoriteRelation`              | 收藏关系                                               |
+| `UserResourceFavoriteFolder`                | 收藏夹                                                 |
+| `UserResourceCommentLikeRelation`           | 评论点赞                                               |
+| `Announcement`                              | 公告                                                   |
+| `PasswordReset`                             | 密码重置                                               |
+| `TrackingVisitor` / `TrackingEvent`         | 埋点系统                                               |
 
 ### Prisma Client 导入
 
@@ -671,12 +739,12 @@ router.push(href, { onTransitionReady: slideInOut })
 
 ### 17.2 资源路由映射
 
-| 前缀 | 路由 | 类型 |
-|------|------|------|
-| `a` | `/anime/` | 动漫 |
-| `c` | `/comic/` | 漫画 |
-| `g` | `/game/` | 游戏 |
-| `n` | `/novel/` | 小说 |
+| 前缀 | 路由      | 类型 |
+| ---- | --------- | ---- |
+| `a`  | `/anime/` | 动漫 |
+| `c`  | `/comic/` | 漫画 |
+| `g`  | `/game/`  | 游戏 |
+| `n`  | `/novel/` | 小说 |
 
 ```tsx
 import { getRouteByDbId } from '@/utils/router'

@@ -50,7 +50,9 @@ export const getHomeData = async () => {
     take: 10
   })
 
-  const reorderedData = reorderByCentralPriority(carousel || []) as typeof carousel
+  const reorderedData = reorderByCentralPriority(
+    carousel || []
+  ) as typeof carousel
 
   const carouselData: HomeCarousel[] = reorderedData.map((item) => ({
     title: item.name,

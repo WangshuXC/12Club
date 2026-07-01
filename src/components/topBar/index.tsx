@@ -44,7 +44,7 @@ export const TopBar = () => {
 
       <NavbarContent className="hidden gap-3 md:flex w-screen">
         {NavItemList.map((item: NavItem) => (
-          <NavbarItem key={item.href} isActive={pathname.includes(item.href)} >
+          <NavbarItem key={item.href} isActive={pathname.includes(item.href)}>
             <Link
               className={
                 pathname.includes(item.href)

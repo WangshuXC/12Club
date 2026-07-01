@@ -65,7 +65,7 @@
     display: contents;
   }
 
-  span[role="img"] {
+  span[role='img'] {
     user-select: none;
     cursor: default;
   }

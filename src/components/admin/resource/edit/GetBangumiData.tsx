@@ -158,7 +158,9 @@ export function GetBangumiData({ name, setData, setAliases }: Props) {
                     bangumiData?.map((item: BangumiSearchItem) => (
                       <div
                         key={item.id}
-                        onClick={() => fetchDetailData(String(item.id), onClose)}
+                        onClick={() =>
+                          fetchDetailData(String(item.id), onClose)
+                        }
                       >
                         <Card className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
                           <CardBody>

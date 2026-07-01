@@ -2,7 +2,14 @@ import type { PlayListItem } from '@/types/common/detail-container'
 import type { ReaderFormat, ReaderFile } from '@/types/common/reader'
 
 // foliate-js 原生支持的格式（其余走 TxtReader 或提示不支持）
-const FOLIATE_FORMATS: ReaderFormat[] = ['epub', 'mobi', 'azw3', 'fb2', 'cbz', 'pdf']
+const FOLIATE_FORMATS: ReaderFormat[] = [
+  'epub',
+  'mobi',
+  'azw3',
+  'fb2',
+  'cbz',
+  'pdf'
+]
 
 // 扩展名到阅读器格式的映射
 const EXT_FORMAT_MAP: Record<string, ReaderFormat> = {
@@ -71,10 +78,9 @@ export const loadFoliateView = async (): Promise<void> => {
     return
   }
 
-  const dynamicImport = new Function(
-    'url',
-    'return import(url)'
-  ) as (url: string) => Promise<unknown>
+  const dynamicImport = new Function('url', 'return import(url)') as (
+    url: string
+  ) => Promise<unknown>
   await dynamicImport('/foliate-js/view.js')
   await customElements.whenDefined('foliate-view')
 }

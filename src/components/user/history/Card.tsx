@@ -43,7 +43,10 @@ export const PlayHistoryCard = ({ item }: Props) => {
 
             <div>
               <Chip variant="flat">
-                {formatDate(item.lastPlayedAt, { isShowYear: true, isPrecise: true })}
+                {formatDate(item.lastPlayedAt, {
+                  isShowYear: true,
+                  isPrecise: true
+                })}
               </Chip>
             </div>
           </div>

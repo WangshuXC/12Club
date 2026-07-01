@@ -286,9 +286,8 @@ export const ResourcePlayLinkManager = ({
 
     setBatchSubmitting(true)
     const startAccordion =
-      (playLinks.length
-        ? Math.max(...playLinks.map((l) => l.accordion))
-        : 0) + 1
+      (playLinks.length ? Math.max(...playLinks.map((l) => l.accordion)) : 0) +
+      1
 
     let successCount = 0
     const errors: string[] = []

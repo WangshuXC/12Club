@@ -44,6 +44,7 @@ export const startViewCounterScheduler = () => {
   state.timer = setInterval(async () => {
     if (state.running) return // 防止上一轮未完成时并发
     state.running = true
+
     try {
       const { flushed, failed } = await withTimeout(
         flushViews(),
@@ -63,11 +64,13 @@ export const startViewCounterScheduler = () => {
   // 进程退出前尽力 flush 一次；只挂一次监听
   if (!state.shutdownHooked) {
     state.shutdownHooked = true
+
     const shutdown = async () => {
       if (state.timer) {
         clearInterval(state.timer)
         state.timer = null
       }
+
       try {
         await flushViews()
       } catch {

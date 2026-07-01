@@ -99,7 +99,10 @@ export const EditSeriesModal = ({
 
     try {
       // 1. 更新系列基本信息
-      const updateResponse = await FetchPut<{ success: boolean; message?: string }>(`/admin/series/${series.id}`, {
+      const updateResponse = await FetchPut<{
+        success: boolean
+        message?: string
+      }>(`/admin/series/${series.id}`, {
         id: series.id,
         name: name.trim(),
         description: description.trim()
@@ -120,13 +123,13 @@ export const EditSeriesModal = ({
 
       // 添加新资源
       if (toAdd.length > 0) {
-        const addResponse = await FetchPost<{ success: boolean; message?: string }>(
-          `/admin/series/${series.id}/resources`,
-          {
-            seriesId: series.id,
-            dbIds: toAdd
-          }
-        )
+        const addResponse = await FetchPost<{
+          success: boolean
+          message?: string
+        }>(`/admin/series/${series.id}/resources`, {
+          seriesId: series.id,
+          dbIds: toAdd
+        })
 
         if (typeof addResponse === 'string') {
           setError(`更新系列成功，但添加资源失败: ${addResponse}`)
@@ -143,13 +146,13 @@ export const EditSeriesModal = ({
 
       // 移除资源
       for (const dbId of toRemove) {
-        const removeResponse = await FetchDelete<{ success: boolean; message?: string }>(
-          `/admin/series/${series.id}/resources`,
-          {
-            seriesId: series.id,
-            dbId
-          }
-        )
+        const removeResponse = await FetchDelete<{
+          success: boolean
+          message?: string
+        }>(`/admin/series/${series.id}/resources`, {
+          seriesId: series.id,
+          dbId
+        })
 
         if (typeof removeResponse === 'string') {
           setError(`更新系列成功，但移除资源失败: ${removeResponse}`)

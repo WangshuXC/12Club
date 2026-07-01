@@ -70,7 +70,10 @@ export const Series = ({
         params.search = query
       }
 
-      const data = await FetchGet<AdminSeriesListResponse>('/admin/series', params)
+      const data = await FetchGet<AdminSeriesListResponse>(
+        '/admin/series',
+        params
+      )
 
       if (typeof data === 'string') {
         console.error('获取系列列表失败:', data)

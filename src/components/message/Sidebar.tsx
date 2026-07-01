@@ -17,8 +17,18 @@ const TABS: Array<{
   href: string
   icon: React.ComponentType<{ className?: string }>
 }> = [
-  { category: 'notice', label: '系统通知', href: '/message/notice', icon: Bell },
-  { category: 'update', label: '番剧更新', href: '/message/update', icon: Film },
+  {
+    category: 'notice',
+    label: '系统通知',
+    href: '/message/notice',
+    icon: Bell
+  },
+  {
+    category: 'update',
+    label: '番剧更新',
+    href: '/message/update',
+    icon: Film
+  },
   {
     category: 'comment',
     label: '评论区',

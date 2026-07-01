@@ -79,19 +79,22 @@ export const SearchContainer = () => {
     setSearchData({ ...searchData, selectedResourceType: types })
   }
 
-  const addToHistory = useCallback((searchQuery: string) => {
-    if (!searchQuery.trim()) {
-      return
-    }
+  const addToHistory = useCallback(
+    (searchQuery: string) => {
+      if (!searchQuery.trim()) {
+        return
+      }
 
-    const current = useSearchStore.getState().data
-    const newHistory = [
-      searchQuery,
-      ...current.searchHistory.filter((item) => item !== searchQuery)
-    ].slice(0, MAX_HISTORY_ITEMS)
+      const current = useSearchStore.getState().data
+      const newHistory = [
+        searchQuery,
+        ...current.searchHistory.filter((item) => item !== searchQuery)
+      ].slice(0, MAX_HISTORY_ITEMS)
 
-    setSearchData({ ...current, searchHistory: newHistory })
-  }, [setSearchData])
+      setSearchData({ ...current, searchHistory: newHistory })
+    },
+    [setSearchData]
+  )
 
   const removeFromHistory = (index: number) => {
     if (index < 0 || index >= searchData.searchHistory.length) {
@@ -106,41 +109,44 @@ export const SearchContainer = () => {
   }
 
   const [loading, setLoading] = useState(false)
-  const handleSearch = useCallback(async (currentPage = page) => {
-    if (!query.trim()) {
-      return
-    }
-
-    setLoading(true)
-    addToHistory(query)
-    setShowHistory(false)
-
-    const current = useSearchStore.getState().data
-    const { _data, total } = await FetchPost<{
-      _data: SearchData[]
-      total: number
-    }>('/search', {
-      query: query.split(' ').filter((term) => term.length > 0),
-      page: currentPage,
-      limit: 12,
-      searchOption: {
-        searchInIntroduction: current.searchInIntroduction,
-        searchInAlias: current.searchInAlias,
-        selectedResourceType: current.selectedResourceType,
-        selectedType: current.selectedType,
-        sortField: current.sortField,
-        sortOrder: current.sortOrder,
-        selectedLanguage: current.selectedLanguage,
-        selectedStatus: current.selectedStatus
+  const handleSearch = useCallback(
+    async (currentPage = page) => {
+      if (!query.trim()) {
+        return
       }
-    })
 
-    setSearchContainerData(_data)
-    setTotal(total)
-    setHasSearched(true)
+      setLoading(true)
+      addToHistory(query)
+      setShowHistory(false)
 
-    setLoading(false)
-  }, [page, query, addToHistory])
+      const current = useSearchStore.getState().data
+      const { _data, total } = await FetchPost<{
+        _data: SearchData[]
+        total: number
+      }>('/search', {
+        query: query.split(' ').filter((term) => term.length > 0),
+        page: currentPage,
+        limit: 12,
+        searchOption: {
+          searchInIntroduction: current.searchInIntroduction,
+          searchInAlias: current.searchInAlias,
+          selectedResourceType: current.selectedResourceType,
+          selectedType: current.selectedType,
+          sortField: current.sortField,
+          sortOrder: current.sortOrder,
+          selectedLanguage: current.selectedLanguage,
+          selectedStatus: current.selectedStatus
+        }
+      })
+
+      setSearchContainerData(_data)
+      setTotal(total)
+      setHasSearched(true)
+
+      setLoading(false)
+    },
+    [page, query, addToHistory]
+  )
 
   useEffect(() => {
     if (debouncedQuery) {

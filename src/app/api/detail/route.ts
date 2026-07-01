@@ -26,7 +26,10 @@ type DetailPayload = {
 }
 
 /** 将 pending 增量合并到 payload.view 上，返回给前端 */
-const withLiveView = (payload: DetailPayload, pending: number): DetailPayload => {
+const withLiveView = (
+  payload: DetailPayload,
+  pending: number
+): DetailPayload => {
   if (pending <= 0) return payload
 
   return {

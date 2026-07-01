@@ -6,11 +6,7 @@ import { FoliateReader } from './FoliateReader'
 import { TxtReader } from './TxtReader'
 import { isFoliateFormat } from './loader'
 
-import type {
-  BookTocItem,
-  ReaderFile,
-  ReaderFlow
-} from '@/types/common/reader'
+import type { BookTocItem, ReaderFile, ReaderFlow } from '@/types/common/reader'
 
 interface ScrollFeedReaderProps {
   files: ReaderFile[]
@@ -148,9 +144,7 @@ export const ScrollFeedReader = ({
     const isCurrent = file.index === currentIndex
     const body = (() => {
       if (file.format === 'txt') {
-        return (
-          <TxtReader file={file} onScrollBoundary={handleBoundary(file)} />
-        )
+        return <TxtReader file={file} onScrollBoundary={handleBoundary(file)} />
       }
 
       if (isFoliateFormat(file.format)) {
@@ -193,9 +187,7 @@ export const ScrollFeedReader = ({
       style={{ pointerEvents: animating ? 'none' : 'auto' }}
     >
       {viewportH > 0 && (
-        <div className="flex flex-col w-full">
-          {windowFiles.map(renderOne)}
-        </div>
+        <div className="flex flex-col w-full">{windowFiles.map(renderOne)}</div>
       )}
     </div>
   )

@@ -2,10 +2,7 @@ import { create } from 'zustand'
 
 import { FetchGet } from '@/utils/fetch'
 
-import type {
-  MessageCategory,
-  UnreadCountData
-} from '@/types/api/message'
+import type { MessageCategory, UnreadCountData } from '@/types/api/message'
 
 // 运行时未读快照，不持久化以避免跨账号泄漏
 const initialUnread: UnreadCountData = {

@@ -106,7 +106,9 @@ export const Resource = ({
     window.history.replaceState(
       {},
       '',
-      queryString ? `${window.location.pathname}?${queryString}` : window.location.pathname
+      queryString
+        ? `${window.location.pathname}?${queryString}`
+        : window.location.pathname
     )
   }
 
@@ -219,20 +221,20 @@ export const Resource = ({
           base: 'max-h-[calc(100vh-365px)]'
         }}
         bottomContent={
-        <div className="flex justify-center w-full">
-          {Math.ceil(total / PAGE_SIZE) > 1 && (
-            <Pagination
-              isCompact
-              showControls
-              showShadow
-              color="primary"
-              page={page}
-              total={Math.ceil(total / PAGE_SIZE)}
-              onChange={(page) => setPage(page)}
-            />
-          )}
-        </div>
-      }
+          <div className="flex justify-center w-full">
+            {Math.ceil(total / PAGE_SIZE) > 1 && (
+              <Pagination
+                isCompact
+                showControls
+                showShadow
+                color="primary"
+                page={page}
+                total={Math.ceil(total / PAGE_SIZE)}
+                onChange={(page) => setPage(page)}
+              />
+            )}
+          </div>
+        }
         bottomContentPlacement="outside"
       >
         <TableHeader columns={columns}>

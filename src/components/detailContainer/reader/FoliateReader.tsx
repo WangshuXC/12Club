@@ -216,8 +216,7 @@ export const FoliateReader = ({
 
         prevBtn.type = 'button'
         prevBtn.textContent = '← 上一章'
-        prevBtn.disabled =
-          renderer?.atStart === true && isFirstFile
+        prevBtn.disabled = renderer?.atStart === true && isFirstFile
 
         const nextBtn = doc.createElement('button')
 
@@ -298,7 +297,10 @@ export const FoliateReader = ({
       }
 
       // 应用阅读方向（分页/滚动）与样式
-      view.renderer?.setAttribute('flow', flow === 'scrolled' ? 'scrolled' : 'paginated')
+      view.renderer?.setAttribute(
+        'flow',
+        flow === 'scrolled' ? 'scrolled' : 'paginated'
+      )
       view.renderer?.setStyles?.(getReaderCSS(isDark))
       view.renderer?.next()
       // 暴露目录与跳转方法

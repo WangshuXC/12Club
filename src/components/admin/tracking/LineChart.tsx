@@ -91,9 +91,14 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
               borderRadius: '8px',
               fontSize: '13px'
             }}
-            labelFormatter={(label) => isHourly ? `时间: ${label}` : `日期: ${label}`}
+            labelFormatter={(label) =>
+              isHourly ? `时间: ${label}` : `日期: ${label}`
+            }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            formatter={(value: any) => [`${Number(value).toLocaleString()}`, '数量']}
+            formatter={(value: any) => [
+              `${Number(value).toLocaleString()}`,
+              '数量'
+            ]}
           />
           <Area
             type="monotone"

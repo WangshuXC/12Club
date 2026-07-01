@@ -7,8 +7,8 @@
 
 @theme {
   /* 全局字体栈 */
-  --font-sans: '微软雅黑', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
-    'Microsoft YaHei', sans-serif;
+  --font-sans: '微软雅黑', 'PingFang SC', 'Hiragino Sans GB',
+    'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
 
   /* 自定义主色调 */
   --color-primary: rgb(14 165 233);

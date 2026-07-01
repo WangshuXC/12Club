@@ -60,7 +60,7 @@ export const UserFavoriteDataCard = ({
   }
 
   return (
-    <Card className="w-full" shadow='sm'>
+    <Card className="w-full" shadow="sm">
       <CardBody className="p-4">
         <div className="flex flex-col gap-4 sm:flex-row relative">
           <Link

@@ -12,10 +12,7 @@ const updatePatchBannerSchema = z.object({
   image: z.any()
 })
 
-const updatePatchBanner = async (
-  image: ArrayBuffer,
-  resourceId: string
-) => {
+const updatePatchBanner = async (image: ArrayBuffer, resourceId: string) => {
   const resource = await prisma.resource.findUnique({
     where: { id: Number(resourceId) }
   })

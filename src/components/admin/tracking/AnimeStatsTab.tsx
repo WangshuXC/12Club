@@ -29,7 +29,10 @@ import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
 
 import { VisitorsModal } from './VisitorsModal'
 
-import type { AnimeStats, PaginationInfo } from '@/app/admin/tracking/anime/actions'
+import type {
+  AnimeStats,
+  PaginationInfo
+} from '@/app/admin/tracking/anime/actions'
 
 interface AnimeStatsTableProps {
   data: AnimeStats[]

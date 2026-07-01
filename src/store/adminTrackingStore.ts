@@ -2,13 +2,7 @@
 
 import { create } from 'zustand'
 
-export type QuickRangeType =
-  | '24h'
-  | 'today'
-  | '7d'
-  | '30d'
-  | '90d'
-  | 'custom'
+export type QuickRangeType = '24h' | 'today' | '7d' | '30d' | '90d' | 'custom'
 
 interface TrackingDateState {
   startDate: string
@@ -46,108 +40,104 @@ const getLast24hDates = () => {
 
 const defaults = getLast24hDates()
 
-export const useTrackingDateStore = create<TrackingDateStore>()(
-  (set, get) => ({
-    startDate: defaults.startDate,
-    endDate: defaults.endDate,
-    activeRange: '24h',
-    queryVersion: 0,
+export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
+  startDate: defaults.startDate,
+  endDate: defaults.endDate,
+  activeRange: '24h',
+  queryVersion: 0,
 
-    setStartDate: (date) => set({ startDate: date, activeRange: 'custom' }),
-    setEndDate: (date) => set({ endDate: date, activeRange: 'custom' }),
+  setStartDate: (date) => set({ startDate: date, activeRange: 'custom' }),
+  setEndDate: (date) => set({ endDate: date, activeRange: 'custom' }),
 
-    triggerQuery: () =>
-      set((state) => ({ queryVersion: state.queryVersion + 1 })),
+  triggerQuery: () =>
+    set((state) => ({ queryVersion: state.queryVersion + 1 })),
 
-    setQuickRange: (days) => {
-      const end = new Date()
-      const start = new Date()
+  setQuickRange: (days) => {
+    const end = new Date()
+    const start = new Date()
 
-      start.setDate(start.getDate() - days)
+    start.setDate(start.getDate() - days)
 
-      const rangeMap: Record<number, QuickRangeType> = {
-        7: '7d',
-        30: '30d',
-        90: '90d'
-      }
+    const rangeMap: Record<number, QuickRangeType> = {
+      7: '7d',
+      30: '30d',
+      90: '90d'
+    }
 
-      set((state) => ({
-        startDate: start.toISOString().split('T')[0],
-        endDate: end.toISOString().split('T')[0],
-        activeRange: rangeMap[days] || 'custom',
-        queryVersion: state.queryVersion + 1
-      }))
-    },
+    set((state) => ({
+      startDate: start.toISOString().split('T')[0],
+      endDate: end.toISOString().split('T')[0],
+      activeRange: rangeMap[days] || 'custom',
+      queryVersion: state.queryVersion + 1
+    }))
+  },
 
-    setLast24h: () => {
+  setLast24h: () => {
+    const end = new Date()
+    const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
+
+    set((state) => ({
+      startDate: start.toISOString().split('T')[0],
+      endDate: end.toISOString().split('T')[0],
+      activeRange: '24h',
+      queryVersion: state.queryVersion + 1
+    }))
+  },
+
+  setToday: () => {
+    const today = new Date().toISOString().split('T')[0]
+
+    set((state) => ({
+      startDate: today,
+      endDate: today,
+      activeRange: 'today',
+      queryVersion: state.queryVersion + 1
+    }))
+  },
+
+  getQueryRange: () => {
+    const { activeRange, startDate, endDate } = get()
+
+    if (activeRange === '24h') {
       const end = new Date()
       const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
 
-      set((state) => ({
-        startDate: start.toISOString().split('T')[0],
-        endDate: end.toISOString().split('T')[0],
-        activeRange: '24h',
-        queryVersion: state.queryVersion + 1
-      }))
-    },
-
-    setToday: () => {
-      const today = new Date().toISOString().split('T')[0]
-
-      set((state) => ({
-        startDate: today,
-        endDate: today,
-        activeRange: 'today',
-        queryVersion: state.queryVersion + 1
-      }))
-    },
-
-    getQueryRange: () => {
-      const { activeRange, startDate, endDate } = get()
-
-      if (activeRange === '24h') {
-        const end = new Date()
-        const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
-
-        return {
-          startISO: start.toISOString(),
-          endISO: end.toISOString()
-        }
-      }
-
-      if (activeRange === 'today') {
-        const now = new Date()
-        const start = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          0,
-          0,
-          0,
-          0
-        )
-        const end = new Date(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate() + 1,
-          0,
-          0,
-          0,
-          0
-        )
-
-        return {
-          startISO: start.toISOString(),
-          endISO: end.toISOString()
-        }
-      }
-
       return {
-        startISO: startDate ? new Date(startDate).toISOString() : '',
-        endISO: endDate
-          ? new Date(endDate + 'T23:59:59').toISOString()
-          : ''
+        startISO: start.toISOString(),
+        endISO: end.toISOString()
       }
     }
-  })
-)
+
+    if (activeRange === 'today') {
+      const now = new Date()
+      const start = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+        0
+      )
+      const end = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0,
+        0,
+        0,
+        0
+      )
+
+      return {
+        startISO: start.toISOString(),
+        endISO: end.toISOString()
+      }
+    }
+
+    return {
+      startISO: startDate ? new Date(startDate).toISOString() : '',
+      endISO: endDate ? new Date(endDate + 'T23:59:59').toISOString() : ''
+    }
+  }
+}))

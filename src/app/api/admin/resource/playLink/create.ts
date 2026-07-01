@@ -87,7 +87,10 @@ export const createResourcePlayLink = async (
 
     // 处理特定的 Prisma 错误
     if (error && typeof error === 'object' && 'code' in error) {
-      const prismaError = error as { code: string; meta?: { target?: string[] } }
+      const prismaError = error as {
+        code: string
+        meta?: { target?: string[] }
+      }
 
       if (prismaError.code === 'P2002') {
         // 唯一约束违反

@@ -18,31 +18,30 @@ export const AnimeStatsContainer = () => {
   const [pagination, setPagination] = useState<PaginationInfo | null>(null)
   const initialLoaded = useRef(false)
 
-  const loadData = useCallback(
-    async (page = 1) => {
-      setLoading(true)
+  const loadData = useCallback(async (page = 1) => {
+    setLoading(true)
 
-      try {
-        const { startISO, endISO } = useTrackingDateStore.getState().getQueryRange()
-        const data = await getAnimeStats(
-          startISO || undefined,
-          endISO || undefined,
-          page,
-          20
-        )
+    try {
+      const { startISO, endISO } = useTrackingDateStore
+        .getState()
+        .getQueryRange()
+      const data = await getAnimeStats(
+        startISO || undefined,
+        endISO || undefined,
+        page,
+        20
+      )
 
-        if (data) {
-          setAnimeStats(data.list)
-          setPagination(data.pagination)
-        }
-      } catch (error) {
-        console.error('Failed to load anime stats:', error)
-      } finally {
-        setLoading(false)
+      if (data) {
+        setAnimeStats(data.list)
+        setPagination(data.pagination)
       }
-    },
-    []
-  )
+    } catch (error) {
+      console.error('Failed to load anime stats:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
 
   // 初始加载
   useEffect(() => {

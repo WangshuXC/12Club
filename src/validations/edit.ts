@@ -33,8 +33,5 @@ export const resourceCreateSchema = z.object({
     .string()
     .max(3000, { message: '标签字符串总长度不可超过 3000 个字符' })
     .optional(),
-  released: z
-    .string()
-    .trim()
-    .min(1, { message: '发行日期是必填项' })
+  released: z.string().trim().min(1, { message: '发行日期是必填项' })
 })

@@ -2,12 +2,7 @@
 
 import { useState } from 'react'
 
-import {
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerHeader
-} from '@heroui/react'
+import { Drawer, DrawerBody, DrawerContent, DrawerHeader } from '@heroui/react'
 import { ChevronRight } from 'lucide-react'
 
 import { Cover, Introduction } from '@/types/common/detail-container'
@@ -92,9 +87,7 @@ export const MobileAnimeDetail = ({
         }}
       >
         <DrawerContent>
-          <DrawerHeader >
-            详情
-          </DrawerHeader>
+          <DrawerHeader>详情</DrawerHeader>
           <DrawerBody className="py-4 overflow-y-auto">
             {/* 封面 + 标题 + 播放下载 */}
             <div className="flex gap-3">
@@ -110,7 +103,9 @@ export const MobileAnimeDetail = ({
                 <div className="text-xs text-default-500">
                   {primaryItems.map((item, i) => (
                     <span key={i}>
-                      {i > 0 && <span className="mx-1 text-default-300">·</span>}
+                      {i > 0 && (
+                        <span className="mx-1 text-default-300">·</span>
+                      )}
                       {item}
                     </span>
                   ))}

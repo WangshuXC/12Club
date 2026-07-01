@@ -23,7 +23,6 @@ interface Props {
   loading: boolean
   onEdit: (playLink: ResourcePlayLink) => void
   onDelete: (id: number) => Promise<void>
-
 }
 
 export const PlayLinkTable = ({
@@ -33,9 +32,7 @@ export const PlayLinkTable = ({
   onDelete
 }: Props) => {
   if (!playLinks?.length) {
-    return (
-      <div className="text-center py-8 text-default-500">暂无在线资源</div>
-    )
+    return <div className="text-center py-8 text-default-500">暂无在线资源</div>
   }
 
   return (

@@ -9,8 +9,8 @@
 }
 
 * {
-  font-family: '微软雅黑', 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
-    'Microsoft YaHei', sans-serif;
+  font-family: '微软雅黑', 'PingFang SC', 'Hiragino Sans GB',
+    'Noto Sans CJK SC', 'Microsoft YaHei', sans-serif;
 }
 
 ::view-transition-old(root),

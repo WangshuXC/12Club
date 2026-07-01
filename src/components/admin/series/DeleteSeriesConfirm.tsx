@@ -41,7 +41,10 @@ export const DeleteSeriesConfirm = ({
     setError('')
 
     try {
-      const response = await FetchDelete<{ success: boolean; message?: string }>(`/admin/series/${series.id}`, {
+      const response = await FetchDelete<{
+        success: boolean
+        message?: string
+      }>(`/admin/series/${series.id}`, {
         id: series.id
       })
 

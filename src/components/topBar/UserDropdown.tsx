@@ -17,12 +17,7 @@ import {
   addToast,
   useDisclosure
 } from '@heroui/react'
-import {
-  CircleHelp,
-  LogOut,
-  UserRound,
-  Shield
-} from 'lucide-react'
+import { CircleHelp, LogOut, UserRound, Shield } from 'lucide-react'
 import { useRouter } from 'next-nprogress-bar'
 
 import { useMounted } from '@/hooks/useMounted'

@@ -38,7 +38,9 @@ export function slideInOut() {
         pseudoElement: '::view-transition-new(root)'
       }
     )
-  } catch { /* empty */ }
+  } catch {
+    /* empty */
+  }
 }
 
 export function upPage() {
@@ -103,7 +105,9 @@ export function circle() {
         pseudoElement: '::view-transition-new(root)'
       }
     )
-  } catch { /* empty */ }
+  } catch {
+    /* empty */
+  }
 }
 
 export function circleExpand(event: MouseEvent) {
@@ -134,5 +138,7 @@ export function circleExpand(event: MouseEvent) {
         pseudoElement: '::view-transition-new(root)'
       }
     )
-  } catch { /* empty */ }
+  } catch {
+    /* empty */
+  }
 }

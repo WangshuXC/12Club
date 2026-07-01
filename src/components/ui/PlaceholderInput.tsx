@@ -47,7 +47,9 @@ export function PlaceholdersAndVanishInput({
   }, [placeholders])
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const newDataRef = useRef<{ x: number; y: number; r: number; color: string }[]>([])
+  const newDataRef = useRef<
+    { x: number; y: number; r: number; color: string }[]
+  >([])
   const inputRef = useRef<HTMLInputElement>(null)
   const [value, setValue] = useState('')
   const [animating, setAnimating] = useState(false)

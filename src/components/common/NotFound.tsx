@@ -12,7 +12,11 @@ export const NotFoundComponent = () => {
       <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader className="flex items-center pt-8">
           <div className="w-full flex flex-col justify-center items-center gap-y-4">
-            <Image src="/not-found.gif" alt="页面未找到动图" className="size-40" />
+            <Image
+              src="/not-found.gif"
+              alt="页面未找到动图"
+              className="size-40"
+            />
             <div className="text-center">
               <h1 className="text-4xl font-bold text-primary">404 Not Found</h1>
               <p className="text-default-500">请检查路由是否正确</p>

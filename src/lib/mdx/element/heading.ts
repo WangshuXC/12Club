@@ -10,7 +10,9 @@ const getTextContent = (children: ReactNode): string => {
   }
 
   if (isValidElement(children)) {
-    return getTextContent((children.props as { children?: ReactNode })?.children)
+    return getTextContent(
+      (children.props as { children?: ReactNode })?.children
+    )
   }
 
   if (children && typeof children === 'object' && 'props' in children) {

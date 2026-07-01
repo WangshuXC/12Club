@@ -42,9 +42,7 @@ const extractPath = (url: string) => {
 
 const PageViewList = ({ data }: { data: VisitorPageView[] }) => {
   if (data.length === 0) {
-    return (
-      <div className="text-center py-8 text-default-400">暂无访问记录</div>
-    )
+    return <div className="text-center py-8 text-default-400">暂无访问记录</div>
   }
 
   return (
@@ -81,9 +79,7 @@ const PageViewList = ({ data }: { data: VisitorPageView[] }) => {
 
 const AnimePlayList = ({ data }: { data: VisitorAnimePlay[] }) => {
   if (data.length === 0) {
-    return (
-      <div className="text-center py-8 text-default-400">暂无播放记录</div>
-    )
+    return <div className="text-center py-8 text-default-400">暂无播放记录</div>
   }
 
   return (
@@ -140,7 +136,8 @@ export const VisitorDetailModal = ({
     }
   }, [isOpen, visitor])
 
-  const displayName = visitor?.user?.name || `游客 ${visitor?.guid.slice(0, 8)}...`
+  const displayName =
+    visitor?.user?.name || `游客 ${visitor?.guid.slice(0, 8)}...`
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" scrollBehavior="inside">

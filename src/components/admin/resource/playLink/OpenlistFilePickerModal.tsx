@@ -168,7 +168,11 @@ export const OpenlistFilePickerModal = ({
           )}
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" onPress={onClose} isDisabled={batchSubmitting}>
+          <Button
+            variant="light"
+            onPress={onClose}
+            isDisabled={batchSubmitting}
+          >
             {isBatch ? '取消' : '关闭'}
           </Button>
           {isBatch && (

@@ -53,7 +53,10 @@ export const ResourceEdit = ({ initialResource, onUpdate }: Props) => {
   const currentUser = useUserStore((state) => state.user)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const handleChange = (key: keyof AdminResource, value: AdminResource[keyof AdminResource]) => {
+  const handleChange = (
+    key: keyof AdminResource,
+    value: AdminResource[keyof AdminResource]
+  ) => {
     setResource((prev) => ({ ...prev, [key]: value }))
   }
 

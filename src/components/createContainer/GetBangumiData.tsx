@@ -81,7 +81,10 @@ export function GetBangumiData({ onBannerFetched }: Props) {
         body: JSON.stringify({ url: picUrl })
       })
 
-      if (!res.ok || res.headers.get('content-type')?.includes('application/json')) {
+      if (
+        !res.ok ||
+        res.headers.get('content-type')?.includes('application/json')
+      ) {
         addToast({
           title: '提示',
           description: '服务端拉取图片失败，已在新窗口中打开，请手动保存后上传',
@@ -151,9 +154,7 @@ export function GetBangumiData({ onBannerFetched }: Props) {
       const tagSet = tags.map((t) => t.toLowerCase())
       if (tagSet.some((t) => ['日本', '日本动画'].includes(t))) return 'jp'
       if (
-        tagSet.some((t) =>
-          ['中国', '中国大陆', '中国动画', '国产'].includes(t)
-        )
+        tagSet.some((t) => ['中国', '中国大陆', '中国动画', '国产'].includes(t))
       )
         return 'zh'
       if (tagSet.some((t) => ['欧美', '美国', '英国'].includes(t))) return 'en'
@@ -171,10 +172,9 @@ export function GetBangumiData({ onBannerFetched }: Props) {
         ? `${getString(infoObject?.['导演'])} | ${getString(infoObject?.['Copyright'])}`
         : getString(infoObject?.['导演']),
       introduction: bangumiDetail.summary || '',
-      alias: [
-        bangumiDetail.name,
-        ...(infoObject?.['别名'] || [])
-      ].filter(Boolean),
+      alias: [bangumiDetail.name, ...(infoObject?.['别名'] || [])].filter(
+        Boolean
+      ),
       tag: [],
       language: detectLanguage(metaTags),
       accordionTotal: Number(getString(infoObject?.['话数'])) || 0,
@@ -232,7 +232,9 @@ export function GetBangumiData({ onBannerFetched }: Props) {
                     bangumiData?.map((item: BangumiSearchItem) => (
                       <div
                         key={item.id}
-                        onClick={() => fetchDetailData(String(item.id), onClose)}
+                        onClick={() =>
+                          fetchDetailData(String(item.id), onClose)
+                        }
                       >
                         <Card className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800">
                           <CardBody>

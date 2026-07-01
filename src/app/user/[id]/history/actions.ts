@@ -55,10 +55,7 @@ export const getActions = async (
       }
     })
 
-    const latestMap = new Map<
-      string,
-      { accordion: number; timestamp: Date }
-    >()
+    const latestMap = new Map<string, { accordion: number; timestamp: Date }>()
     for (const event of events) {
       const extraData = event.extra_data as Record<string, unknown> | null
       if (!extraData) continue
@@ -114,8 +111,7 @@ export const getActions = async (
         name: resource?.name || '未知资源',
         imageUrl: resource?.image_url || '',
         accordion: data.accordion,
-        showAccordion:
-          playLink?.show_accordion || `第 ${data.accordion} 集`,
+        showAccordion: playLink?.show_accordion || `第 ${data.accordion} 集`,
         lastPlayedAt: data.timestamp.toISOString()
       }
     })

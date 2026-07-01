@@ -14,7 +14,10 @@ export const PUT = async (
   const { id } = await params
   const announcementId = parseInt(id)
   if (isNaN(announcementId)) {
-    return NextResponse.json({ message: '无效的公告ID', status: 400 }, { status: 400 })
+    return NextResponse.json(
+      { message: '无效的公告ID', status: 400 },
+      { status: 400 }
+    )
   }
 
   const input = await ParsePutBody(req, adminUpdateAnnouncementSchema)
@@ -29,7 +32,10 @@ export const PUT = async (
 
     const response = await updateAnnouncement(updateInput)
     if (typeof response === 'string') {
-      return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+      return NextResponse.json(
+        { message: response, status: 500 },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ...response, status: 200 })
@@ -43,14 +49,20 @@ export const DELETE = async (
   const { id } = await params
   const announcementId = parseInt(id)
   if (isNaN(announcementId)) {
-    return NextResponse.json({ message: '无效的公告ID', status: 400 }, { status: 400 })
+    return NextResponse.json(
+      { message: '无效的公告ID', status: 400 },
+      { status: 400 }
+    )
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return withAdminAuth(req, async (_payload) => {
     const response = await deleteAnnouncement({ id: announcementId })
     if (typeof response === 'string') {
-      return NextResponse.json({ message: response, status: 500 }, { status: 500 })
+      return NextResponse.json(
+        { message: response, status: 500 },
+        { status: 500 }
+      )
     }
 
     return NextResponse.json({ ...response, status: 200 })

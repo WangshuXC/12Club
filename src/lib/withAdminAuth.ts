@@ -11,7 +11,10 @@ export const withAdminAuth = async (
   const payload = await verifyHeaderCookie(req)
 
   if (!payload) {
-    return NextResponse.json({ message: '用户未登录', status: 401 }, { status: 401 })
+    return NextResponse.json(
+      { message: '用户未登录', status: 401 },
+      { status: 401 }
+    )
   }
 
   if (payload.role < 3) {

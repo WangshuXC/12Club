@@ -10,7 +10,15 @@ import {
   DropdownMenu,
   DropdownTrigger
 } from '@heroui/react'
-import { Cloud, Database, Download, Edit, Link as LinkIcon, MoreHorizontal, Trash2 } from 'lucide-react'
+import {
+  Cloud,
+  Database,
+  Download,
+  Edit,
+  Link as LinkIcon,
+  MoreHorizontal,
+  Trash2
+} from 'lucide-react'
 
 import { ExternalLink } from '@/components/common/ExternalLink'
 import { SUPPORTED_RESOURCE_LINK_MAP } from '@/constants/resource'

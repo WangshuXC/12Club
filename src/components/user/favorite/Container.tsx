@@ -59,10 +59,14 @@ export const UserFavorite = ({
   const fetchPatchesInFolder = useCallback(
     (folderId: number) => {
       startTransition(async () => {
-        const res = await FetchGet<{ resources: ResourceData[]; total: number }>(
-          `/user/profile/favorite/folder/resource`,
-          { folderId, page, limit: 48 }
-        )
+        const res = await FetchGet<{
+          resources: ResourceData[]
+          total: number
+        }>(`/user/profile/favorite/folder/resource`, {
+          folderId,
+          page,
+          limit: 48
+        })
         ErrorHandler(res, (value) => {
           setResource(value.resources)
           setTotal(value.total)

@@ -20,7 +20,9 @@ export const OverviewContainer = () => {
     setLoading(true)
 
     try {
-      const { startISO, endISO } = useTrackingDateStore.getState().getQueryRange()
+      const { startISO, endISO } = useTrackingDateStore
+        .getState()
+        .getQueryRange()
       const data = await getTrackingOverview(
         startISO || undefined,
         endISO || undefined

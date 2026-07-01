@@ -38,7 +38,10 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   resource_update: Film
 }
 
-const COLOR_MAP: Record<string, 'primary' | 'success' | 'warning' | 'danger' | 'default' | 'secondary'> = {
+const COLOR_MAP: Record<
+  string,
+  'primary' | 'success' | 'warning' | 'danger' | 'default' | 'secondary'
+> = {
   apply: 'primary',
   system: 'primary',
   pm: 'secondary',

@@ -44,7 +44,10 @@ export const UserPlayHistory = ({ history, total, uid }: Props) => {
       ) : (
         <>
           {items.map((item) => (
-            <PlayHistoryCard key={`${item.dbId}-${item.accordion}`} item={item} />
+            <PlayHistoryCard
+              key={`${item.dbId}-${item.accordion}`}
+              item={item}
+            />
           ))}
         </>
       )}

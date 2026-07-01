@@ -59,7 +59,15 @@ export const PageContainer = ({
         setTotal(response.total)
       }
     })
-  }, [category, selectedType, selectedLanguage, selectedStatus, sortField, sortOrder, page])
+  }, [
+    category,
+    selectedType,
+    selectedLanguage,
+    selectedStatus,
+    sortField,
+    sortOrder,
+    page
+  ])
 
   return (
     <div className="container mx-auto my-4 space-y-6">
