@@ -83,8 +83,8 @@ export const flushViews = async (): Promise<{
     if (!ids || ids.length === 0) return { flushed: 0, failed: 0 }
 
     for (const idStr of ids) {
-      const resourceId = parseInt(idStr, 10)
-      if (!Number.isFinite(resourceId)) continue
+      const resourceId = Number(idStr)
+      if (!Number.isInteger(resourceId) || resourceId <= 0) continue
 
       // MULTI(GET+DEL)：原子读取并删除，保证并发写入的新增计数不会丢
       let delta = 0
@@ -104,10 +104,20 @@ export const flushViews = async (): Promise<{
       if (delta <= 0) continue
 
       try {
-        await prisma.resource.update({
-          where: { id: resourceId },
-          data: { view: { increment: delta } }
-        })
+        // 使用原生 SQL 绕过 Prisma 的 @updatedAt 自动刷新，
+        // 仅递增 view 字段而不改动 updated 时间戳。
+        // 返回受影响行数：为 0 表示资源已被删除，直接丢弃孤儿计数。
+        const affected = await prisma.$executeRaw`
+          UPDATE "resource" SET "view" = "view" + ${delta} WHERE "id" = ${resourceId}
+        `
+
+        if (affected === 0) {
+          console.warn(
+            `[viewCounter] 资源不存在，丢弃孤儿计数 id=${resourceId} delta=${delta}`
+          )
+          continue
+        }
+
         flushed++
       } catch (err) {
         failed++
@@ -115,7 +125,8 @@ export const flushViews = async (): Promise<{
           `[viewCounter] DB 更新失败 id=${resourceId} delta=${delta}:`,
           err
         )
-        // 回滚：把 delta 加回 Redis，并重新标脏，等下次 flush
+
+        // 仅对可重试错误回滚：把 delta 加回 Redis，并重新标脏，等下次 flush
 
         try {
           await redis
