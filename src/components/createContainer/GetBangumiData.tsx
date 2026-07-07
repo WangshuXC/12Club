@@ -19,6 +19,7 @@ import {
 import localforage from 'localforage'
 
 import { Loading } from '@/components/common/Loading'
+import { fetchBangumi } from '@/constants/bangumi'
 import { useCreateResourceStore } from '@/store/editStore'
 
 interface BangumiSearchItem {
@@ -46,10 +47,13 @@ export function GetBangumiData({ onBannerFetched }: Props) {
   const [bangumiData, setBangumiData] = useState<BangumiSearchItem[]>([])
 
   const fetchBangumiData = async (name: string, type: number = 2) => {
-    const res = await fetch(
-      `https://api.bgm.tv/search/subject/${name}?responseGroup=large&type=${type}`
-    )
-    if (!res.ok) {
+    let res: Response
+
+    try {
+      res = await fetchBangumi(
+        `/search/subject/${name}?responseGroup=large&type=${type}`
+      )
+    } catch {
       addToast({
         title: '错误',
         description: '获取数据失败',
@@ -115,10 +119,11 @@ export function GetBangumiData({ onBannerFetched }: Props) {
   }
 
   const fetchDetailData = async (id: string, onClose: () => void) => {
-    const res = await fetch(
-      `https://api.bgm.tv/v0/subjects/${id}?responseGroup=large`
-    )
-    if (!res.ok) {
+    let res: Response
+
+    try {
+      res = await fetchBangumi(`/v0/subjects/${id}?responseGroup=large`)
+    } catch {
       addToast({
         title: '错误',
         description: '获取数据失败',

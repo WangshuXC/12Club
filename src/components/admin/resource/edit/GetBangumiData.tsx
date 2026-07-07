@@ -18,6 +18,7 @@ import {
 } from '@heroui/react'
 
 import { Loading } from '@/components/common/Loading'
+import { fetchBangumi } from '@/constants/bangumi'
 
 interface BangumiSearchItem {
   id: number
@@ -54,10 +55,13 @@ export function GetBangumiData({ name, setData, setAliases }: Props) {
   const [bangumiData, setBangumiData] = useState<BangumiSearchItem[]>([])
 
   const fetchBangumiData = async (name: string) => {
-    const res = await fetch(
-      `https://api.bgm.tv/search/subject/${name}?responseGroup=large&type=2`
-    )
-    if (!res.ok) {
+    let res: Response
+
+    try {
+      res = await fetchBangumi(
+        `/search/subject/${name}?responseGroup=large&type=2`
+      )
+    } catch {
       addToast({
         title: '错误',
         description: '获取数据失败',
@@ -81,10 +85,11 @@ export function GetBangumiData({ name, setData, setAliases }: Props) {
   }
 
   const fetchDetailData = async (id: string, onClose: () => void) => {
-    const res = await fetch(
-      `https://api.bgm.tv/v0/subjects/${id}?responseGroup=large&type=2`
-    )
-    if (!res.ok) {
+    let res: Response
+
+    try {
+      res = await fetchBangumi(`/v0/subjects/${id}?responseGroup=large&type=2`)
+    } catch {
       addToast({
         title: '错误',
         description: '获取数据失败',
