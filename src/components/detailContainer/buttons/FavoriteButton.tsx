@@ -1,8 +1,7 @@
 'use client'
 
-import { Button, Tooltip, useDisclosure } from '@heroui/react'
+import { addToast, Button, Tooltip, useDisclosure } from '@heroui/react'
 import { Heart } from 'lucide-react'
-import toast from 'react-hot-toast'
 
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
@@ -20,7 +19,7 @@ export const FavoriteButton = ({ dbId, isFavorite }: Props) => {
 
   const toggleLike = async () => {
     if (!user.uid) {
-      toast.error('请登录以收藏')
+      addToast({ title: '请登录以收藏', color: 'danger' })
       return
     }
 

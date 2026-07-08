@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useTransition } from 'react'
 
 import {
+  addToast,
   Table,
   TableBody,
   TableCell,
@@ -13,7 +14,6 @@ import {
   Button
 } from '@heroui/react'
 import { Search, Play } from 'lucide-react'
-import toast from 'react-hot-toast'
 import { useDebounce } from 'use-debounce'
 
 import { GetAutoUpdateActions } from '@/app/admin/auto-update/actions'
@@ -101,7 +101,7 @@ export const AutoUpdateContainer = ({
 
     try {
       setBatchUpdating(true)
-      toast.loading('正在批量更新资源...', { id: 'batch-update' })
+      addToast({ title: '正在批量更新资源...', color: 'default' })
 
       const response = await FetchPost<{
         success: boolean
@@ -121,16 +121,17 @@ export const AutoUpdateContainer = ({
       }>('/admin/auto-update/batch-update', {})
 
       if (response.success) {
-        toast.success(response.message, { id: 'batch-update' })
+        addToast({ title: response.message, color: 'success' })
 
         // 刷新列表
         fetchData()
       } else {
-        toast.error('批量更新失败', { id: 'batch-update' })
+        addToast({ title: '批量更新失败', color: 'danger' })
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '批量更新失败', {
-        id: 'batch-update'
+      addToast({
+        title: error instanceof Error ? error.message : '批量更新失败',
+        color: 'danger'
       })
     } finally {
       setBatchUpdating(false)

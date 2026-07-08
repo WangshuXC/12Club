@@ -10,17 +10,19 @@ const decodeIfEncoded = (text: string) => {
   }
 }
 
-export const Copy = (originText: string) => {
+export const Copy = (originText: string, needToast = false) => {
   const text = decodeIfEncoded(originText)
 
   if (navigator?.clipboard) {
     navigator.clipboard
       .writeText(text)
       .then(() => {
+        if (needToast) {
         addToast({
           title: '成功',
           description: `${text}`
         })
+      }
       })
       .catch(() =>
         addToast({

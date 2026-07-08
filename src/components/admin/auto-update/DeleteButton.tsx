@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import {
+  addToast,
   Button,
   Tooltip,
   Modal,
@@ -13,7 +14,6 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Trash2 } from 'lucide-react'
-import toast from 'react-hot-toast'
 
 import { FetchDelete } from '@/utils/fetch'
 
@@ -34,11 +34,14 @@ export const DeleteButton = ({ id, onDelete }: Props) => {
         { id: id.toString() }
       )
 
-      toast.success('移除成功')
+      addToast({ title: '移除成功', color: 'success' })
       onDelete(id)
       onOpenChange()
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '移除失败')
+      addToast({
+        title: error instanceof Error ? error.message : '移除失败',
+        color: 'danger'
+      })
     } finally {
       setIsLoading(false)
     }

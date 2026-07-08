@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useTransition } from 'react'
 
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -16,7 +17,6 @@ import {
 } from '@heroui/react'
 import { Folder } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 import { Loading } from '@/components/common/Loading'
 import { Null } from '@/components/common/Null'
@@ -96,7 +96,7 @@ export const UserFavorite = ({
         setFolders((prev) => prev.filter((p) => p.id !== selectedFolder?.id))
         onCloseDelete()
         onCloseFolder()
-        toast.success('删除收藏夹成功')
+        addToast({ title: '删除收藏夹成功', color: 'success' })
         router.refresh()
       })
     })

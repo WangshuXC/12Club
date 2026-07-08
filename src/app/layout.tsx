@@ -1,6 +1,5 @@
 import { cookies, headers } from 'next/headers'
 import { ViewTransitions } from 'next-view-transitions'
-import { Toaster } from 'react-hot-toast'
 
 import { BackToTop } from '@/components/common/BackToTop'
 import { Footer } from '@/components/common/Footer'
@@ -42,7 +41,6 @@ export default async function RootLayout({
               <TopBar />
               <div className="flex min-h-[calc(100dvh-256px)] w-full grow">
                 {children}
-                <Toaster />
               </div>
               <BackToTop />
               <Footer />

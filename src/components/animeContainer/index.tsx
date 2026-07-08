@@ -103,6 +103,7 @@ const AnimeContainerComponent = ({
               favorited: introduce?._count.favorited ?? 0
             }}
             onScrollToComment={handleScrollToComment}
+            coverImage={coverData.image}
           />
 
           {/* 移动端：精简详情+底部Drawer */}

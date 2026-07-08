@@ -1,25 +1,23 @@
 'use client'
 
-import { useDisclosure } from '@heroui/react'
+import { addToast, useDisclosure } from '@heroui/react'
 import {
   Star,
-  Share2,
   MessageSquare,
   MessageCircleQuestion,
   Pencil
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 import { Config } from '@/config/config'
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
-import { Copy } from '@/utils/copy'
 import { formatNumber } from '@/utils/formatNumber'
 
 import { ActionButton } from './ActionButton'
 import { FavoriteModal } from './FavoriteModal'
 import { FeedbackModal } from './FeedbackModal'
+import { SharePopover } from './SharePopover'
 
 interface ActionBarProps {
   dbId: string
@@ -30,6 +28,7 @@ interface ActionBarProps {
     favorited: number
   }
   onScrollToComment?: () => void
+  coverImage: string
 }
 
 export const ActionBar = ({
@@ -37,7 +36,8 @@ export const ActionBar = ({
   title,
   isFavorite,
   stats,
-  onScrollToComment
+  onScrollToComment,
+  coverImage
 }: ActionBarProps) => {
   const pathName = usePathname()
   const { user } = useUserStore((state) => state)
@@ -60,18 +60,14 @@ export const ActionBar = ({
   // 收藏逻辑
   const handleFavorite = () => {
     if (!user.uid) {
-      toast.error('请登录以收藏')
+      addToast({ title: '请登录以收藏', color: 'danger' })
       return
     }
 
     onFavoriteOpen()
   }
 
-  // 分享逻辑
-  const handleShare = () => {
-    const text = `${title} - ${Config.url}${pathName}`
-    Copy(text)
-  }
+  const shareUrl = `${Config.url}${pathName}`
 
   return (
     <>
@@ -106,12 +102,12 @@ export const ActionBar = ({
 
         <div className="h-4 w-px bg-default-300 hidden sm:block mx-1" />
 
-        {/* 分享按钮 */}
-        <ActionButton
-          icon={<Share2 className="size-5 sm:size-6" />}
-          label="分享"
-          tooltip="复制分享链接"
-          onPress={handleShare}
+        {/* 分享按钮：PC hover 显示二维码/预览，移动端点击复制 */}
+        <SharePopover
+          shareUrl={shareUrl}
+          title={title}
+          coverImage={coverImage}
+          onCopy={() => addToast({ title: '链接已复制', color: 'success' })}
         />
 
         <div className="flex-1" />

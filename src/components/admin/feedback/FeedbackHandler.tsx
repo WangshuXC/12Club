@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import {
+  addToast,
   Button,
   Dropdown,
   DropdownItem,
@@ -18,7 +19,6 @@ import {
 } from '@heroui/react'
 import { MoreVertical } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 import { useUserStore } from '@/store/userStore'
 import { FetchPost } from '@/utils/fetch'
@@ -48,11 +48,11 @@ export const FeedbackHandler = ({ initialFeedback }: Props) => {
       content: handleContent.trim()
     })
     if (typeof res === 'string') {
-      toast.error(res)
+      addToast({ title: '错误', description: res, color: 'danger' })
     } else {
       onCloseHandle()
       setHandleContent('')
-      toast.success('处理反馈成功!')
+      addToast({ title: '处理反馈成功!', color: 'success' })
       router.refresh()
     }
 

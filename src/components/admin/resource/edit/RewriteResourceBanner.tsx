@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import {
+  addToast,
   Button,
   Modal,
   ModalBody,
@@ -11,7 +12,6 @@ import {
   ModalHeader,
   useDisclosure
 } from '@heroui/react'
-import toast from 'react-hot-toast'
 
 import { ImageCropper } from '@/components/common/cropper/ImageCropper'
 import { dataURItoBlob } from '@/utils/dataURItoBlob'
@@ -35,7 +35,7 @@ export const RewriteResourceBanner = ({ resourceId }: Props) => {
   const [updating, setUpdating] = useState(false)
   const handleUpdateBanner = async () => {
     if (!banner) {
-      toast.error('请选择一张新的预览图片')
+      addToast({ title: '请选择一张新的预览图片', color: 'danger' })
       return
     }
 
@@ -50,7 +50,7 @@ export const RewriteResourceBanner = ({ resourceId }: Props) => {
       setBanner(null)
       setPreviewUrl('')
     })
-    toast.success('更新图片成功')
+    addToast({ title: '更新图片成功', color: 'success' })
     setUpdating(false)
     onClose()
   }

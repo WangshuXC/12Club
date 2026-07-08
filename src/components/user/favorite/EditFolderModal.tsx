@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 
 import {
+  addToast,
   Button,
   Checkbox,
   Input,
@@ -15,7 +16,6 @@ import {
   useDisclosure
 } from '@heroui/react'
 import { Pencil, Plus } from 'lucide-react'
-import toast from 'react-hot-toast'
 
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPost, FetchPut } from '@/utils/fetch'
@@ -61,9 +61,11 @@ export const EditFolderModal = ({
 
       ErrorHandler(res, (value) => {
         onActionSuccess(value)
-        toast.success(
-          action === 'create' ? '创建收藏文件夹成功' : '编辑收藏文件夹成功'
-        )
+        addToast({
+          title:
+            action === 'create' ? '创建收藏文件夹成功' : '编辑收藏文件夹成功',
+          color: 'success'
+        })
         setNewFolder({ name: '', description: '', isPublic: false })
         onClose()
       })

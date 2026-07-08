@@ -2,9 +2,15 @@
 
 import { useCallback, useEffect, useState, useTransition } from 'react'
 
-import { Button, Chip, Modal, ModalBody, ModalContent } from '@heroui/react'
+import {
+  addToast,
+  Button,
+  Chip,
+  Modal,
+  ModalBody,
+  ModalContent
+} from '@heroui/react'
 import { Folder } from 'lucide-react'
-import toast from 'react-hot-toast'
 
 import { EditFolderModal } from '@/components/user/favorite/EditFolderModal'
 import { ErrorHandler } from '@/utils/errorHandler'
@@ -44,7 +50,10 @@ export const FavoriteModal = ({ dbId, isOpen, onClose }: Props) => {
         folderId
       })
       ErrorHandler(res, (value: FavoriteToggleResponse) => {
-        toast.success(value.added ? '收藏成功' : '取消收藏成功')
+        addToast({
+          title: value.added ? '收藏成功' : '取消收藏成功',
+          color: 'success'
+        })
         fetchFolders()
       })
     })

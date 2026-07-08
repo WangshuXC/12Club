@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -14,7 +15,6 @@ import {
 } from '@heroui/react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
-import toast from 'react-hot-toast'
 import { z } from 'zod'
 
 import { ErrorHandler } from '@/utils/errorHandler'
@@ -45,7 +45,7 @@ export const Password = () => {
     const res = await FetchPost<object>('/user/setting/password', watch())
     ErrorHandler(res, () => {
       reset()
-      toast.success('更改密码成功!')
+      addToast({ title: '更改密码成功!', color: 'success' })
     })
 
     setLoading(false)

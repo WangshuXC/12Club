@@ -3,6 +3,7 @@
 import { useTransition } from 'react'
 
 import {
+  addToast,
   Button,
   Card,
   CardBody,
@@ -16,7 +17,6 @@ import {
 } from '@heroui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
 
 import { CardStatus } from '@/components/common/CoverCard'
 import { ErrorHandler } from '@/utils/errorHandler'
@@ -52,7 +52,7 @@ export const UserFavoriteDataCard = ({
       })
       ErrorHandler(res, () => {
         onCloseDelete()
-        toast.success('取消收藏成功')
+        addToast({ title: '取消收藏成功', color: 'success' })
         onRemoveFavorite(favoriteData.dbId)
         router.refresh()
       })

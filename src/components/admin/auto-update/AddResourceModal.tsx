@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 
 import {
+  addToast,
   Button,
   Modal,
   ModalBody,
@@ -13,7 +14,6 @@ import {
   Input
 } from '@heroui/react'
 import { Plus, Search } from 'lucide-react'
-import toast from 'react-hot-toast'
 import { useDebounce } from 'use-debounce'
 
 import { Loading } from '@/components/common/Loading'
@@ -51,7 +51,7 @@ export const AddResourceModal = ({ onSuccess }: Props) => {
       })
       setResources(resources)
     } catch {
-      toast.error('搜索失败')
+      addToast({ title: '搜索失败', color: 'danger' })
     } finally {
       setLoading(false)
     }
@@ -72,14 +72,17 @@ export const AddResourceModal = ({ onSuccess }: Props) => {
       }>('/admin/auto-update', { resourceId })
 
       if (response.success) {
-        toast.success(response.message)
+        addToast({ title: response.message, color: 'success' })
         onSuccess()
         onOpenChange()
         setSearchQuery('')
         setResources([])
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '添加失败')
+      addToast({
+        title: error instanceof Error ? error.message : '添加失败',
+        color: 'danger'
+      })
     } finally {
       setSubmitting(false)
     }
