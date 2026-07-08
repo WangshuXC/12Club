@@ -113,11 +113,10 @@ export const CoverCard = ({ data }: { data: PageData }) => {
             alt="Card Cover"
             radius="sm"
             classNames={{
-              wrapper: '!max-w-full w-full',
-              img: 'w-full object-cover'
+              wrapper: '!max-w-full w-full aspect-[3/4]',
+              img: 'w-full h-full object-cover aspect-[3/4]'
             }}
             src={imageSrc}
-            style={{ aspectRatio: '3/4' }}
             isZoomed
             onError={handleImageError}
           />

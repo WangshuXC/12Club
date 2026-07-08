@@ -5,7 +5,8 @@ import {
   Star,
   Share2,
   MessageSquare,
-  MessageCircleQuestion
+  MessageCircleQuestion,
+  Pencil
 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import toast from 'react-hot-toast'
@@ -40,6 +41,7 @@ export const ActionBar = ({
 }: ActionBarProps) => {
   const pathName = usePathname()
   const { user } = useUserStore((state) => state)
+  const isAdmin = user.role >= 2
 
   // 收藏弹窗状态
   const {
@@ -113,6 +115,22 @@ export const ActionBar = ({
         />
 
         <div className="flex-1" />
+
+        {/* 编辑按钮（仅管理员可见，新标签页打开） */}
+        {isAdmin && (
+          <ActionButton
+            icon={<Pencil className="size-5 sm:size-6" />}
+            label="编辑"
+            tooltip="编辑资源"
+            onPress={() =>
+              window.open(
+                `/admin/resource?query=${encodeURIComponent(dbId)}`,
+                '_blank',
+                'noopener,noreferrer'
+              )
+            }
+          />
+        )}
 
         {/* 反馈按钮 */}
         <ActionButton

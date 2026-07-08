@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { getOpenlistPathSize } from '@/lib/openlist'
+import { getOpenlistPathSizes } from '@/lib/openlist'
 import { prisma } from '@/lib/prisma'
 import { getRouteByDbId } from '@/utils/router'
 
@@ -38,16 +38,12 @@ export const getPatchResource = async (input: z.infer<typeof dbIdSchema>) => {
       }
     })
 
-    // 对 storage === 'alist' 的 patch，优先读 DB size，缺失则调 openlist API 并回写
+    // 对 storage === 'alist' 的 patch，优先读 DB size，缺失则批量调 openlist API 并回写
     const alistPath = `/resource${getRouteByDbId(currentResource.db_id)}`
-    const alistSizeMap = new Map<number, string>()
-    await Promise.all(
+    const alistSizeMap = await getOpenlistPathSizes(
       patchDataList
         .filter((p) => p.storage === 'alist')
-        .map(async (p) => {
-          const size = await getOpenlistPathSize(p.id, alistPath)
-          alistSizeMap.set(p.id, size)
-        })
+        .map((p) => ({ patchId: p.id, path: alistPath }))
     )
 
     const resources: PatchResource[] = patchDataList?.map((patchData) => ({
