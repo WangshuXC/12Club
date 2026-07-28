@@ -180,6 +180,7 @@ model ResourceComment {
   resource Resource                          @relation(fields: [resource_id], references: [id], onDelete: Cascade)
   likes    UserResourceCommentLikeRelation[]
 
+  @@index([resource_id, created])
   @@map("resource_comment")
 }
 
@@ -244,6 +245,7 @@ model UserResourceCommentLikeRelation {
   comment ResourceComment @relation(fields: [comment_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, comment_id])
+  @@index([comment_id])
   @@map("user_resource_comment_like_relation")
 }
 

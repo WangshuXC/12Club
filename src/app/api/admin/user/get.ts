@@ -29,8 +29,15 @@ export const getUserInfo = async (
         skip: offset,
         take: limit,
         orderBy:
-          sortField && sortOrder && sortField === 'created'
-            ? [{ role: 'desc' }, { created: sortOrder }]
+          sortField && sortOrder
+            ? [
+                { role: 'desc' },
+                {
+                  [sortField === 'lastLoginTime'
+                    ? 'last_login_time'
+                    : 'created']: sortOrder
+                }
+              ]
             : [{ role: 'desc' }, { created: 'desc' }],
         include: {
           _count: {
@@ -46,39 +53,8 @@ export const getUserInfo = async (
       })
     ])
 
-    // 如果需要对资源数量排序，在内存中排序（保持role降序为第一优先级）
-    let sortedUsers = usersData
-    if (
-      sortField &&
-      sortOrder &&
-      (sortField === 'resource' || sortField === 'resource_patch')
-    ) {
-      sortedUsers = usersData.sort((a, b) => {
-        // 首先按role降序排序
-        if (a.role !== b.role) {
-          return b.role - a.role
-        }
-
-        // 然后按指定字段排序
-        const aCount =
-          sortField === 'resource'
-            ? a._count.resources
-            : a._count.resource_patches
-        const bCount =
-          sortField === 'resource'
-            ? b._count.resources
-            : b._count.resource_patches
-
-        if (sortOrder === 'asc') {
-          return aCount - bCount
-        } else {
-          return bCount - aCount
-        }
-      })
-    }
-
     // 数据格式转换
-    const users: AdminUser[] = sortedUsers.map((user) => ({
+    const users: AdminUser[] = usersData.map((user) => ({
       id: user.id,
       name: user.name,
       bio: user.bio,
@@ -86,11 +62,12 @@ export const getUserInfo = async (
       role: user.role,
       email: user.email,
       created: user.created.toISOString(),
-      status: user.status,
-      _count: {
-        resource_patch: user._count.resource_patches,
-        resource: user._count.resources
-      }
+      registerTime: user.register_time.toISOString(),
+      lastLoginTime: user.last_login_time,
+      ip: user.ip,
+      resourceCount: user._count.resources,
+      resourcePatchCount: user._count.resource_patches,
+      status: user.status
     }))
 
     return { users, total }

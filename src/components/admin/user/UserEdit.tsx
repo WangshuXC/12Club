@@ -22,6 +22,7 @@ import { USER_ROLE_MAP, USER_STATUS_MAP } from '@/constants/user'
 import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPut } from '@/utils/fetch'
+import { formatDate } from '@/utils/time'
 
 import type { AdminUser } from '@/types/api/admin'
 
@@ -101,6 +102,48 @@ export const UserEdit = ({ initialUser, onUpdate }: Props) => {
           <ModalHeader>编辑用户: {user.name}</ModalHeader>
           <ModalBody>
             <p>请注意, 您的任何更改都会导致该用户重新登录</p>
+            <dl className="grid grid-cols-2 gap-x-6 gap-y-3 rounded-lg bg-default-100 p-4 text-sm">
+              <div>
+                <dt className="text-default-500">用户 ID</dt>
+                <dd>{user.id}</dd>
+              </div>
+              <div>
+                <dt className="text-default-500">邮箱</dt>
+                <dd className="break-all">{user.email}</dd>
+              </div>
+              <div>
+                <dt className="text-default-500">注册时间</dt>
+                <dd>
+                  {formatDate(user.registerTime, {
+                    isShowYear: true,
+                    isPrecise: true
+                  })}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-default-500">上次登录时间</dt>
+                <dd>
+                  {user.lastLoginTime
+                    ? formatDate(user.lastLoginTime, {
+                        isShowYear: true,
+                        isPrecise: true
+                      })
+                    : '从未登录'}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-default-500">最近登录 IP</dt>
+                <dd>{user.ip || '暂无'}</dd>
+              </div>
+              <div>
+                <dt className="text-default-500">资源数</dt>
+                <dd>{user.resourceCount}</dd>
+              </div>
+              <div>
+                <dt className="text-default-500">下载资源数</dt>
+                <dd>{user.resourcePatchCount}</dd>
+              </div>
+            </dl>
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label="用户名"

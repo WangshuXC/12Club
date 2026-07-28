@@ -5,12 +5,13 @@ import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { verifyPassword } from '@/utils/algorithm'
 import { generateToken } from '@/utils/jwt'
+import { getRemoteIp } from '@/utils/getRemoteIp'
 import { ParsePostBody } from '@/utils/parseQuery'
 import { loginSchema } from '@/validations/auth'
 
 import type { UserState } from '@/store/userStore'
 
-const login = async (input: z.infer<typeof loginSchema>) => {
+const login = async (input: z.infer<typeof loginSchema>, ip: string) => {
   const { name, password } = input
 
   try {
@@ -34,11 +35,12 @@ const login = async (input: z.infer<typeof loginSchema>) => {
       return '用户密码错误'
     }
 
-    // 更新最后登录时间
+    // 更新最后登录时间和最近登录 IP
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        last_login_time: new Date().toISOString()
+        last_login_time: new Date().toISOString(),
+        ...(ip ? { ip } : {})
       }
     })
 
@@ -76,7 +78,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(input)
   }
 
-  const response = await login(input)
+  const response = await login(input, getRemoteIp(req.headers))
 
   return NextResponse.json(response)
 }

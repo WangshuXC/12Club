@@ -22,7 +22,7 @@ export const adminPaginationSchema = z.object({
     .max(300, { message: '搜索内容最多 300 个字符' })
     .optional(),
   types: adminResourceTypesSchema,
-  sortField: z.enum(['resource', 'resource_patch', 'created']).optional(),
+  sortField: z.enum(['lastLoginTime', 'created']).optional(),
   sortOrder: z.enum(['asc', 'desc']).optional()
 })
 

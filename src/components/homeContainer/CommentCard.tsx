@@ -19,7 +19,7 @@ export default function CommentCard({ data }: { data: HomeComments }) {
     <Card shadow="sm">
       <CardHeader className="justify-between">
         <User
-          avatarProps={{ src: data.user?.avatar }}
+          avatarProps={{ src: data.user?.avatar || '/defaultAvatar.png' }}
           description={formatDistanceToNow(data.created)}
           name={data.user?.name}
         />

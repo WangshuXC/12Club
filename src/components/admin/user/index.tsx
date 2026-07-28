@@ -25,10 +25,9 @@ import type { AdminUser } from '@/types/api/admin'
 
 const columns = [
   { name: '用户', uid: 'user', allowsSorting: false },
-  { name: '资源数', uid: 'resource', allowsSorting: true },
-  { name: '下载资源数', uid: 'resource_patch', allowsSorting: true },
   { name: '角色', uid: 'role', allowsSorting: false },
   { name: '状态', uid: 'status', allowsSorting: false },
+  { name: '上次登录时间', uid: 'lastLoginTime', allowsSorting: true },
   { name: '创建时间', uid: 'created', allowsSorting: true },
   { name: '操作', uid: 'actions', allowsSorting: false }
 ]
@@ -59,10 +58,7 @@ export const User = ({ initialUsers, initialTotal }: Props) => {
       return
     }
 
-    const sortField = sortDescriptor.column as
-      | 'resource'
-      | 'resource_patch'
-      | 'created'
+    const sortField = sortDescriptor.column as 'lastLoginTime' | 'created'
     const sortOrder = sortDescriptor.direction === 'ascending' ? 'asc' : 'desc'
 
     startTransition(async () => {

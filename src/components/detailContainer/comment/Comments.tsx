@@ -89,7 +89,9 @@ export const Comments = ({ id, shouldFetchComment }: Props) => {
               <div className="flex-1 space-y-2 overflow-hidden">
                 <div className="flex items-start justify-between">
                   <User
-                    avatarProps={{ src: comment.user?.avatar }}
+                    avatarProps={{
+                      src: comment.user?.avatar || '/defaultAvatar.png'
+                    }}
                     description={formatDistanceToNow(comment.created)}
                     name={displayName}
                   />

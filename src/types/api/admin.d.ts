@@ -23,11 +23,12 @@ export interface AdminUser {
   role: number
   status: number
   created: Date | string
+  registerTime: Date | string
+  lastLoginTime: string
   email: string
-  _count: {
-    resource: number
-    resource_patch: number
-  }
+  ip: string
+  resourceCount: number
+  resourcePatchCount: number
 }
 
 export interface AdminComment {

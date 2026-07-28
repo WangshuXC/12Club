@@ -36,14 +36,6 @@ export const RenderCell = (
           }}
         />
       )
-    case 'resource':
-      return <div className="text-sm text-gray-500">{user._count.resource}</div>
-    case 'resource_patch':
-      return (
-        <div className="text-sm text-gray-500">
-          {user._count.resource_patch}
-        </div>
-      )
     case 'email':
       return <div className="text-sm text-gray-500">{user.email}</div>
     case 'role':
@@ -68,7 +60,18 @@ export const RenderCell = (
     case 'created':
       return (
         <div className="text-sm text-gray-500">
-          {formatDate(user.created, { isShowYear: true })}
+          {formatDate(user.created, { isShowYear: true, isPrecise: true })}
+        </div>
+      )
+    case 'lastLoginTime':
+      return (
+        <div className="text-sm text-gray-500">
+          {user.lastLoginTime
+            ? formatDate(user.lastLoginTime, {
+                isShowYear: true,
+                isPrecise: true
+              })
+            : '从未登录'}
         </div>
       )
     default:

@@ -157,14 +157,13 @@ export async function POST(_req: NextRequest) {
         if (result.success && result.errors.length === 0) {
           successCount++
 
-          // 更新最后更新时间
-          await prisma.resourceAutoUpdate.update({
-            where: { id: autoUpdate.id },
-            data: { last_update_time: new Date() }
-          })
-
-          // 仅当有实际新增链接时才通知收藏用户；通知失败不影响主流程
+          // 仅当有实际新增链接时才记录更新时间并通知收藏用户；通知失败不影响主流程
           if (result.newLinksCount > 0) {
+            await prisma.resourceAutoUpdate.update({
+              where: { id: autoUpdate.id },
+              data: { last_update_time: new Date() }
+            })
+
             try {
               await notifyResourceUpdate(
                 autoUpdate.resource_id,
