@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, memo, useRef, useCallback } from 'react'
+import { useState, memo, useRef, useCallback, useEffect } from 'react'
 
 import { Tab, Tabs, Card, CardBody, Image } from '@heroui/react'
 import Link from 'next/link'
@@ -55,12 +55,21 @@ const AnimeContainerComponent = ({
   const commentRef = useRef<HTMLDivElement>(null)
   const { trackCustom } = useTrackingContext()
 
+  useEffect(() => {
+    trackCustom('resource_detail_view', { dbid: id, resource_type: 'anime' })
+  }, [id, trackCustom])
+
   const handleAccordionChange = (newAccordion: number) => {
     window?.umami?.track(`在线播放-${newAccordion.toString()}`, {
       dbId: id
     })
     FetchPost('/detail/view', {
       resourceDbId: id
+    })
+    trackCustom('episode_select', {
+      dbid: id,
+      episode: newAccordion,
+      previous_episode: accordion
     })
     setAccordion(newAccordion)
   }
@@ -78,6 +87,21 @@ const AnimeContainerComponent = ({
     })
   }, [trackCustom, accordion, coverData?.title, id])
 
+  const handleVideoProgress = useCallback(
+    (progress: number) => {
+      trackCustom('play_progress', { dbid: id, episode: accordion, progress })
+    },
+    [accordion, id, trackCustom]
+  )
+
+  const handleVideoComplete = useCallback(() => {
+    trackCustom('play_complete', { dbid: id, episode: accordion })
+  }, [accordion, id, trackCustom])
+
+  const handleVideoError = useCallback(() => {
+    trackCustom('play_error', { dbid: id, episode: accordion })
+  }, [accordion, id, trackCustom])
+
   return (
     <div className="container py-4 px-3 sm:px-4">
       {/* 响应式布局：移动端单列，PC端左右分栏 */}
@@ -90,6 +114,9 @@ const AnimeContainerComponent = ({
               key={accordion}
               src={introduce?.playList[accordion - 1]?.link || ''}
               onPlay={handleVideoPlay}
+              onProgress={handleVideoProgress}
+              onComplete={handleVideoComplete}
+              onError={handleVideoError}
             />
           </div>
 
@@ -125,7 +152,11 @@ const AnimeContainerComponent = ({
                 className="w-full overflow-hidden shadow-medium rounded-large"
                 fullWidth={true}
                 defaultSelectedKey="playlist"
-                onSelectionChange={(value) => setSelectedTab(value.toString())}
+                onSelectionChange={(value) => {
+                  const tab = value.toString()
+                  setSelectedTab(tab)
+                  trackCustom('anime_detail_tab_change', { dbid: id, tab })
+                }}
                 selectedKey={selectedTab}
               >
                 <Tab key="playlist" title="分集选择">
@@ -232,7 +263,11 @@ const AnimeContainerComponent = ({
                 className="w-full overflow-hidden shadow-medium rounded-large"
                 fullWidth={true}
                 defaultSelectedKey="playlist"
-                onSelectionChange={(value) => setSelectedTab(value.toString())}
+                onSelectionChange={(value) => {
+                  const tab = value.toString()
+                  setSelectedTab(tab)
+                  trackCustom('anime_detail_tab_change', { dbid: id, tab })
+                }}
                 selectedKey={selectedTab}
               >
                 <Tab key="playlist" title="分集选择">

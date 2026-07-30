@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 
 import { PlayListItem } from '@/types/common/detail-container'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 type ViewMode = 'grid' | 'list'
 
@@ -56,10 +57,12 @@ interface PlaylistTabProps {
 export const PlaylistTab = ({
   playList,
   currentAccordion,
-  onAccordionChange
+  onAccordionChange,
+  dbId
 }: PlaylistTabProps) => {
   const [isAscending, setIsAscending] = useState(true)
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
+  const { trackCustom } = useTrackingContext()
 
   if (!playList || playList.length === 0) {
     return (
@@ -96,7 +99,14 @@ export const PlaylistTab = ({
             size="sm"
             isIconOnly
             className="text-default-500"
-            onPress={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+            onPress={() => {
+              const nextViewMode = viewMode === 'grid' ? 'list' : 'grid'
+              setViewMode(nextViewMode)
+              trackCustom('playlist_view_mode_change', {
+                dbid: dbId,
+                view_mode: nextViewMode
+              })
+            }}
           >
             {viewMode === 'grid' ? (
               <List className="size-5" />
@@ -111,7 +121,14 @@ export const PlaylistTab = ({
             size="sm"
             isIconOnly
             className="text-default-500"
-            onPress={() => setIsAscending(!isAscending)}
+            onPress={() => {
+              const nextAscending = !isAscending
+              setIsAscending(nextAscending)
+              trackCustom('playlist_sort_change', {
+                dbid: dbId,
+                sort_order: nextAscending ? 'asc' : 'desc'
+              })
+            }}
           >
             {isAscending ? (
               <ArrowDownWideNarrow className="size-5" />

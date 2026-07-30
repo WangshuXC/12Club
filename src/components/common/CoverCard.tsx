@@ -66,7 +66,17 @@ export const CardStatus = ({
   )
 }
 
-export const CoverCard = ({ data }: { data: PageData }) => {
+interface CoverCardProps {
+  data: PageData
+  surface?: string
+  position?: number
+}
+
+export const CoverCard = ({
+  data,
+  surface = 'unknown',
+  position
+}: CoverCardProps) => {
   const router = useTransitionRouter()
   const [imageSrc, setImageSrc] = useState(data.image)
 
@@ -84,6 +94,12 @@ export const CoverCard = ({ data }: { data: PageData }) => {
       isPressable
       disableRipple
       className="pb-4 h-full"
+      log-expose="resource_card_expose"
+      log-click="resource_card_click"
+      data-log-db-id={data.dbId}
+      data-log-resource-type={data.dbId.charAt(0)}
+      data-log-surface={surface}
+      data-log-position={position}
       onPress={() => {
         setTimeout(() => {
           router.push(getRouteByDbId(data.dbId), {

@@ -37,6 +37,7 @@ interface ResourceItemProps {
   onEdit: (resource: PatchResource) => void
   onDelete: (id: number) => void
   onDownload: (resource: PatchResource) => void
+  onDownloadLinkClick: (resource: PatchResource, linkIndex: number) => void
 }
 
 export const ResourceItem = ({
@@ -44,7 +45,8 @@ export const ResourceItem = ({
   showLinks,
   onEdit,
   onDelete,
-  onDownload
+  onDownload,
+  onDownloadLinkClick
 }: ResourceItemProps) => {
   const { user } = useUserStore((state) => state)
 
@@ -138,6 +140,7 @@ export const ResourceItem = ({
               underline="hover"
               link={link}
               className="text-xs break-all w-full"
+              onPress={() => onDownloadLinkClick(resource, index)}
             >
               <span className="w-full text-ellipsis overflow-hidden whitespace-nowrap">
                 {link}

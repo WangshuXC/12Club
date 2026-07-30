@@ -13,6 +13,7 @@ import {
 import { Folder } from 'lucide-react'
 
 import { EditFolderModal } from '@/components/user/favorite/EditFolderModal'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchGet, FetchPut } from '@/utils/fetch'
 
@@ -28,6 +29,7 @@ interface Props {
 export const FavoriteModal = ({ dbId, isOpen, onClose }: Props) => {
   const [folders, setFolders] = useState<UserFavoriteResourceFolder[]>([])
   const [isPending, startTransition] = useTransition()
+  const { trackCustom } = useTrackingContext()
 
   const fetchFolders = useCallback(async () => {
     const response = await FetchGet<UserFavoriteResourceFolder[]>(
@@ -53,6 +55,11 @@ export const FavoriteModal = ({ dbId, isOpen, onClose }: Props) => {
         addToast({
           title: value.added ? '收藏成功' : '取消收藏成功',
           color: 'success'
+        })
+        trackCustom('favorite_success', {
+          dbid: dbId,
+          folder_id: folderId,
+          action: value.added ? 'add' : 'remove'
         })
         fetchFolders()
       })

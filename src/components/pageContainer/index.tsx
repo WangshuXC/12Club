@@ -6,6 +6,7 @@ import { Pagination } from '@heroui/react'
 
 import { getPageResourceActions } from '@/app/anime/actions'
 import FadeContent from '@/components/ui/FadeContent'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import { scrollToTop } from '../common/BackToTop'
 import { CoverCard } from '../common/CoverCard'
@@ -34,6 +35,7 @@ export const PageContainer = ({
   const [sortField, setSortField] = useState<SortField>('updated')
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
   const [page, setPage] = useState(1)
+  const { trackCustom } = useTrackingContext()
 
   const isInitialMount = useRef(true)
 
@@ -84,6 +86,7 @@ export const PageContainer = ({
         setSelectedStatus={setSelectedStatus}
         page={page}
         setPage={setPage}
+        category={category}
       />
 
       <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 scrollbar-hide">
@@ -95,7 +98,11 @@ export const PageContainer = ({
             easing="ease-in-out"
             initialOpacity={0}
           >
-            <CoverCard data={data} />
+            <CoverCard
+              data={data}
+              surface={`catalog_${category}`}
+              position={(page - 1) * 24 + index + 1}
+            />
           </FadeContent>
         ))}
       </div>
@@ -110,6 +117,7 @@ export const PageContainer = ({
             total={Math.ceil(total / 24)}
             onChange={(page) => {
               setPage(page)
+              trackCustom('catalog_pagination_change', { category, page })
               scrollToTop()
             }}
           />

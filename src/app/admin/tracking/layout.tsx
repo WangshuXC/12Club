@@ -15,7 +15,8 @@ const tabs = [
   { key: '/admin/tracking', title: '概览' },
   { key: '/admin/tracking/pages', title: '页面访问' },
   { key: '/admin/tracking/anime', title: '动漫播放' },
-  { key: '/admin/tracking/visitors', title: '访客列表' }
+  { key: '/admin/tracking/visitors', title: '访客列表' },
+  { key: '/admin/tracking/logs', title: '日志详情' }
 ]
 
 export default function TrackingLayout({

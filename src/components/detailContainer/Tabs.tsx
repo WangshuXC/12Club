@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from 'react'
 import { Tab, Tabs } from '@heroui/react'
 
 import { Introduction } from '@/types/common/detail-container'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import { CommentTab } from './comment'
 import { IntroductionTab } from './introduction'
@@ -23,6 +24,7 @@ export const DetailTabs = ({
   setSelected,
   introduce
 }: DetailTabsProps) => {
+  const { trackCustom } = useTrackingContext()
   return (
     <Tabs
       className="w-full overflow-hidden shadow-medium rounded-large"
@@ -33,7 +35,9 @@ export const DetailTabs = ({
           window.scroll(0, 99999)
         }
 
-        setSelected(value.toString())
+        const tab = value.toString()
+        setSelected(tab)
+        trackCustom('resource_detail_tab_change', { dbid: id, tab })
       }}
       selectedKey={selected}
     >

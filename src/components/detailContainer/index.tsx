@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, memo, useCallback } from 'react'
+import { useState, memo, useCallback, useEffect } from 'react'
 
 import { Button } from '@heroui/react'
 import { usePathname } from 'next/navigation'
@@ -31,6 +31,13 @@ const DetailContainerComponent = ({
   const [selected, setSelected] = useState('introduction')
   const [accordion, setAccordion] = useState(1)
 
+  useEffect(() => {
+    trackCustom('resource_detail_view', {
+      dbid: id,
+      resource_type: pathname.split('/')[1] || 'unknown'
+    })
+  }, [id, pathname, trackCustom])
+
   // 视频播放时上报埋点
   const handleVideoPlay = useCallback(() => {
     trackCustom('accordion-play', {
@@ -39,6 +46,21 @@ const DetailContainerComponent = ({
       dbid: id
     })
   }, [trackCustom, accordion, coverData?.title, id])
+
+  const handleVideoProgress = useCallback(
+    (progress: number) => {
+      trackCustom('play_progress', { dbid: id, episode: accordion, progress })
+    },
+    [accordion, id, trackCustom]
+  )
+
+  const handleVideoComplete = useCallback(() => {
+    trackCustom('play_complete', { dbid: id, episode: accordion })
+  }, [accordion, id, trackCustom])
+
+  const handleVideoError = useCallback(() => {
+    trackCustom('play_error', { dbid: id, episode: accordion })
+  }, [accordion, id, trackCustom])
 
   return (
     <>
@@ -72,6 +94,9 @@ const DetailContainerComponent = ({
               key={accordion}
               src={introduce?.playList[accordion - 1]?.link || ''}
               onPlay={handleVideoPlay}
+              onProgress={handleVideoProgress}
+              onComplete={handleVideoComplete}
+              onError={handleVideoError}
             />
           </div>
 
@@ -93,6 +118,11 @@ const DetailContainerComponent = ({
                     )
                     FetchPost('/detail/view', {
                       resourceDbId: id
+                    })
+                    trackCustom('episode_select', {
+                      dbid: id,
+                      episode: item.accordion,
+                      previous_episode: accordion
                     })
                     setAccordion(item.accordion)
                   }}

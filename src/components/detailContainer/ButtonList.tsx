@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { useUserStore } from '@/store/userStore'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import { FavoriteButton } from './buttons/FavoriteButton'
 import { FeedbackButton } from './buttons/FeedbackButton'
@@ -36,6 +37,7 @@ export const ButtonList = ({
   const pathName = usePathname()
   const user = useUserStore((state) => state.user)
   const router = useRouter()
+  const { trackCustom } = useTrackingContext()
   const showReader =
     pathName.startsWith('/novel') && (playList?.length ?? 0) > 0
 
@@ -51,7 +53,14 @@ export const ButtonList = ({
           variant="shadow"
           isIconOnly
           aria-label="下载资源"
-          onPress={handleClickDownloadNav}
+          onPress={() => {
+            trackCustom('resource_detail_tab_change', {
+              dbid: dbId,
+              tab: 'resources',
+              source: 'action_bar'
+            })
+            handleClickDownloadNav()
+          }}
         >
           <Download className="size-5" />
         </Button>
@@ -59,7 +68,7 @@ export const ButtonList = ({
 
       <FavoriteButton dbId={dbId} isFavorite={isFavorite} />
 
-      <ShareButton name={name} pathName={pathName} />
+      <ShareButton name={name} pathName={pathName} dbId={dbId} />
 
       <FeedbackButton name={name} dbId={dbId} />
 

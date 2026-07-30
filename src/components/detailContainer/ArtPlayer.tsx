@@ -9,16 +9,23 @@ interface VideoPlayerProps {
   src: string
   className?: string
   onPlay?: () => void
+  onProgress?: (progress: number) => void
+  onComplete?: () => void
+  onError?: () => void
 }
 
 export const ArtPlayer = ({
   src,
   className = '',
-  onPlay
+  onPlay,
+  onProgress,
+  onComplete,
+  onError
 }: VideoPlayerProps) => {
   const artRef = useRef<HTMLDivElement>(null)
   const playerRef = useRef<Artplayer | null>(null)
   const hasReportedPlayRef = useRef(false)
+  const reportedProgressRef = useRef(new Set<number>())
   const pathname = usePathname()
 
   // 路由切换时销毁播放器
@@ -71,6 +78,25 @@ export const ArtPlayer = ({
         }
       })
 
+      playerRef.current.on('video:timeupdate', () => {
+        const player = playerRef.current
+        const duration = player?.duration ?? 0
+        if (!player || !Number.isFinite(duration) || duration <= 0) {
+          return
+        }
+
+        const progress = (player.currentTime / duration) * 100
+        ;[25, 50, 75].forEach((bucket) => {
+          if (progress >= bucket && !reportedProgressRef.current.has(bucket)) {
+            reportedProgressRef.current.add(bucket)
+            onProgress?.(bucket)
+          }
+        })
+      })
+
+      playerRef.current.on('video:ended', () => onComplete?.())
+      playerRef.current.on('video:error', () => onError?.())
+
       // 确保鼠标指针正常显示
       if (artRef.current) {
         artRef.current.style.cursor = 'default'
@@ -89,11 +115,12 @@ export const ArtPlayer = ({
         playerRef.current = null
       }
     }
-  }, [src, onPlay])
+  }, [src, onComplete, onError, onPlay, onProgress])
 
   // 当 src 变化时重置上报状态
   useEffect(() => {
     hasReportedPlayRef.current = false
+    reportedProgressRef.current = new Set()
   }, [src])
 
   return (

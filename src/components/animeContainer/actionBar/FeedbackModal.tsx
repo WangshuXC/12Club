@@ -14,6 +14,7 @@ import {
 } from '@heroui/react'
 
 import { FetchPost } from '@/utils/fetch'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 interface FeedbackModalProps {
   dbId: string
@@ -30,12 +31,17 @@ export const FeedbackModal = ({
 }: FeedbackModalProps) => {
   const [feedbackInput, setFeedbackInput] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { trackCustom } = useTrackingContext()
 
   const handleSubmitFeedback = async () => {
     setSubmitting(true)
     const res = await FetchPost<object>('/detail/feedback', {
       dbId,
       content: feedbackInput
+    })
+    trackCustom('feedback_submit', {
+      dbid: dbId,
+      content_length: feedbackInput.trim().length
     })
     if (typeof res === 'string') {
       addToast({

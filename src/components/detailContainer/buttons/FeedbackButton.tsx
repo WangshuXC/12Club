@@ -16,6 +16,7 @@ import {
 } from '@heroui/react'
 import { MessageCircleQuestion } from 'lucide-react'
 
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { FetchPost } from '@/utils/fetch'
 
 interface Props {
@@ -27,12 +28,17 @@ export const FeedbackButton = ({ name, dbId }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [inputValue, setInputValue] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const { trackCustom } = useTrackingContext()
 
   const handleSubmitFeedback = async () => {
     setSubmitting(true)
     const res = await FetchPost<object>('/detail/feedback', {
       dbId,
       content: inputValue
+    })
+    trackCustom('feedback_submit', {
+      dbid: dbId,
+      content_length: inputValue.trim().length
     })
     if (typeof res === 'string') {
       addToast({
@@ -59,7 +65,10 @@ export const FeedbackButton = ({ name, dbId }: Props) => {
           variant="bordered"
           isIconOnly
           aria-label="资源反馈"
-          onPress={onOpen}
+          onPress={() => {
+            trackCustom('feedback_open', { dbid: dbId })
+            onOpen()
+          }}
         >
           <MessageCircleQuestion className="size-5" />
         </Button>

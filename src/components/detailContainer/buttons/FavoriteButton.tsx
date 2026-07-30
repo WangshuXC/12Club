@@ -4,6 +4,7 @@ import { addToast, Button, Tooltip, useDisclosure } from '@heroui/react'
 import { Heart } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { useUserStore } from '@/store/userStore'
 
 import { FavoriteModal } from './FavoriteModal'
@@ -16,6 +17,7 @@ interface Props {
 export const FavoriteButton = ({ dbId, isFavorite }: Props) => {
   const { user } = useUserStore((state) => state)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { trackCustom } = useTrackingContext()
 
   const toggleLike = async () => {
     if (!user.uid) {
@@ -23,6 +25,7 @@ export const FavoriteButton = ({ dbId, isFavorite }: Props) => {
       return
     }
 
+    trackCustom('favorite_open', { dbid: dbId })
     onOpen()
   }
 

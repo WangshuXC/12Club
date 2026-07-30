@@ -14,6 +14,7 @@ import { Send } from 'lucide-react'
 
 import { CommentPreview } from '@/components/ui/MemePreview'
 import { MemeSelector } from '@/components/ui/MemeSelector'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPost } from '@/utils/fetch'
@@ -40,6 +41,7 @@ export const PublishComment = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const user = useUserStore((state) => state.user)
   const isLoggedIn = user.uid > 0
+  const { trackCustom } = useTrackingContext()
 
   // 更新光标位置
   const handleTextareaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,9 +114,19 @@ export const PublishComment = ({
           color: 'success'
         })
         setContent('')
+        trackCustom('comment_submit_success', {
+          dbid: id,
+          is_reply: Boolean(parentId),
+          content_length: content.trim().length
+        })
         onSuccess?.()
       })
     } catch {
+      trackCustom('comment_submit_fail', {
+        dbid: id,
+        is_reply: Boolean(parentId),
+        reason: 'request_error'
+      })
       addToast({
         title: '错误',
         description: '评论发布失败，请稍后重试',

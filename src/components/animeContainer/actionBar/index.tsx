@@ -10,6 +10,7 @@ import {
 import { usePathname } from 'next/navigation'
 
 import { Config } from '@/config/config'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { cn } from '@/lib/utils'
 import { useUserStore } from '@/store/userStore'
 import { formatNumber } from '@/utils/formatNumber'
@@ -42,6 +43,7 @@ export const ActionBar = ({
   const pathName = usePathname()
   const { user } = useUserStore((state) => state)
   const isAdmin = user.role >= 2
+  const { trackCustom } = useTrackingContext()
 
   // 收藏弹窗状态
   const {
@@ -64,6 +66,7 @@ export const ActionBar = ({
       return
     }
 
+    trackCustom('favorite_open', { dbid: dbId })
     onFavoriteOpen()
   }
 
@@ -97,7 +100,10 @@ export const ActionBar = ({
           icon={<MessageSquare className="size-5 sm:size-6" />}
           label={formatNumber(stats.comment)}
           tooltip="查看评论"
-          onPress={onScrollToComment}
+          onPress={() => {
+            trackCustom('comment_section_open', { dbid: dbId })
+            onScrollToComment?.()
+          }}
         />
 
         <div className="h-4 w-px bg-default-300 hidden sm:block mx-1" />
@@ -107,7 +113,10 @@ export const ActionBar = ({
           shareUrl={shareUrl}
           title={title}
           coverImage={coverImage}
-          onCopy={() => addToast({ title: '链接已复制', color: 'success' })}
+          onCopy={() => {
+            trackCustom('share_copy', { dbid: dbId, method: 'link' })
+            addToast({ title: '链接已复制', color: 'success' })
+          }}
         />
 
         <div className="flex-1" />
@@ -133,7 +142,10 @@ export const ActionBar = ({
           icon={<MessageCircleQuestion className="size-5 sm:size-6" />}
           label="反馈"
           tooltip="资源反馈"
-          onPress={onFeedbackOpen}
+          onPress={() => {
+            trackCustom('feedback_open', { dbid: dbId })
+            onFeedbackOpen()
+          }}
         />
       </div>
 

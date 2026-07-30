@@ -30,6 +30,7 @@ import {
   SUPPORTED_STATUS_MAP,
   SORT_FIELD_LABEL_MAP
 } from '@/constants/resource'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import type { SortField, SortOrder } from './sort'
 
@@ -46,6 +47,7 @@ interface Props {
   setSelectedStatus: (status: string) => void
   page: number
   setPage: (page: number) => void
+  category: string
 }
 
 export const FilterBar = ({
@@ -58,9 +60,11 @@ export const FilterBar = ({
   selectedStatus,
   setSelectedStatus,
   page: _page,
-  setPage
+  setPage,
+  category
 }: Props) => {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false)
+  const { trackCustom } = useTrackingContext()
   const hasActiveFilters =
     selectedLanguage !== 'all' || selectedStatus !== 'all'
 
@@ -85,6 +89,11 @@ export const FilterBar = ({
                 onAction={(key) => {
                   setSortField(key as SortField)
                   setPage(1)
+                  trackCustom('catalog_sort_change', {
+                    category,
+                    sort_field: key.toString(),
+                    sort_order: sortOrder
+                  })
                 }}
                 selectionMode="single"
                 className="min-w-[120px]"
@@ -117,8 +126,14 @@ export const FilterBar = ({
               variant="flat"
               className="text-sm shrink-0"
               onPress={() => {
-                setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+                const nextSortOrder = sortOrder === 'asc' ? 'desc' : 'asc'
+                setSortOrder(nextSortOrder)
                 setPage(1)
+                trackCustom('catalog_sort_change', {
+                  category,
+                  sort_field: sortField,
+                  sort_order: nextSortOrder
+                })
               }}
               startContent={
                 sortOrder === 'asc' ? (
@@ -140,7 +155,11 @@ export const FilterBar = ({
           <Button
             variant={showAdvancedFilters ? 'solid' : 'flat'}
             className="sm:w-auto text-sm"
-            onPress={() => setShowAdvancedFilters(!showAdvancedFilters)}
+            onPress={() => {
+              const opened = !showAdvancedFilters
+              setShowAdvancedFilters(opened)
+              trackCustom('catalog_filter_panel_toggle', { category, opened })
+            }}
             endContent={
               showAdvancedFilters ? (
                 <ChevronUp className="size-4" />
@@ -170,6 +189,12 @@ export const FilterBar = ({
                     }
 
                     setSelectedLanguage(event.target.value)
+                    setPage(1)
+                    trackCustom('catalog_filter_apply', {
+                      category,
+                      filter_name: 'language',
+                      filter_value: event.target.value
+                    })
                   }}
                   startContent={<Filter className="size-4 text-default-400" />}
                   radius="lg"
@@ -192,6 +217,12 @@ export const FilterBar = ({
                     }
 
                     setSelectedStatus(event.target.value)
+                    setPage(1)
+                    trackCustom('catalog_filter_apply', {
+                      category,
+                      filter_name: 'status',
+                      filter_value: event.target.value
+                    })
                   }}
                   startContent={<Filter className="size-4 text-default-400" />}
                   radius="lg"
@@ -212,6 +243,8 @@ export const FilterBar = ({
                 onPress={() => {
                   setSelectedLanguage('all')
                   setSelectedStatus('all')
+                  setPage(1)
+                  trackCustom('catalog_filter_reset', { category })
                 }}
               >
                 重置筛选

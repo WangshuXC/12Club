@@ -6,6 +6,7 @@ import { Button, Tooltip, addToast } from '@heroui/react'
 import { ThumbsUp } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { useUserStore } from '@/store/userStore'
 import { ErrorHandler } from '@/utils/errorHandler'
 import { FetchPut } from '@/utils/fetch'
@@ -21,6 +22,7 @@ export const CommentLikeButton = ({ comment }: Props) => {
   const [liked, setLiked] = useState(comment.isLike)
   const [likeCount, setLikeCount] = useState(comment.likeCount)
   const [loading, setLoading] = useState(false)
+  const { trackCustom } = useTrackingContext()
 
   const toggleLike = async () => {
     if (!user.uid) {
@@ -50,6 +52,10 @@ export const CommentLikeButton = ({ comment }: Props) => {
     ErrorHandler(res, (value) => {
       setLiked(value)
       setLikeCount((prev: number) => (value ? prev + 1 : prev - 1))
+      trackCustom('comment_like_success', {
+        comment_id: comment.id,
+        action: value ? 'like' : 'unlike'
+      })
     })
   }
 

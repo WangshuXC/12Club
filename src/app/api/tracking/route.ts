@@ -66,6 +66,15 @@ export async function POST(req: NextRequest) {
     const userAgent = req.headers.get('user-agent')?.slice(0, 500) || ''
     const ip = getClientIP(req)
 
+    // 本地开发通过 IPv6 回环地址访问时，不创建访客也不写入事件，避免污染看板数据。
+    if (ip === '::1') {
+      return NextResponse.json({
+        success: true,
+        skipped: true,
+        events_count: 0
+      })
+    }
+
     // upsert：一次往返完成"存在则更新，否则创建"，天然规避并发首访竞态
     const visitor = await prisma.trackingVisitor.upsert({
       where: { guid },

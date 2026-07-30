@@ -6,6 +6,7 @@ import { Chip } from '@heroui/react'
 import { Cloud, Link as LinkIcon, Database } from 'lucide-react'
 
 import { ExternalLink } from '@/components/common/ExternalLink'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { SUPPORTED_RESOURCE_LINK_MAP } from '@/constants/resource'
 import { FetchPut } from '@/utils/fetch'
 
@@ -21,10 +22,17 @@ interface Props {
 }
 
 export const ResourceDownloadCard = ({ resource }: Props) => {
-  const handleClickDownload = async () => {
+  const { trackCustom } = useTrackingContext()
+  const handleClickDownload = async (linkIndex: number) => {
     await FetchPut<object>('/patch/download', {
       resourceId: resource.resourceId,
       patchId: resource.id
+    })
+    trackCustom('download_link_click', {
+      dbid: resource.dbId,
+      patch_id: resource.id,
+      storage: resource.storage,
+      link_index: linkIndex
     })
   }
 
@@ -45,10 +53,10 @@ export const ResourceDownloadCard = ({ resource }: Props) => {
 
       <p className="text-sm text-default-500">点击下面的链接以下载</p>
 
-      {resource.content.split(',').map((link) => (
-        <div key={Math.random()} className="space-y-2">
+      {resource.content.split(',').map((link, index) => (
+        <div key={`${resource.id}-${index}`} className="space-y-2">
           <ExternalLink
-            onPress={handleClickDownload}
+            onPress={() => handleClickDownload(index)}
             underline="always"
             link={link}
           >

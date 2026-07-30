@@ -56,9 +56,11 @@ export const HomeContainer = ({
               </Button>
             </div>
             <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-              {updatedResourceData?.map((data) => (
+              {updatedResourceData?.map((data, index) => (
                 <CoverCard
                   key={data.dbId}
+                  surface="home_latest"
+                  position={index + 1}
                   data={{
                     ...data,
                     comment: data._count.comment,

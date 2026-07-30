@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
   useCallback,
+  useMemo,
   ReactNode
 } from 'react'
 
@@ -46,7 +47,9 @@ const parseExtraData = (element: HTMLElement): Record<string, unknown> => {
   // 获取所有 data-log-* 属性
   Array.from(element.attributes).forEach((attr) => {
     if (attr.name.startsWith('data-log-')) {
-      const key = attr.name.replace('data-log-', '')
+      // HTML attribute names are normalized to kebab-case. Store fields in
+      // snake_case so downstream analytics can use stable JSON paths.
+      const key = attr.name.replace('data-log-', '').replace(/-/g, '_')
 
       try {
         // 尝试解析 JSON
@@ -281,13 +284,16 @@ export const TrackingProvider = ({
     // pathname 或 searchParams 变化时触发（覆盖 Link 导航、router.push、浏览器前进后退）
   }, [pathname, searchParams, trackCustom])
 
-  const contextValue: TrackingContextValue = {
-    trackExpose,
-    trackClick,
-    trackCustom,
-    flush,
-    getGUID
-  }
+  const contextValue = useMemo<TrackingContextValue>(
+    () => ({
+      trackExpose,
+      trackClick,
+      trackCustom,
+      flush,
+      getGUID
+    }),
+    [flush, getGUID, trackClick, trackCustom, trackExpose]
+  )
 
   return (
     <TrackingContext.Provider value={contextValue}>

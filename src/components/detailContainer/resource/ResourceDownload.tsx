@@ -6,6 +6,7 @@ import { Accordion, AccordionItem, Button } from '@heroui/react'
 import { Download } from 'lucide-react'
 
 import { SelfUser } from '@/components/common/user-card/User'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import { formatDistanceToNow } from '@/utils/formatDistanceToNow'
 
 // import { ResourceLikeButton } from './resource-like'
@@ -19,12 +20,21 @@ interface Props {
 
 export const ResourceDownload = ({ resource }: Props) => {
   const [showLinks, setShowLinks] = useState<Record<number, boolean>>({})
+  const { trackCustom } = useTrackingContext()
 
   const toggleLinks = (resourceId: number) => {
+    const willShow = !showLinks[resourceId]
     setShowLinks((prev) => ({
       ...prev,
-      [resourceId]: !prev[resourceId]
+      [resourceId]: willShow
     }))
+    if (willShow) {
+      trackCustom('download_reveal', {
+        dbid: resource.dbId,
+        patch_id: resource.id,
+        storage: resource.storage
+      })
+    }
   }
 
   return (

@@ -17,6 +17,7 @@ import {
 } from '@heroui/react'
 
 import { FetchDelete, FetchGet, FetchPost, FetchPut } from '@/utils/fetch'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 
 import { EditResourceDialog } from '../../detailContainer/resource/edit/EditResourceDialog'
 import { PublishResource } from '../../detailContainer/resource/publish/PublishResource'
@@ -40,6 +41,7 @@ export const ResourceTab = ({
   playList,
   needUpdate = false
 }: ResourceTabProps) => {
+  const { trackCustom } = useTrackingContext()
   const [resources, setResources] = useState<PatchResource[]>([])
   const [individualLoaded, setIndividualLoaded] = useState(false)
 
@@ -107,6 +109,11 @@ export const ResourceTab = ({
       patchId: resource.id
     })
     setShowLinks((prev) => ({ ...prev, [resource.id]: true }))
+    trackCustom('download_reveal', {
+      dbid: id,
+      patch_id: resource.id,
+      storage: resource.storage
+    })
   }
 
   // 点击官方分集下载按钮，使用隐藏 a 标签触发下载避免弹窗闪烁
@@ -121,6 +128,10 @@ export const ResourceTab = ({
       a.click()
       document.body.removeChild(a)
       FetchPost<object>('/detail/download', { resourceDbId: id })
+      trackCustom('official_download_click', {
+        dbid: id,
+        episode: item.accordion
+      })
     }
   }
 
@@ -138,11 +149,26 @@ export const ResourceTab = ({
         playListCount={playList.length}
         viewMode={viewMode}
         isAscending={isAscending}
-        onOpenCreate={onOpenCreate}
-        onToggleViewMode={() =>
-          setViewMode(viewMode === 'grid' ? 'list' : 'grid')
-        }
-        onToggleSortOrder={() => setIsAscending(!isAscending)}
+        onOpenCreate={() => {
+          trackCustom('resource_publish_open', { dbid: id })
+          onOpenCreate()
+        }}
+        onToggleViewMode={() => {
+          const nextViewMode = viewMode === 'grid' ? 'list' : 'grid'
+          setViewMode(nextViewMode)
+          trackCustom('download_view_mode_change', {
+            dbid: id,
+            view_mode: nextViewMode
+          })
+        }}
+        onToggleSortOrder={() => {
+          const nextAscending = !isAscending
+          setIsAscending(nextAscending)
+          trackCustom('download_sort_change', {
+            dbid: id,
+            sort_order: nextAscending ? 'asc' : 'desc'
+          })
+        }}
       />
 
       <CardBody className="px-4 pt-0 pb-4 space-y-4">
@@ -183,6 +209,14 @@ export const ResourceTab = ({
                       onOpenDelete()
                     }}
                     onDownload={handleClickDownload}
+                    onDownloadLinkClick={(res, linkIndex) =>
+                      trackCustom('download_link_click', {
+                        dbid: id,
+                        patch_id: res.id,
+                        storage: res.storage,
+                        link_index: linkIndex
+                      })
+                    }
                   />
                 ))}
               </div>

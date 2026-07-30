@@ -8,6 +8,7 @@ import { useDebounce } from 'use-debounce'
 
 import { FilterBar } from '@/components/searchContainer/FilterBar'
 import { SearchOption } from '@/components/searchContainer/SearchOption'
+import { useTrackingContext } from '@/components/tracking/TrackingProvider'
 import FadeContent from '@/components/ui/FadeContent'
 import { cn } from '@/lib/utils'
 import { useSearchStore } from '@/store/searchStore'
@@ -36,6 +37,7 @@ export const SearchContainer = () => {
   const [page, setPage] = useState(currentPage)
 
   const [showHistory, setShowHistory] = useState(false)
+  const { trackCustom } = useTrackingContext()
 
   const searchData = useSearchStore((state) => state.data)
   const setSearchData = useSearchStore((state) => state.setData)
@@ -120,6 +122,19 @@ export const SearchContainer = () => {
       setShowHistory(false)
 
       const current = useSearchStore.getState().data
+      const trackingData = {
+        query_length: query.trim().length,
+        page: currentPage,
+        search_in_introduction: current.searchInIntroduction,
+        search_in_alias: current.searchInAlias,
+        resource_types: current.selectedResourceType,
+        selected_type: current.selectedType,
+        sort_field: current.sortField,
+        sort_order: current.sortOrder,
+        language: current.selectedLanguage,
+        status: current.selectedStatus
+      }
+      trackCustom('search_submit', trackingData)
       const { _data, total } = await FetchPost<{
         _data: SearchData[]
         total: number
@@ -143,9 +158,14 @@ export const SearchContainer = () => {
       setTotal(total)
       setHasSearched(true)
 
+      trackCustom('search_result', {
+        ...trackingData,
+        result_count: total
+      })
+
       setLoading(false)
     },
-    [page, query, addToHistory]
+    [page, query, addToHistory, trackCustom]
   )
 
   useEffect(() => {
@@ -245,6 +265,8 @@ export const SearchContainer = () => {
                   initialOpacity={0}
                 >
                   <CoverCard
+                    surface="search"
+                    position={(page - 1) * 12 + index + 1}
                     data={{
                       ...data,
                       favorite_by: data._count.favorite_by,
@@ -263,6 +285,7 @@ export const SearchContainer = () => {
                 page={page}
                 onChange={(page) => {
                   setPage(page)
+                  trackCustom('search_pagination_change', { page })
                   handleSearch(page)
                 }}
                 showControls
