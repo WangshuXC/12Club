@@ -37,16 +37,17 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
 
   const isHourly = data.length > 0 && data[0].date.includes('T')
 
-  const chartData = data.map((d) => ({
-    ...d,
-    label: isHourly ? d.date.split('T')[1] : d.date.slice(5)
-  }))
+  const formatTimeLabel = (value: string | number) => {
+    const date = String(value)
+
+    return isHourly ? date.split('T')[1] : date.slice(5)
+  }
 
   return (
-    <div className="w-full h-64 [&_.recharts-wrapper]:focus:outline-none [&_.recharts-surface]:focus:outline-none">
+    <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          data={chartData}
+          data={data}
           margin={{ top: 8, right: 16, left: 0, bottom: 0 }}
         >
           <defs>
@@ -70,7 +71,11 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
             vertical={false}
           />
           <XAxis
-            dataKey="label"
+            // The complete timestamp is the category key. Hour-only labels repeat
+            // across a 24-hour range and can otherwise point the tooltip at a
+            // different data point with the same clock time.
+            dataKey="date"
+            tickFormatter={formatTimeLabel}
             tick={{ fontSize: 12 }}
             tickLine={false}
             axisLine={false}
@@ -92,7 +97,7 @@ export const LineChart = ({ data, loading }: LineChartProps) => {
               fontSize: '13px'
             }}
             labelFormatter={(label) =>
-              isHourly ? `时间: ${label}` : `日期: ${label}`
+              `${isHourly ? '时间' : '日期'}: ${formatTimeLabel(label)}`
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             formatter={(value: any) => [

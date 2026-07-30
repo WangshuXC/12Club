@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 
 import {
   Table,
@@ -26,6 +26,7 @@ import { SelfPagination } from '@/components/common/Pagination'
 import { TYPE_CHINESE_MAP } from '@/constants/resource'
 import { cn } from '@/lib/utils'
 import { getRouteByDbId, getResourceTypeByDbId } from '@/utils/router'
+import type { TrackingQueryRange } from '@/store/adminTrackingStore'
 
 import { VisitorsModal } from './VisitorsModal'
 
@@ -38,9 +39,10 @@ interface AnimeStatsTableProps {
   data: AnimeStats[]
   pagination: PaginationInfo | null
   onPageChange: (page: number) => void
+  sortDescriptor: SortDescriptor
+  onSortChange: (descriptor: SortDescriptor) => void
   loading: boolean
-  startDate?: string
-  endDate?: string
+  range: TrackingQueryRange
 }
 
 const columns = [
@@ -56,51 +58,16 @@ export const AnimeStatsTable = ({
   data,
   pagination,
   onPageChange,
+  sortDescriptor,
+  onSortChange,
   loading,
-  startDate,
-  endDate
+  range
 }: AnimeStatsTableProps) => {
-  const [sortDescriptor, setSortDescriptor] = useState<SortDescriptor>({
-    column: 'playCount',
-    direction: 'descending'
-  })
   const [selectedAnime, setSelectedAnime] = useState<{
     dbid: string
     name: string
   } | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
-
-  // 排序后的数据
-  const sortedData = useMemo(() => {
-    if (!sortDescriptor.column) {
-      return data
-    }
-
-    return [...data].sort((a, b) => {
-      let comparison = 0
-
-      switch (sortDescriptor.column) {
-        case 'name':
-          comparison = a.name.localeCompare(b.name, 'zh-CN')
-          break
-        case 'playCount':
-          comparison = a.playCount - b.playCount
-          break
-        case 'uniqueVisitors':
-          comparison = a.uniqueVisitors - b.uniqueVisitors
-          break
-        case 'episodes':
-          comparison = a.accordionStats.length - b.accordionStats.length
-          break
-      }
-
-      return sortDescriptor.direction === 'ascending' ? comparison : -comparison
-    })
-  }, [data, sortDescriptor])
-
-  const handleSortChange = (descriptor: SortDescriptor) => {
-    setSortDescriptor(descriptor)
-  }
 
   const handleViewVisitors = (dbid: string, name: string) => {
     setSelectedAnime({ dbid, name })
@@ -112,7 +79,7 @@ export const AnimeStatsTable = ({
       <Table
         aria-label="动漫播放统计"
         sortDescriptor={sortDescriptor}
-        onSortChange={handleSortChange}
+        onSortChange={onSortChange}
       >
         <TableHeader columns={columns}>
           {(column) => (
@@ -134,7 +101,7 @@ export const AnimeStatsTable = ({
           isLoading={loading}
           loadingContent={<Spinner />}
         >
-          {sortedData.map((item) => (
+          {data.map((item) => (
             <TableRow key={item.dbid}>
               <TableCell>
                 <div>
@@ -196,6 +163,7 @@ export const AnimeStatsTable = ({
                   <Tooltip content="查看访客详情">
                     <Button
                       isIconOnly
+                      aria-label={`查看 ${item.name} 的播放访客详情`}
                       size="sm"
                       variant="light"
                       onPress={() => handleViewVisitors(item.dbid, item.name)}
@@ -256,8 +224,7 @@ export const AnimeStatsTable = ({
           type="anime"
           dbid={selectedAnime.dbid}
           animeName={selectedAnime.name}
-          startDate={startDate}
-          endDate={endDate}
+          range={range}
         />
       )}
     </div>

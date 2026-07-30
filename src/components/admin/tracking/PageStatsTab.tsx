@@ -17,6 +17,7 @@ import {
 import { Users } from 'lucide-react'
 
 import { SelfPagination } from '@/components/common/Pagination'
+import type { TrackingQueryRange } from '@/store/adminTrackingStore'
 
 import { VisitorsModal } from './VisitorsModal'
 
@@ -30,8 +31,7 @@ interface PageStatsTableProps {
   pagination: PaginationInfo | null
   onPageChange: (page: number) => void
   loading: boolean
-  startDate?: string
-  endDate?: string
+  range: TrackingQueryRange
 }
 
 // 页面访问统计表格
@@ -40,8 +40,7 @@ export const PageStatsTable = ({
   pagination,
   onPageChange,
   loading,
-  startDate,
-  endDate
+  range
 }: PageStatsTableProps) => {
   const [selectedPage, setSelectedPage] = useState<{
     url: string
@@ -105,6 +104,7 @@ export const PageStatsTable = ({
                   <Tooltip content="查看访客详情">
                     <Button
                       isIconOnly
+                      aria-label={`查看 ${item.page_title} 的访客详情`}
                       size="sm"
                       variant="light"
                       onPress={() =>
@@ -141,8 +141,7 @@ export const PageStatsTable = ({
           type="page"
           pageUrl={selectedPage.url}
           pageTitle={selectedPage.title}
-          startDate={startDate}
-          endDate={endDate}
+          range={range}
         />
       )}
     </div>

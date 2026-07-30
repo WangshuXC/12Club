@@ -7,27 +7,31 @@ import {
   type VisitorStats,
   type PaginationInfo
 } from '@/app/admin/tracking/visitors/actions'
-import { useTrackingDateStore } from '@/store/adminTrackingStore'
+import {
+  useTrackingDateStore,
+  type TrackingQueryRange
+} from '@/store/adminTrackingStore'
 
 import { VisitorStatsTable } from './VisitorStatsTab'
 
 export const VisitorStatsContainer = () => {
-  const { queryVersion } = useTrackingDateStore()
+  const queryVersion = useTrackingDateStore((state) => state.queryVersion)
   const [loading, setLoading] = useState(false)
   const [visitorStats, setVisitorStats] = useState<VisitorStats[]>([])
   const [pagination, setPagination] = useState<PaginationInfo | null>(null)
+  const [range, setRange] = useState<TrackingQueryRange>(() =>
+    useTrackingDateStore.getState().getQueryRange()
+  )
   const initialLoaded = useRef(false)
 
   const loadData = useCallback(async (page = 1) => {
     setLoading(true)
+    const queryRange = useTrackingDateStore.getState().getQueryRange()
 
     try {
-      const { startISO, endISO } = useTrackingDateStore
-        .getState()
-        .getQueryRange()
       const data = await getVisitorStats(
-        startISO || undefined,
-        endISO || undefined,
+        queryRange.startISO || undefined,
+        queryRange.endISO || undefined,
         page,
         20
       )
@@ -35,6 +39,7 @@ export const VisitorStatsContainer = () => {
       if (data) {
         setVisitorStats(data.list)
         setPagination(data.pagination)
+        setRange(queryRange)
       }
     } catch (error) {
       console.error('Failed to load visitor stats:', error)
@@ -68,6 +73,7 @@ export const VisitorStatsContainer = () => {
       pagination={pagination}
       onPageChange={handlePageChange}
       loading={loading}
+      range={range}
     />
   )
 }

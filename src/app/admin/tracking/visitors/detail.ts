@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { verifyAdminAccess } from '@/utils/trackingUtils'
+import { buildEventDateFilter, verifyAdminAccess } from '@/utils/trackingUtils'
 
 export type VisitorPageView = {
   id: number
@@ -25,14 +25,18 @@ export type VisitorDetail = {
 }
 
 export async function getVisitorDetail(
-  visitorId: number
+  visitorId: number,
+  startDate?: string,
+  endDate?: string
 ): Promise<VisitorDetail | null> {
   try {
     if (!(await verifyAdminAccess())) return null
 
+    const dateFilter = buildEventDateFilter(startDate, endDate)
     const [pageViews, animePlays] = await Promise.all([
       prisma.trackingEvent.findMany({
         where: {
+          ...dateFilter,
           visitor_id: visitorId,
           event_type: 'custom',
           event_name: 'page_view'
@@ -49,6 +53,7 @@ export async function getVisitorDetail(
       }),
       prisma.trackingEvent.findMany({
         where: {
+          ...dateFilter,
           visitor_id: visitorId,
           event_type: 'custom',
           event_name: 'accordion-play'

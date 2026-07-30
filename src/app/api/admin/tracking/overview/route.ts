@@ -6,7 +6,7 @@ import { ParseGetQuery } from '@/utils/parseQuery'
 
 import { buildDateFilter, buildVisitorDateFilter } from '../utils'
 
-import type { TrackingOverviewResult } from '@/types/api/tracking'
+import type { LegacyTrackingOverviewResult } from '@/types/api/tracking'
 
 // 查询参数 Schema
 const QuerySchema = z.object({
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
       }
     })
 
-    const data: TrackingOverviewResult = {
+    const data: LegacyTrackingOverviewResult = {
       totalVisitors,
       totalEvents,
       uniquePages: uniquePageViews.length,

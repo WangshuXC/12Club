@@ -17,7 +17,7 @@ export const buildDateFilter = (
     }
 
     if (endDate) {
-      dateFilter.timestamp.lte = new Date(endDate)
+      dateFilter.timestamp.lt = new Date(endDate)
     }
   }
 
@@ -38,7 +38,7 @@ export const buildVisitorDateFilter = (
     }
 
     if (endDate) {
-      visitorDateFilter.first_seen.lte = new Date(endDate)
+      visitorDateFilter.first_seen.lt = new Date(endDate)
     }
   }
 

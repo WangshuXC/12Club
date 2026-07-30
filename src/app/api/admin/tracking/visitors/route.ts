@@ -57,6 +57,8 @@ export async function GET(req: NextRequest) {
         ip: v.ip,
         first_seen: v.first_seen,
         last_seen: v.last_seen,
+        first_active: v.first_seen,
+        last_active: v.last_seen,
         events_count: v._count.events
       })),
       pagination: {

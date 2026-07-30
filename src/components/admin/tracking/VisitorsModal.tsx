@@ -25,6 +25,7 @@ import {
   type PaginationInfo
 } from '@/app/admin/tracking/pages/actions'
 import { SelfPagination } from '@/components/common/Pagination'
+import type { TrackingQueryRange } from '@/store/adminTrackingStore'
 import { parseUserAgentLabel } from '@/utils/device'
 
 type VisitorType = 'page' | 'anime'
@@ -42,9 +43,8 @@ interface VisitorsModalProps {
   dbid?: string
   animeName?: string
 
-  // 通用参数
-  startDate?: string
-  endDate?: string
+  // 当前结果集对应的精确时间范围
+  range: TrackingQueryRange
 }
 
 export const VisitorsModal = ({
@@ -55,8 +55,7 @@ export const VisitorsModal = ({
   pageTitle,
   dbid,
   animeName,
-  startDate,
-  endDate
+  range
 }: VisitorsModalProps) => {
   const [visitors, setVisitors] = useState<PageVisitor[]>([])
   const [pagination, setPagination] = useState<PaginationInfo | null>(null)
@@ -64,18 +63,27 @@ export const VisitorsModal = ({
 
   const fetchVisitors = async (page = 1) => {
     setLoading(true)
+    setVisitors([])
+    setPagination(null)
 
     try {
-      const start = startDate ? new Date(startDate).toISOString() : undefined
-      const end = endDate
-        ? new Date(endDate + 'T23:59:59').toISOString()
-        : undefined
-
       let data = null
       if (type === 'page' && pageUrl) {
-        data = await getPageVisitors(pageUrl, start, end, page, 10)
+        data = await getPageVisitors(
+          pageUrl,
+          range.startISO || undefined,
+          range.endISO || undefined,
+          page,
+          10
+        )
       } else if (type === 'anime' && dbid) {
-        data = await getAnimeVisitors(dbid, start, end, page, 10)
+        data = await getAnimeVisitors(
+          dbid,
+          range.startISO || undefined,
+          range.endISO || undefined,
+          page,
+          10
+        )
       }
 
       if (data) {
@@ -96,7 +104,7 @@ export const VisitorsModal = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, type, pageUrl, dbid, startDate, endDate])
+  }, [isOpen, type, pageUrl, dbid, range.startISO, range.endISO])
 
   const handlePageChange = (page: number) => {
     fetchVisitors(page)

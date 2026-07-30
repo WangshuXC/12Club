@@ -4,14 +4,14 @@
 export interface TrackingDateFilter {
   timestamp?: {
     gte?: Date
-    lte?: Date
+    lt?: Date
   }
 }
 
 export interface TrackingVisitorDateFilter {
   first_seen?: {
     gte?: Date
-    lte?: Date
+    lt?: Date
   }
 }
 
@@ -31,6 +31,26 @@ export interface TrackingPaginationResult<T> {
 
 // ==================== 概览统计 ====================
 export interface TrackingOverviewResult {
+  summary: TrackingSummary
+  previousSummary: TrackingSummary
+  uniquePages: number
+  totalEvents: number
+  deviceStats: Array<{ device: string; count: number }>
+  sourceStats: Array<{ source: string; count: number }>
+  eventTypeStats: Array<{ type: string; count: number }>
+}
+
+export interface TrackingSummary {
+  activeVisitors: number
+  newVisitors: number
+  pageViews: number
+  animePlayCount: number
+  playVisitors: number
+  sessions: number
+}
+
+// Deprecated compatibility shape for consumers of the legacy REST endpoints.
+export interface LegacyTrackingOverviewResult {
   totalVisitors: number
   totalEvents: number
   uniquePages: number
@@ -70,5 +90,7 @@ export interface TrackingVisitorStatsItem {
   ip: string
   first_seen: Date
   last_seen: Date
+  first_active: Date
+  last_active: Date
   events_count: number
 }

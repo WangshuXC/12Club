@@ -22,11 +22,13 @@ import {
 } from '@/app/admin/tracking/visitors/detail'
 
 import type { VisitorStats } from '@/app/admin/tracking/visitors/actions'
+import type { TrackingQueryRange } from '@/store/adminTrackingStore'
 
 interface VisitorDetailModalProps {
   isOpen: boolean
   onClose: () => void
   visitor: VisitorStats | null
+  range: TrackingQueryRange
 }
 
 const formatTime = (dateStr: string) =>
@@ -121,7 +123,8 @@ const AnimePlayList = ({ data }: { data: VisitorAnimePlay[] }) => {
 export const VisitorDetailModal = ({
   isOpen,
   onClose,
-  visitor
+  visitor,
+  range
 }: VisitorDetailModalProps) => {
   const [loading, setLoading] = useState(false)
   const [detail, setDetail] = useState<VisitorDetail | null>(null)
@@ -129,12 +132,13 @@ export const VisitorDetailModal = ({
   useEffect(() => {
     if (isOpen && visitor) {
       setLoading(true)
-      getVisitorDetail(visitor.id)
+      setDetail(null)
+      getVisitorDetail(visitor.id, range.startISO, range.endISO)
         .then((data) => setDetail(data))
         .catch(console.error)
         .finally(() => setLoading(false))
     }
-  }, [isOpen, visitor])
+  }, [isOpen, range.endISO, range.startISO, visitor])
 
   const displayName =
     visitor?.user?.name || `游客 ${visitor?.guid.slice(0, 8)}...`

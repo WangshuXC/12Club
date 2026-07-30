@@ -6,29 +6,34 @@ import {
   getTrackingOverview,
   type TrackingOverview
 } from '@/app/admin/tracking/actions'
-import { useTrackingDateStore } from '@/store/adminTrackingStore'
+import {
+  useTrackingDateStore,
+  type TrackingQueryRange
+} from '@/store/adminTrackingStore'
 
 import { OverviewCards } from './OverviewTab'
 
 export const OverviewContainer = () => {
-  const { startDate, endDate, queryVersion } = useTrackingDateStore()
+  const queryVersion = useTrackingDateStore((state) => state.queryVersion)
   const [loading, setLoading] = useState(false)
   const [overview, setOverview] = useState<TrackingOverview | null>(null)
+  const [range, setRange] = useState<TrackingQueryRange>(() =>
+    useTrackingDateStore.getState().getQueryRange()
+  )
   const initialLoaded = useRef(false)
 
   const loadData = useCallback(async () => {
     setLoading(true)
+    const queryRange = useTrackingDateStore.getState().getQueryRange()
 
     try {
-      const { startISO, endISO } = useTrackingDateStore
-        .getState()
-        .getQueryRange()
       const data = await getTrackingOverview(
-        startISO || undefined,
-        endISO || undefined
+        queryRange.startISO || undefined,
+        queryRange.endISO || undefined
       )
 
       setOverview(data)
+      setRange(queryRange)
     } catch (error) {
       console.error('Failed to load overview data:', error)
     } finally {
@@ -51,12 +56,5 @@ export const OverviewContainer = () => {
     }
   }, [queryVersion, loadData])
 
-  return (
-    <OverviewCards
-      data={overview}
-      loading={loading}
-      startDate={startDate}
-      endDate={endDate}
-    />
-  )
+  return <OverviewCards data={overview} loading={loading} range={range} />
 }

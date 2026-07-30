@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import {
   verifyAdminAccess,
-  buildVisitorDateFilter,
+  buildEventDateFilter,
   calcSkip,
   buildPagination,
   fetchUserMapByIds,
@@ -14,12 +14,6 @@ import type {
   TrackingPaginationInfo,
   TrackingPaginationResult
 } from '@/types/api/tracking'
-import type { Prisma } from '@prisma/client'
-
-// 定义带有事件计数的访客类型
-type VisitorWithEventsCount = Prisma.TrackingVisitorGetPayload<{
-  include: { _count: { select: { events: true } } }
-}>
 
 export type PaginationInfo = TrackingPaginationInfo
 
@@ -32,6 +26,8 @@ export type VisitorStats = {
   ip: string
   first_seen: string
   last_seen: string
+  first_active: string
+  last_active: string
   events_count: number
   user: {
     id: number
@@ -52,40 +48,52 @@ export async function getVisitorStats(
     if (!(await verifyAdminAccess())) return null
 
     const skip = calcSkip(page, pageSize)
-    const visitorDateFilter = buildVisitorDateFilter(startDate, endDate)
+    const dateFilter = buildEventDateFilter(startDate, endDate)
 
-    const [visitors, total] = await Promise.all([
-      prisma.trackingVisitor.findMany({
-        where: visitorDateFilter,
-        orderBy: { last_seen: 'desc' },
-        skip,
-        take: pageSize,
-        include: {
-          _count: {
-            select: { events: true }
-          }
-        }
-      }),
-      prisma.trackingVisitor.count({
-        where: visitorDateFilter
-      })
-    ])
+    // The list is based on activity in the selected period, not when a visitor
+    // was first created. Counts and timestamps therefore share one definition.
+    const activeVisitors = await prisma.trackingEvent.groupBy({
+      by: ['visitor_id'],
+      where: dateFilter,
+      _count: { id: true },
+      _min: { timestamp: true },
+      _max: { timestamp: true },
+      orderBy: { _max: { timestamp: 'desc' } }
+    })
+    const total = activeVisitors.length
+    const pageVisitors = activeVisitors.slice(skip, skip + pageSize)
+    const visitorIds = pageVisitors.map((visitor) => visitor.visitor_id)
+    const visitors = await prisma.trackingVisitor.findMany({
+      where: { id: { in: visitorIds } }
+    })
+    const visitorMap = new Map(visitors.map((visitor) => [visitor.id, visitor]))
 
     const userIds = extractUserIds(visitors)
     const userMap = await fetchUserMapByIds(userIds)
 
     return {
-      list: visitors.map((v: VisitorWithEventsCount) => ({
-        id: v.id,
-        guid: v.guid,
-        user_id: v.user_id,
-        user_agent: v.user_agent,
-        ip: v.ip,
-        first_seen: v.first_seen.toISOString(),
-        last_seen: v.last_seen.toISOString(),
-        events_count: v._count.events,
-        user: v.user_id ? userMap.get(v.user_id) || null : null
-      })),
+      list: pageVisitors.flatMap((activity) => {
+        const visitor = visitorMap.get(activity.visitor_id)
+        if (!visitor || !activity._min.timestamp || !activity._max.timestamp) {
+          return []
+        }
+
+        return [
+          {
+            id: visitor.id,
+            guid: visitor.guid,
+            user_id: visitor.user_id,
+            user_agent: visitor.user_agent,
+            ip: visitor.ip,
+            first_seen: visitor.first_seen.toISOString(),
+            last_seen: visitor.last_seen.toISOString(),
+            first_active: activity._min.timestamp.toISOString(),
+            last_active: activity._max.timestamp.toISOString(),
+            events_count: activity._count.id,
+            user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
+          }
+        ]
+      }),
       pagination: buildPagination(page, pageSize, total)
     }
   } catch (error) {

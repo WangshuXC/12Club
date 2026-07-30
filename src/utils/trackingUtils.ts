@@ -3,6 +3,14 @@ import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
 
 import type { TrackingPaginationInfo } from '@/types/api/tracking'
 
+const toValidDate = (value: string | undefined) => {
+  if (!value) return undefined
+
+  const date = new Date(value)
+
+  return Number.isNaN(date.getTime()) ? undefined : date
+}
+
 // ==================== 权限验证 ====================
 
 /**
@@ -27,7 +35,7 @@ export async function verifyAdminAccess() {
 // ==================== 时间范围过滤器 ====================
 
 type DateRangeFilter<K extends string> = {
-  [P in K]?: { gte?: Date; lte?: Date }
+  [P in K]?: { gte?: Date; lt?: Date }
 }
 
 /**
@@ -41,8 +49,10 @@ export function buildEventDateFilter(
   if (!startDate && !endDate) return filter
 
   filter.timestamp = {}
-  if (startDate) filter.timestamp.gte = new Date(startDate)
-  if (endDate) filter.timestamp.lte = new Date(endDate)
+  const start = toValidDate(startDate)
+  const end = toValidDate(endDate)
+  if (start) filter.timestamp.gte = start
+  if (end) filter.timestamp.lt = end
 
   return filter
 }
@@ -58,8 +68,10 @@ export function buildVisitorDateFilter(
   if (!startDate && !endDate) return filter
 
   filter.first_seen = {}
-  if (startDate) filter.first_seen.gte = new Date(startDate)
-  if (endDate) filter.first_seen.lte = new Date(endDate)
+  const start = toValidDate(startDate)
+  const end = toValidDate(endDate)
+  if (start) filter.first_seen.gte = start
+  if (end) filter.first_seen.lt = end
 
   return filter
 }
@@ -225,4 +237,15 @@ export function mapToTrendPoints(
     date,
     value: countMap.get(date) || 0
   }))
+}
+
+/** Collapse query/hash variants so one application route has one dashboard row. */
+export function normalizeTrackingPath(url: string): string {
+  try {
+    const parsed = new URL(url)
+
+    return parsed.pathname || '/'
+  } catch {
+    return url.split(/[?#]/, 1)[0] || '/'
+  }
 }

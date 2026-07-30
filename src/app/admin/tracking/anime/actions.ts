@@ -31,6 +31,8 @@ type AnimeEventSelect = Prisma.TrackingEventGetPayload<{
 export type AnimeStats = TrackingAnimeStatsItem
 
 export type PaginationInfo = TrackingPaginationInfo
+export type AnimeSortBy = 'name' | 'playCount' | 'uniqueVisitors' | 'episodes'
+export type SortDirection = 'ascending' | 'descending'
 
 // 动漫访客信息类型
 export type AnimeVisitor = {
@@ -55,7 +57,9 @@ export async function getAnimeStats(
   startDate?: string,
   endDate?: string,
   page = 1,
-  pageSize = 20
+  pageSize = 20,
+  sortBy: AnimeSortBy = 'playCount',
+  sortDirection: SortDirection = 'descending'
 ): Promise<TrackingPaginationResult<AnimeStats> | null> {
   try {
     if (!(await verifyAdminAccess())) return null
@@ -134,26 +138,38 @@ export async function getAnimeStats(
 
     const resourceMap = new Map(resources.map((r) => [r.db_id, r]))
 
-    const animeStatsList = Array.from(animeStatsMap.values())
-      .map((stat) => {
-        const resource = resourceMap.get(stat.dbid)
+    const animeStatsList = Array.from(animeStatsMap.values()).map((stat) => {
+      const resource = resourceMap.get(stat.dbid)
 
-        return {
-          dbid: stat.dbid,
-          name: resource?.name || '未知动漫',
-          banner: resource?.image_url || '',
-          status: resource?.status || 0,
-          playCount: stat.playCount,
-          uniqueVisitors: stat.uniqueVisitors.size,
-          accordionStats: Array.from(stat.accordionStats.entries())
-            .map(([acc, count]) => ({
-              accordion: acc,
-              playCount: count
-            }))
-            .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
-        }
-      })
-      .sort((a, b) => b.playCount - a.playCount)
+      return {
+        dbid: stat.dbid,
+        name: resource?.name || '未知动漫',
+        banner: resource?.image_url || '',
+        status: resource?.status || 0,
+        playCount: stat.playCount,
+        uniqueVisitors: stat.uniqueVisitors.size,
+        accordionStats: Array.from(stat.accordionStats.entries())
+          .map(([acc, count]) => ({
+            accordion: acc,
+            playCount: count
+          }))
+          .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
+      }
+    })
+
+    animeStatsList.sort((a, b) => {
+      let comparison = 0
+      if (sortBy === 'name') comparison = a.name.localeCompare(b.name, 'zh-CN')
+      if (sortBy === 'playCount') comparison = a.playCount - b.playCount
+      if (sortBy === 'uniqueVisitors') {
+        comparison = a.uniqueVisitors - b.uniqueVisitors
+      }
+      if (sortBy === 'episodes') {
+        comparison = a.accordionStats.length - b.accordionStats.length
+      }
+
+      return sortDirection === 'ascending' ? comparison : -comparison
+    })
 
     const { list, total } = slicePage(animeStatsList, page, pageSize)
 

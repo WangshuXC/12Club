@@ -4,6 +4,12 @@ import { create } from 'zustand'
 
 export type QuickRangeType = '24h' | 'today' | '7d' | '30d' | '90d' | 'custom'
 
+export type TrackingQueryRange = {
+  startISO: string
+  /** Exclusive upper bound. */
+  endISO: string
+}
+
 interface TrackingDateState {
   startDate: string
   endDate: string
@@ -25,17 +31,31 @@ interface TrackingDateStore extends TrackingDateState {
   /** 设置当天数据范围并立即触发查询 */
   setToday: () => void
   /** 获取用于查询的 ISO 时间范围 */
-  getQueryRange: () => { startISO: string; endISO: string }
+  getQueryRange: () => TrackingQueryRange
+}
+
+const formatDateInput = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${year}-${month}-${day}`
 }
 
 const getLast24hDates = () => {
-  const end = new Date()
-  const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
+  const now = new Date()
+  const start = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
   return {
-    startDate: start.toISOString().split('T')[0],
-    endDate: end.toISOString().split('T')[0]
+    startDate: formatDateInput(start),
+    endDate: formatDateInput(now)
   }
+}
+
+const startOfLocalDay = (dateInput: string) => {
+  const [year, month, day] = dateInput.split('-').map(Number)
+
+  return new Date(year, month - 1, day)
 }
 
 const defaults = getLast24hDates()
@@ -56,7 +76,7 @@ export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
     const end = new Date()
     const start = new Date()
 
-    start.setDate(start.getDate() - days)
+    start.setDate(start.getDate() - (days - 1))
 
     const rangeMap: Record<number, QuickRangeType> = {
       7: '7d',
@@ -65,8 +85,8 @@ export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
     }
 
     set((state) => ({
-      startDate: start.toISOString().split('T')[0],
-      endDate: end.toISOString().split('T')[0],
+      startDate: formatDateInput(start),
+      endDate: formatDateInput(end),
       activeRange: rangeMap[days] || 'custom',
       queryVersion: state.queryVersion + 1
     }))
@@ -77,15 +97,15 @@ export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
     const start = new Date(end.getTime() - 24 * 60 * 60 * 1000)
 
     set((state) => ({
-      startDate: start.toISOString().split('T')[0],
-      endDate: end.toISOString().split('T')[0],
+      startDate: formatDateInput(start),
+      endDate: formatDateInput(end),
       activeRange: '24h',
       queryVersion: state.queryVersion + 1
     }))
   },
 
   setToday: () => {
-    const today = new Date().toISOString().split('T')[0]
+    const today = formatDateInput(new Date())
 
     set((state) => ({
       startDate: today,
@@ -119,7 +139,7 @@ export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
         0,
         0
       )
-      const end = new Date(
+      const endExclusive = new Date(
         now.getFullYear(),
         now.getMonth(),
         now.getDate() + 1,
@@ -131,13 +151,17 @@ export const useTrackingDateStore = create<TrackingDateStore>()((set, get) => ({
 
       return {
         startISO: start.toISOString(),
-        endISO: end.toISOString()
+        endISO: endExclusive.toISOString()
       }
     }
 
     return {
-      startISO: startDate ? new Date(startDate).toISOString() : '',
-      endISO: endDate ? new Date(endDate + 'T23:59:59').toISOString() : ''
+      startISO: startDate ? startOfLocalDay(startDate).toISOString() : '',
+      endISO: endDate
+        ? new Date(
+            startOfLocalDay(endDate).getTime() + 24 * 60 * 60 * 1000
+          ).toISOString()
+        : ''
     }
   }
 }))
