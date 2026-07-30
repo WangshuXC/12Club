@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { verifyHeaderCookie } from '@/utils/actions/verifyHeaderCookie'
+import { Prisma } from '@prisma/client'
 
 import type { TrackingPaginationInfo } from '@/types/api/tracking'
 
@@ -9,6 +10,34 @@ const toValidDate = (value: string | undefined) => {
   const date = new Date(value)
 
   return Number.isNaN(date.getTime()) ? undefined : date
+}
+
+/** Parse optional dashboard date input once so raw SQL and Prisma use identical bounds. */
+export const getTrackingDateRange = (
+  startDate?: string,
+  endDate?: string
+): { start?: Date; end?: Date } => ({
+  start: toValidDate(startDate),
+  end: toValidDate(endDate)
+})
+
+/**
+ * Build a parameterized, left-closed/right-open date predicate for raw SQL.
+ * `column` must be a static identifier supplied by server-side code.
+ */
+export const buildRawDateRangeFilter = (
+  column: Prisma.Sql,
+  start?: Date,
+  end?: Date
+): Prisma.Sql => {
+  const conditions: Prisma.Sql[] = []
+
+  if (start) conditions.push(Prisma.sql`${column} >= ${start}`)
+  if (end) conditions.push(Prisma.sql`${column} < ${end}`)
+
+  return conditions.length > 0
+    ? Prisma.join(conditions, ' AND ')
+    : Prisma.sql`TRUE`
 }
 
 // ==================== 权限验证 ====================

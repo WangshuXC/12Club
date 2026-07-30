@@ -25,19 +25,22 @@ export type VisitorDetail = {
 }
 
 export async function getVisitorDetail(
-  visitorId: number,
+  visitorIds: number[],
   startDate?: string,
   endDate?: string
 ): Promise<VisitorDetail | null> {
   try {
     if (!(await verifyAdminAccess())) return null
+    if (visitorIds.length === 0) {
+      return { pageViews: [], animePlays: [] }
+    }
 
     const dateFilter = buildEventDateFilter(startDate, endDate)
     const [pageViews, animePlays] = await Promise.all([
       prisma.trackingEvent.findMany({
         where: {
           ...dateFilter,
-          visitor_id: visitorId,
+          visitor_id: { in: visitorIds },
           event_type: 'custom',
           event_name: 'page_view'
         },
@@ -54,7 +57,7 @@ export async function getVisitorDetail(
       prisma.trackingEvent.findMany({
         where: {
           ...dateFilter,
-          visitor_id: visitorId,
+          visitor_id: { in: visitorIds },
           event_type: 'custom',
           event_name: 'accordion-play'
         },

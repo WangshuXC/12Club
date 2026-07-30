@@ -398,6 +398,7 @@ model TrackingVisitor {
 
   @@index([guid])
   @@index([user_id])
+  @@index([first_seen])
   @@map("tracking_visitor")
 }
 
@@ -429,7 +430,8 @@ model TrackingEvent {
   @@index([visitor_id])
   @@index([user_id])
   @@index([page_url])
-  @@index([timestamp])
+  @@index([timestamp, id])
+  @@index([event_type, event_name, timestamp, visitor_id])
   @@index([session_id])
   @@map("tracking_event")
 }

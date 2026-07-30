@@ -3,36 +3,60 @@
 import { prisma } from '@/lib/prisma'
 import {
   verifyAdminAccess,
-  buildEventDateFilter,
+  buildRawDateRangeFilter,
+  getTrackingDateRange,
   buildPagination,
-  slicePage,
   fetchUserMapByIds,
   extractUserIds
 } from '@/utils/trackingUtils'
+import { Prisma } from '@prisma/client'
 
 import type {
   TrackingAnimeStatsItem,
   TrackingPaginationInfo,
   TrackingPaginationResult
 } from '@/types/api/tracking'
-import type { Prisma } from '@prisma/client'
-
-// 定义动漫事件查询结果类型
-type AnimeEventSelect = Prisma.TrackingEventGetPayload<{
-  select: {
-    id: true
-    event_type: true
-    extra_data: true
-    timestamp: true
-    visitor_id: true
-  }
-}>
-
 export type AnimeStats = TrackingAnimeStatsItem
 
 export type PaginationInfo = TrackingPaginationInfo
 export type AnimeSortBy = 'name' | 'playCount' | 'uniqueVisitors' | 'episodes'
 export type SortDirection = 'ascending' | 'descending'
+
+type AnimeStatsRow = {
+  dbid: string
+  name: string | null
+  banner: string | null
+  status: number | null
+  play_count: number
+  unique_visitors: number
+  accordion_stats: unknown
+  total: number
+}
+
+type AnimeVisitorActivityRow = {
+  visitor_id: number
+  visit_count: number
+  total: number
+}
+
+const parseAccordionStats = (
+  value: unknown
+): TrackingAnimeStatsItem['accordionStats'] => {
+  if (!Array.isArray(value)) return []
+
+  return value.flatMap((item) => {
+    if (!item || typeof item !== 'object') return []
+
+    const record = item as Record<string, unknown>
+    const accordion = record['accordion']
+    const playCount = record['playCount']
+    if (typeof accordion !== 'string' || typeof playCount !== 'number') {
+      return []
+    }
+
+    return [{ accordion, playCount }]
+  })
+}
 
 // 动漫访客信息类型
 export type AnimeVisitor = {
@@ -64,114 +88,103 @@ export async function getAnimeStats(
   try {
     if (!(await verifyAdminAccess())) return null
 
-    const dateFilter = buildEventDateFilter(startDate, endDate)
+    const { start, end } = getTrackingDateRange(startDate, endDate)
+    const eventRange = buildRawDateRangeFilter(
+      Prisma.raw('e."timestamp"'),
+      start,
+      end
+    )
+    const safeSortBy: AnimeSortBy = [
+      'name',
+      'playCount',
+      'uniqueVisitors',
+      'episodes'
+    ].includes(sortBy)
+      ? sortBy
+      : 'playCount'
+    const sortExpression = {
+      name: Prisma.raw('COALESCE(r."name", \'未知动漫\')'),
+      playCount: Prisma.raw('stats."play_count"'),
+      uniqueVisitors: Prisma.raw('stats."unique_visitors"'),
+      episodes: Prisma.raw('stats."episode_count"')
+    }[safeSortBy]
+    const sortDirectionSql = Prisma.raw(
+      sortDirection === 'ascending' ? 'ASC' : 'DESC'
+    )
+    const skip = (page - 1) * pageSize
 
-    const animeEvents = await prisma.trackingEvent.findMany({
-      where: {
-        ...dateFilter,
-        event_name: 'accordion-play'
-      },
-      select: {
-        id: true,
-        event_type: true,
-        extra_data: true,
-        timestamp: true,
-        visitor_id: true
-      }
-    })
-
-    const animeStatsMap = new Map<
-      string,
-      {
-        dbid: string
-        playCount: number
-        uniqueVisitors: Set<number>
-        accordionStats: Map<string, number>
-      }
-    >()
-
-    animeEvents.forEach((event: AnimeEventSelect) => {
-      const extraData = event.extra_data as Record<string, unknown> | null
-      if (!extraData) return
-
-      const dbid = String(extraData['dbid'] || '')
-      const accordion = String(extraData['accordion'] || '1')
-
-      if (!dbid) return
-
-      if (!animeStatsMap.has(dbid)) {
-        animeStatsMap.set(dbid, {
-          dbid,
-          playCount: 0,
-          uniqueVisitors: new Set(),
-          accordionStats: new Map()
-        })
-      }
-
-      const stats = animeStatsMap.get(dbid)!
-      stats.uniqueVisitors.add(event.visitor_id)
-      stats.playCount++
-
-      if (!stats.accordionStats.has(accordion)) {
-        stats.accordionStats.set(accordion, 0)
-      }
-
-      stats.accordionStats.set(
-        accordion,
-        stats.accordionStats.get(accordion)! + 1
+    // JSON payloads are extracted and aggregated by PostgreSQL, so the server
+    // only receives the requested resource page rather than every play event.
+    const animeStatsRows = await prisma.$queryRaw<AnimeStatsRow[]>(Prisma.sql`
+      WITH filtered_events AS (
+        SELECT
+          e."extra_data" ->> 'dbid' AS "dbid",
+          COALESCE(NULLIF(e."extra_data" ->> 'accordion', ''), '1') AS "accordion",
+          e."visitor_id"
+        FROM "tracking_event" e
+        WHERE ${eventRange}
+          AND e."event_type" = 'custom'
+          AND e."event_name" = 'accordion-play'
+      ),
+      episode_counts AS (
+        SELECT "dbid", "accordion", COUNT(*)::int AS "play_count"
+        FROM filtered_events
+        WHERE "dbid" IS NOT NULL AND "dbid" <> ''
+        GROUP BY "dbid", "accordion"
+      ),
+      stats AS (
+        SELECT
+          "dbid",
+          COUNT(*)::int AS "play_count",
+          COUNT(DISTINCT "visitor_id")::int AS "unique_visitors",
+          COUNT(DISTINCT "accordion")::int AS "episode_count"
+        FROM filtered_events
+        WHERE "dbid" IS NOT NULL AND "dbid" <> ''
+        GROUP BY "dbid"
+      ),
+      accordion_stats AS (
+        SELECT
+          "dbid",
+          JSONB_AGG(
+            JSONB_BUILD_OBJECT(
+              'accordion', "accordion",
+              'playCount', "play_count"
+            )
+            ORDER BY
+              CASE
+                WHEN "accordion" ~ '^[0-9]+$' THEN "accordion"::int
+                ELSE 2147483647
+              END,
+              "accordion"
+          ) AS "accordion_stats"
+        FROM episode_counts
+        GROUP BY "dbid"
       )
-    })
-
-    const dbids = Array.from(animeStatsMap.keys())
-
-    const resources = await prisma.resource.findMany({
-      where: {
-        db_id: { in: dbids }
-      },
-      select: {
-        db_id: true,
-        name: true,
-        image_url: true,
-        status: true
-      }
-    })
-
-    const resourceMap = new Map(resources.map((r) => [r.db_id, r]))
-
-    const animeStatsList = Array.from(animeStatsMap.values()).map((stat) => {
-      const resource = resourceMap.get(stat.dbid)
-
-      return {
-        dbid: stat.dbid,
-        name: resource?.name || '未知动漫',
-        banner: resource?.image_url || '',
-        status: resource?.status || 0,
-        playCount: stat.playCount,
-        uniqueVisitors: stat.uniqueVisitors.size,
-        accordionStats: Array.from(stat.accordionStats.entries())
-          .map(([acc, count]) => ({
-            accordion: acc,
-            playCount: count
-          }))
-          .sort((a, b) => parseInt(a.accordion) - parseInt(b.accordion))
-      }
-    })
-
-    animeStatsList.sort((a, b) => {
-      let comparison = 0
-      if (sortBy === 'name') comparison = a.name.localeCompare(b.name, 'zh-CN')
-      if (sortBy === 'playCount') comparison = a.playCount - b.playCount
-      if (sortBy === 'uniqueVisitors') {
-        comparison = a.uniqueVisitors - b.uniqueVisitors
-      }
-      if (sortBy === 'episodes') {
-        comparison = a.accordionStats.length - b.accordionStats.length
-      }
-
-      return sortDirection === 'ascending' ? comparison : -comparison
-    })
-
-    const { list, total } = slicePage(animeStatsList, page, pageSize)
+      SELECT
+        stats."dbid",
+        r."name",
+        r."image_url" AS "banner",
+        r."status",
+        stats."play_count",
+        stats."unique_visitors",
+        accordion_stats."accordion_stats",
+        (COUNT(*) OVER())::int AS "total"
+      FROM stats
+      LEFT JOIN "resource" r ON r."db_id" = stats."dbid"
+      LEFT JOIN accordion_stats ON accordion_stats."dbid" = stats."dbid"
+      ORDER BY ${sortExpression} ${sortDirectionSql}, stats."dbid" ASC
+      LIMIT ${pageSize} OFFSET ${skip}
+    `)
+    const total = animeStatsRows[0]?.total || 0
+    const list: AnimeStats[] = animeStatsRows.map((row) => ({
+      dbid: row.dbid,
+      name: row.name || '未知动漫',
+      banner: row.banner || '',
+      status: row.status || 0,
+      playCount: row.play_count,
+      uniqueVisitors: row.unique_visitors,
+      accordionStats: parseAccordionStats(row.accordion_stats)
+    }))
 
     return {
       list,
@@ -194,44 +207,35 @@ export async function getAnimeVisitors(
   try {
     if (!(await verifyAdminAccess())) return null
 
-    const dateFilter = buildEventDateFilter(startDate, endDate)
-
-    const animeEvents = await prisma.trackingEvent.findMany({
-      where: {
-        ...dateFilter,
-        event_name: 'accordion-play'
-      },
-      select: {
-        visitor_id: true,
-        extra_data: true
-      }
-    })
-
-    const visitorCountMap = new Map<number, number>()
-
-    animeEvents.forEach((event) => {
-      const extraData = event.extra_data as Record<string, unknown> | null
-      if (!extraData) return
-
-      const eventDbid = String(extraData['dbid'] || '')
-      if (eventDbid !== dbid) return
-
-      visitorCountMap.set(
-        event.visitor_id,
-        (visitorCountMap.get(event.visitor_id) || 0) + 1
-      )
-    })
-
-    const sortedVisitors = Array.from(visitorCountMap.entries()).sort(
-      (a, b) => b[1] - a[1]
+    const { start, end } = getTrackingDateRange(startDate, endDate)
+    const eventRange = buildRawDateRangeFilter(
+      Prisma.raw('e."timestamp"'),
+      start,
+      end
     )
-
-    const { list: paginatedVisitors, total } = slicePage(
-      sortedVisitors,
-      page,
-      pageSize
-    )
-    const visitorIds = paginatedVisitors.map(([id]) => id)
+    const skip = (page - 1) * pageSize
+    const paginatedVisitors = await prisma.$queryRaw<
+      AnimeVisitorActivityRow[]
+    >(Prisma.sql`
+        WITH visitor_activity AS (
+          SELECT e."visitor_id", COUNT(*)::int AS "visit_count"
+          FROM "tracking_event" e
+          WHERE ${eventRange}
+            AND e."event_type" = 'custom'
+            AND e."event_name" = 'accordion-play'
+            AND e."extra_data" ->> 'dbid' = ${dbid}
+          GROUP BY e."visitor_id"
+        )
+        SELECT
+          "visitor_id",
+          "visit_count",
+          (COUNT(*) OVER())::int AS "total"
+        FROM visitor_activity
+        ORDER BY "visit_count" DESC, "visitor_id" ASC
+        LIMIT ${pageSize} OFFSET ${skip}
+      `)
+    const total = paginatedVisitors[0]?.total || 0
+    const visitorIds = paginatedVisitors.map((visitor) => visitor.visitor_id)
 
     const visitors = await prisma.trackingVisitor.findMany({
       where: { id: { in: visitorIds } }
@@ -241,11 +245,12 @@ export async function getAnimeVisitors(
     const userIds = extractUserIds(visitors)
     const userMap = await fetchUserMapByIds(userIds)
 
-    const result: AnimeVisitor[] = paginatedVisitors.map(
-      ([visitorId, count]) => {
-        const visitor = visitorMap.get(visitorId)!
+    const result: AnimeVisitor[] = paginatedVisitors.flatMap((activity) => {
+      const visitor = visitorMap.get(activity.visitor_id)
+      if (!visitor) return []
 
-        return {
+      return [
+        {
           id: visitor.id,
           guid: visitor.guid,
           user_id: visitor.user_id,
@@ -253,11 +258,11 @@ export async function getAnimeVisitors(
           ip: visitor.ip,
           first_seen: visitor.first_seen.toISOString(),
           last_seen: visitor.last_seen.toISOString(),
-          visit_count: count,
+          visit_count: activity.visit_count,
           user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
         }
-      }
-    )
+      ]
+    })
 
     return {
       list: result,

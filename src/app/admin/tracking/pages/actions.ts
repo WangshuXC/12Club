@@ -3,13 +3,14 @@
 import { prisma } from '@/lib/prisma'
 import {
   verifyAdminAccess,
-  buildEventDateFilter,
+  buildRawDateRangeFilter,
+  getTrackingDateRange,
   calcSkip,
   buildPagination,
   fetchUserMapByIds,
-  extractUserIds,
-  normalizeTrackingPath
+  extractUserIds
 } from '@/utils/trackingUtils'
+import { Prisma } from '@prisma/client'
 
 import type {
   TrackingPageStatsItem,
@@ -20,6 +21,19 @@ import type {
 export type PageStats = TrackingPageStatsItem
 
 export type PaginationInfo = TrackingPaginationInfo
+
+type PageStatsRow = TrackingPageStatsItem & { total: number }
+
+type PageVisitorActivityRow = {
+  visitor_id: number
+  visit_count: number
+  total: number
+}
+
+const normalizedPagePath = (column: string) =>
+  Prisma.raw(
+    `COALESCE(NULLIF(split_part(split_part(regexp_replace(${column}, '^[a-z][a-z0-9+.-]*://[^/]+', '', 'i'), '#', 1), '?', 1), ''), '/')`
+  )
 
 // 页面访客信息类型
 export type PageVisitor = {
@@ -49,76 +63,57 @@ export async function getPageStats(
   try {
     if (!(await verifyAdminAccess())) return null
 
-    const dateFilter = buildEventDateFilter(startDate, endDate)
-
-    // 使用 page_view 自定义事件统计真实页面访问
-    const pageViewFilter = {
-      ...dateFilter,
-      event_type: 'custom',
-      event_name: 'page_view'
-    }
-
-    const pageViews = await prisma.trackingEvent.findMany({
-      where: pageViewFilter,
-      select: {
-        page_url: true,
-        page_title: true,
-        visitor_id: true,
-        timestamp: true
-      }
-    })
-
-    const pageStatsMap = new Map<
-      string,
-      {
-        page_url: string
-        page_title: string
-        latestTimestamp: number
-        total_views: number
-        visitors: Set<number>
-      }
-    >()
-
-    pageViews.forEach((event) => {
-      const pageUrl = normalizeTrackingPath(event.page_url)
-      const stat = pageStatsMap.get(pageUrl)
-
-      if (stat) {
-        stat.total_views++
-        stat.visitors.add(event.visitor_id)
-        if (
-          event.timestamp.getTime() > stat.latestTimestamp &&
-          event.page_title
-        ) {
-          stat.page_title = event.page_title
-          stat.latestTimestamp = event.timestamp.getTime()
-        }
-        return
-      }
-
-      pageStatsMap.set(pageUrl, {
-        page_url: pageUrl,
-        page_title: event.page_title || '未知页面',
-        latestTimestamp: event.timestamp.getTime(),
-        total_views: 1,
-        visitors: new Set([event.visitor_id])
-      })
-    })
-
-    const pageStats = Array.from(pageStatsMap.values())
-      .map(({ visitors, latestTimestamp: _latestTimestamp, ...item }) => ({
-        ...item,
-        unique_visitors: visitors.size
-      }))
-      .sort((a, b) => b.total_views - a.total_views)
-    const total = pageStats.length
-    const pageVisitorStats = pageStats.slice(
-      calcSkip(page, pageSize),
-      calcSkip(page, pageSize) + pageSize
+    const { start, end } = getTrackingDateRange(startDate, endDate)
+    const eventRange = buildRawDateRangeFilter(
+      Prisma.raw('e."timestamp"'),
+      start,
+      end
     )
+    const skip = calcSkip(page, pageSize)
+
+    // Page paths, titles and visitor counts are grouped in PostgreSQL. This
+    // avoids transferring every page_view event for a long reporting period.
+    const pageVisitorStats = await prisma.$queryRaw<PageStatsRow[]>(Prisma.sql`
+      WITH page_events AS (
+        SELECT
+          ${normalizedPagePath('e."page_url"')} AS "page_url",
+          e."page_title",
+          e."visitor_id",
+          e."timestamp"
+        FROM "tracking_event" e
+        WHERE ${eventRange}
+          AND e."event_type" = 'custom'
+          AND e."event_name" = 'page_view'
+      ),
+      page_stats AS (
+        SELECT
+          "page_url",
+          COUNT(*)::int AS "total_views",
+          COUNT(DISTINCT "visitor_id")::int AS "unique_visitors"
+        FROM page_events
+        GROUP BY "page_url"
+      ),
+      latest_titles AS (
+        SELECT DISTINCT ON ("page_url") "page_url", "page_title"
+        FROM page_events
+        WHERE "page_title" <> ''
+        ORDER BY "page_url", "timestamp" DESC
+      )
+      SELECT
+        stats."page_url",
+        COALESCE(titles."page_title", '未知页面') AS "page_title",
+        stats."total_views",
+        stats."unique_visitors",
+        (COUNT(*) OVER())::int AS "total"
+      FROM page_stats stats
+      LEFT JOIN latest_titles titles ON titles."page_url" = stats."page_url"
+      ORDER BY stats."total_views" DESC, stats."page_url" ASC
+      LIMIT ${pageSize} OFFSET ${skip}
+    `)
+    const total = pageVisitorStats[0]?.total || 0
 
     return {
-      list: pageVisitorStats,
+      list: pageVisitorStats.map(({ total: _total, ...item }) => item),
       pagination: buildPagination(page, pageSize, total)
     }
   } catch (error) {
@@ -139,53 +134,37 @@ export async function getPageVisitors(
     if (!(await verifyAdminAccess())) return null
 
     const skip = calcSkip(page, pageSize)
-    const dateFilter = buildEventDateFilter(startDate, endDate)
-
-    const visitorEvents = await prisma.trackingEvent.findMany({
-      where: {
-        ...dateFilter,
-        page_url: { not: '' },
-        event_type: 'custom',
-        event_name: 'page_view'
-      },
-      select: { visitor_id: true, page_url: true, timestamp: true }
-    })
-
-    const visitorActivity = new Map<
-      number,
-      { count: number; firstActive: Date; lastActive: Date }
-    >()
-    visitorEvents.forEach((event) => {
-      if (normalizeTrackingPath(event.page_url) !== pageUrl) return
-      const activity = visitorActivity.get(event.visitor_id)
-
-      if (activity) {
-        activity.count++
-        if (event.timestamp < activity.firstActive) {
-          activity.firstActive = event.timestamp
-        }
-        if (event.timestamp > activity.lastActive) {
-          activity.lastActive = event.timestamp
-        }
-        return
-      }
-
-      visitorActivity.set(event.visitor_id, {
-        count: 1,
-        firstActive: event.timestamp,
-        lastActive: event.timestamp
-      })
-    })
-
-    const sortedVisitorEvents = Array.from(visitorActivity.entries()).sort(
-      ([, a], [, b]) => b.count - a.count
+    const { start, end } = getTrackingDateRange(startDate, endDate)
+    const eventRange = buildRawDateRangeFilter(
+      Prisma.raw('e."timestamp"'),
+      start,
+      end
     )
-    const total = sortedVisitorEvents.length
-    const paginatedVisitorEvents = sortedVisitorEvents.slice(
-      skip,
-      skip + pageSize
-    )
-    const visitorIds = paginatedVisitorEvents.map(([visitorId]) => visitorId)
+
+    const paginatedVisitorEvents = await prisma.$queryRaw<
+      PageVisitorActivityRow[]
+    >(Prisma.sql`
+        WITH visitor_activity AS (
+          SELECT
+            e."visitor_id",
+            COUNT(*)::int AS "visit_count"
+          FROM "tracking_event" e
+          WHERE ${eventRange}
+            AND e."event_type" = 'custom'
+            AND e."event_name" = 'page_view'
+            AND ${normalizedPagePath('e."page_url"')} = ${pageUrl}
+          GROUP BY e."visitor_id"
+        )
+        SELECT
+          "visitor_id",
+          "visit_count",
+          (COUNT(*) OVER())::int AS "total"
+        FROM visitor_activity
+        ORDER BY "visit_count" DESC, "visitor_id" ASC
+        LIMIT ${pageSize} OFFSET ${skip}
+      `)
+    const total = paginatedVisitorEvents[0]?.total || 0
+    const visitorIds = paginatedVisitorEvents.map((event) => event.visitor_id)
 
     const visitors = await prisma.trackingVisitor.findMany({
       where: { id: { in: visitorIds } }
@@ -195,11 +174,12 @@ export async function getPageVisitors(
     const userIds = extractUserIds(visitors)
     const userMap = await fetchUserMapByIds(userIds)
 
-    const result: PageVisitor[] = paginatedVisitorEvents.map(
-      ([visitorId, activity]) => {
-        const visitor = visitorMap.get(visitorId)!
+    const result: PageVisitor[] = paginatedVisitorEvents.flatMap((activity) => {
+      const visitor = visitorMap.get(activity.visitor_id)
+      if (!visitor) return []
 
-        return {
+      return [
+        {
           id: visitor.id,
           guid: visitor.guid,
           user_id: visitor.user_id,
@@ -207,11 +187,11 @@ export async function getPageVisitors(
           ip: visitor.ip,
           first_seen: visitor.first_seen.toISOString(),
           last_seen: visitor.last_seen.toISOString(),
-          visit_count: activity.count,
+          visit_count: activity.visit_count,
           user: visitor.user_id ? userMap.get(visitor.user_id) || null : null
         }
-      }
-    )
+      ]
+    })
 
     return {
       list: result,

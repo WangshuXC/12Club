@@ -12,7 +12,8 @@ import {
   Spinner,
   Chip,
   Avatar,
-  Button
+  Button,
+  SortDescriptor
 } from '@heroui/react'
 
 import { SelfPagination } from '@/components/common/Pagination'
@@ -31,6 +32,8 @@ interface VisitorStatsTableProps {
   data: VisitorStats[]
   pagination: PaginationInfo | null
   onPageChange: (page: number) => void
+  sortDescriptor: SortDescriptor
+  onSortChange: (descriptor: SortDescriptor) => void
   loading: boolean
   range: TrackingQueryRange
 }
@@ -40,6 +43,8 @@ export const VisitorStatsTable = ({
   data,
   pagination,
   onPageChange,
+  sortDescriptor,
+  onSortChange,
   loading,
   range
 }: VisitorStatsTableProps) => {
@@ -55,6 +60,45 @@ export const VisitorStatsTable = ({
   const handleRowClick = (item: VisitorStats) => {
     setSelectedVisitor(item)
     setIsModalOpen(true)
+  }
+
+  const columns = [
+    { name: '用户/访客', uid: 'user', allowsSorting: true },
+    { name: '设备', uid: 'device', allowsSorting: false },
+    { name: 'IP地址', uid: 'ip', allowsSorting: false },
+    { name: '本期首次活跃', uid: 'first_active', allowsSorting: true },
+    { name: '本期最后活跃', uid: 'last_active', allowsSorting: true },
+    { name: '事件数', uid: 'events_count', allowsSorting: true },
+    { name: '操作', uid: 'actions', allowsSorting: false }
+  ]
+
+  const renderDevices = (item: VisitorStats) => {
+    const devices = Array.from(
+      new Set(
+        item.user_agents.map((userAgent) => parseUserAgentLabel(userAgent))
+      )
+    )
+
+    return (
+      <div className="flex max-w-48 flex-wrap gap-1" title={devices.join('、')}>
+        {devices.map((device) => (
+          <Chip key={device} size="sm" variant="flat">
+            {device}
+          </Chip>
+        ))}
+      </div>
+    )
+  }
+
+  const renderIps = (item: VisitorStats) => {
+    if (item.ips.length === 0) return '-'
+
+    return (
+      <span className="text-xs font-mono" title={item.ips.join('\n')}>
+        {item.ips[0]}
+        {item.ips.length > 1 ? ` 等 ${item.ips.length} 个` : ''}
+      </span>
+    )
   }
 
   // 渲染用户/访客信息
@@ -101,15 +145,25 @@ export const VisitorStatsTable = ({
 
   return (
     <div>
-      <Table aria-label="访客列表">
-        <TableHeader>
-          <TableColumn>用户/访客</TableColumn>
-          <TableColumn>设备</TableColumn>
-          <TableColumn>IP地址</TableColumn>
-          <TableColumn>本期首次活跃</TableColumn>
-          <TableColumn>本期最后活跃</TableColumn>
-          <TableColumn align="center">事件数</TableColumn>
-          <TableColumn align="center">操作</TableColumn>
+      <Table
+        aria-label="访客列表"
+        sortDescriptor={sortDescriptor}
+        onSortChange={onSortChange}
+      >
+        <TableHeader columns={columns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              allowsSorting={column.allowsSorting}
+              align={
+                column.uid === 'events_count' || column.uid === 'actions'
+                  ? 'center'
+                  : 'start'
+              }
+            >
+              {column.name}
+            </TableColumn>
+          )}
         </TableHeader>
         <TableBody
           emptyContent="暂无数据"
@@ -117,16 +171,10 @@ export const VisitorStatsTable = ({
           loadingContent={<Spinner />}
         >
           {data.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.user_id ? `user-${item.user_id}` : item.id}>
               <TableCell>{renderUserCell(item)}</TableCell>
-              <TableCell>
-                <span className="text-sm" title={item.user_agent}>
-                  {parseUserAgentLabel(item.user_agent)}
-                </span>
-              </TableCell>
-              <TableCell>
-                <span className="text-xs font-mono">{item.ip || '-'}</span>
-              </TableCell>
+              <TableCell>{renderDevices(item)}</TableCell>
+              <TableCell>{renderIps(item)}</TableCell>
               <TableCell>
                 <span className="text-xs">{formatDate(item.first_active)}</span>
               </TableCell>

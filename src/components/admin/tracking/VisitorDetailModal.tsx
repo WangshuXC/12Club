@@ -133,7 +133,7 @@ export const VisitorDetailModal = ({
     if (isOpen && visitor) {
       setLoading(true)
       setDetail(null)
-      getVisitorDetail(visitor.id, range.startISO, range.endISO)
+      getVisitorDetail(visitor.visitor_ids, range.startISO, range.endISO)
         .then((data) => setDetail(data))
         .catch(console.error)
         .finally(() => setLoading(false))
